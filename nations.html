@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nations — Pick Your Nation | theworldcup.gg</title>
+<meta name="description" content="All 48 The World Cup nation tokens, ranked live by market cap and volume. Filter by group, find your flag, back it.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#060709; --surface:#0c0e12; --surface2:#12151c;
+    --border:rgba(255,255,255,0.06); --gold:#f5c518; --gold2:#e8a900;
+    --green:#00e676; --red:#ff1744; --text:#f0f2f5; --muted:#5a6070; --muted2:#8892a4;
+    --silver:#c5ccd8; --bronze:#cd8a44;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-height:100vh;overflow-x:hidden}
+  body::after{content:'';position:fixed;inset:0;z-index:1000;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;opacity:0.4}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:64px;background:rgba(6,7,9,0.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:0.08em;color:var(--gold);text-decoration:none}
+  .nav-links{display:flex;gap:26px;list-style:none}
+  .nav-links a{color:var(--muted2);text-decoration:none;font-size:0.82rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;transition:color 0.2s}
+  .nav-links a:hover,.nav-links a.active{color:var(--gold)}
+
+  .page-hero{padding:108px 48px 24px;max-width:1180px;margin:0 auto}
+  .section-tag{font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;display:flex;align-items:center;gap:12px}
+  .section-tag::before{content:'';width:24px;height:1px;background:var(--gold);opacity:0.6}
+  .page-hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(3.2rem,6.5vw,6rem);letter-spacing:0.03em;line-height:1;margin-bottom:14px}
+  .page-hero h1 .gold{color:var(--gold)}
+  .page-hero p{color:var(--muted2);font-size:1.02rem;max-width:560px;line-height:1.7}
+
+  .inner{max-width:1180px;margin:0 auto;padding:0 48px 90px}
+
+  /* stat strip */
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:26px 0 18px}
+  .stat{background:var(--surface);padding:20px 24px}
+  .stat .k{font-family:'Barlow Condensed',sans-serif;font-size:0.66rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:0.03em;line-height:1.1;margin-top:6px;color:var(--gold)}
+  .stat .v small{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--muted2);letter-spacing:0;margin-left:4px}
+
+  /* controls */
+  .controls{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+  .toggle{display:flex;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:4px}
+  .toggle button{background:none;border:none;color:var(--muted2);cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.8rem;letter-spacing:0.06em;text-transform:uppercase;padding:7px 16px;border-radius:6px;transition:all 0.15s}
+  .toggle button.active{background:rgba(245,197,24,0.12);color:var(--gold)}
+  .live{display:inline-flex;align-items:center;gap:8px;font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted2)}
+  .live .ld{width:8px;height:8px;border-radius:50%;background:var(--green);animation:lp 2s ease-in-out infinite}
+  .live .ld.err{background:var(--red);animation:none}
+  @keyframes lp{0%,100%{opacity:1}50%{opacity:0.3}}
+
+  .filterbar{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin:16px 0 2px}
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chip{background:var(--surface);border:1px solid var(--border);color:var(--muted2);cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.78rem;letter-spacing:0.05em;padding:6px 12px;border-radius:6px;transition:all 0.15s}
+  .chip:hover{color:var(--text)}
+  .chip.active{background:rgba(245,197,24,0.12);color:var(--gold);border-color:rgba(245,197,24,0.3)}
+  .search{background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Barlow',sans-serif;font-size:0.85rem;padding:9px 14px;min-width:220px;outline:none}
+  .search:focus{border-color:rgba(245,197,24,0.35)}
+  .search::placeholder{color:var(--muted)}
+  /* leaderboard rows */
+  .board{display:flex;flex-direction:column;gap:6px}
+  .row{display:grid;grid-template-columns:46px 1fr 150px 130px 110px;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 18px;transition:border-color 0.2s,transform 0.2s}
+  .row:hover{border-color:rgba(245,197,24,0.25);transform:translateY(-1px)}
+  .row.r1{border-color:rgba(245,197,24,0.4);background:linear-gradient(90deg,rgba(245,197,24,0.06),var(--surface) 40%)}
+  .rank{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:0.03em;color:var(--muted);text-align:center}
+  .row.r1 .rank{color:var(--gold)} .row.r2 .rank{color:var(--silver)} .row.r3 .rank{color:var(--bronze)}
+  .nat{display:flex;align-items:center;gap:12px;min-width:0}
+  .nat img{width:36px;height:36px;border-radius:50%;object-fit:cover;border:1px solid rgba(255,255,255,0.12);flex-shrink:0}
+  .nat .code{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:0.05em;color:var(--gold);line-height:1}
+  .nat .name{font-family:'Barlow Condensed',sans-serif;font-size:0.74rem;letter-spacing:0.03em;text-transform:uppercase;color:var(--muted2);margin-top:1px}
+  .nat .grp{font-family:'Barlow Condensed',sans-serif;font-size:0.6rem;color:var(--muted);background:rgba(255,255,255,0.04);border-radius:4px;padding:2px 6px;letter-spacing:0.04em;margin-left:4px}
+  .metric{font-family:'DM Mono',monospace;font-size:1rem;font-weight:500;color:var(--text);text-align:right}
+  .metric .sub{display:block;font-size:0.68rem;color:var(--muted);margin-top:2px}
+  .chg{font-family:'DM Mono',monospace;font-size:0.86rem;text-align:right}
+  .chg.up{color:var(--green)} .chg.down{color:var(--red)} .chg.flat{color:var(--muted)}
+  .row .act{text-align:right}
+  .bbtn{display:inline-block;background:var(--gold);color:#000;text-decoration:none;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:0.76rem;letter-spacing:0.05em;text-transform:uppercase;padding:7px 14px;border-radius:6px;transition:all 0.15s}
+  .bbtn:hover{background:var(--gold2)}
+  .bbtn.soon{background:var(--surface2);color:var(--muted);cursor:default;border:1px solid var(--border)}
+
+  .subhead{font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin:34px 0 12px;display:flex;align-items:center;gap:10px}
+  .subhead::after{content:'';flex:1;height:1px;background:var(--border)}
+
+  /* pending grid */
+  .pending{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+  .pcard{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px}
+  .pcard img{width:28px;height:28px;border-radius:50%;object-fit:cover;border:1px solid rgba(255,255,255,0.1);opacity:0.8}
+  .pcard .code{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:0.04em;color:var(--muted2)}
+  .pcard .st{font-family:'Barlow Condensed',sans-serif;font-size:0.58rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);margin-left:auto}
+  .pcard .st.idx{color:var(--gold)}
+
+  .empty{text-align:center;padding:40px 20px;color:var(--muted2);font-size:0.95rem;line-height:1.7}
+
+  .lastread{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-align:center;margin:30px 0 36px}
+
+  footer{border-top:1px solid var(--border);padding:32px 48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+  .footer-logo{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:0.08em;color:var(--gold);text-decoration:none}
+  .footer-links{display:flex;gap:24px;list-style:none}
+  .footer-links a{color:var(--muted);text-decoration:none;font-size:0.78rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;transition:color 0.2s}
+  .footer-links a:hover{color:var(--text)}
+  .footer-disclaimer{font-size:0.7rem;color:var(--muted);max-width:440px;line-height:1.5}
+
+  @media(max-width:820px){
+    nav{padding:0 20px}.nav-links{display:none}
+    .page-hero{padding:96px 22px 18px}.inner{padding:0 22px 70px}
+    .stats{grid-template-columns:1fr}
+    .row{grid-template-columns:38px 1fr auto;gap:10px;padding:11px 14px}
+    .row .chg,.row .act{display:none}
+    .metric{font-size:0.92rem}
+    footer{padding:24px;flex-direction:column;align-items:flex-start}
+  }
+
+  /* --- mobile nav (injected) --- */
+  .mnav-btn{display:none;background:none;border:0;cursor:pointer;width:40px;height:40px;flex-direction:column;justify-content:center;align-items:center;gap:5px;padding:0;z-index:1002}
+  .mnav-btn span{display:block;width:22px;height:2px;background:var(--gold,#f5c518);border-radius:2px;transition:transform .25s,opacity .25s}
+  .mnav-btn.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+  .mnav-btn.open span:nth-child(2){opacity:0}
+  .mnav-btn.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+  .mnav-panel{display:none;position:fixed;top:64px;left:0;right:0;z-index:501;background:rgba(6,7,9,0.98);backdrop-filter:blur(24px);border-bottom:1px solid var(--border,rgba(255,255,255,0.08));flex-direction:column;padding:8px 0}
+  .mnav-panel.open{display:flex}
+  .mnav-panel a{color:var(--text,#f0f2f5);text-decoration:none;font-family:'Barlow Condensed','Barlow',sans-serif;font-weight:700;font-size:1.05rem;letter-spacing:0.06em;text-transform:uppercase;padding:15px 28px;border-bottom:1px solid rgba(255,255,255,0.04)}
+  .mnav-panel a:last-child{border-bottom:0}
+  .mnav-panel a.active,.mnav-panel a:hover{color:var(--gold,#f5c518)}
+  @media(max-width:1024px){.mnav-btn{display:flex}}
+  html,body{overflow-x:hidden;max-width:100%}
+
+</style>
+  <script src="tokens.js"></script>
+</head>
+<body>
+
+<nav>
+  <button class="mnav-btn" id="mnavBtn" aria-label="Menu" onclick="(function(b){var p=document.getElementById('mnavPanel');var o=p.classList.toggle('open');b.classList.toggle('open',o);})(this)">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="mnav-panel" id="mnavPanel">
+    <a href="index.html">Home</a>
+    <a href="nations.html" class="active">Nations</a>
+    <a href="pools.html">Pools</a>
+    <a href="banner.html">Banners</a>
+    <a href="claim.html">Claim</a>
+  </div>
+
+  <a class="nav-logo" href="index.html">⚽ THE WORLD CUP</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="nations.html" class="active">Nations</a></li>
+    <li><a href="pools.html">Pools</a></li>
+    <li><a href="banner.html">Banners</a></li>
+    <li><a href="claim.html">Claim</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div class="section-tag">All 48 Nations · Live</div>
+  <h1>Pick Your <span class="gold">Nation.</span></h1>
+  <p>Every nation, ranked live by how hard it's being backed. Filter by group, find your flag, and back it — buying routes through The World Cup so you qualify for pool payouts.</p>
+</div>
+
+<div class="inner">
+
+  <div class="stats">
+    <div class="stat"><div class="k">Nations Live</div><div class="v" id="s-live">0<small>/ 48</small></div></div>
+    <div class="stat"><div class="k">Total Backed · Market Cap</div><div class="v" id="s-total">—</div></div>
+    <div class="stat"><div class="k">Top Nation</div><div class="v" id="s-top">—</div></div>
+  </div>
+
+  <div class="filterbar">
+    <div class="chips" id="groupChips"></div>
+    <input class="search" id="search" type="text" placeholder="Search nation or code — BRA, England…" oninput="onSearch(this.value)">
+  </div>
+
+  <div class="controls">
+    <div class="toggle">
+      <button id="t-mc" class="active" onclick="setMetric('mc')">Market Cap</button>
+      <button id="t-vol" onclick="setMetric('vol')">24h Volume</button>
+    </div>
+    <div class="live"><span class="ld" id="livedot"></span><span id="livetext">Loading live data…</span></div>
+  </div>
+
+  <div class="board" id="board"></div>
+
+  <div id="pendingWrap"></div>
+
+  <div class="lastread">Refreshes every 45s · Ranked by live market data (DexScreener) · Last update: <span id="lastread">—</span></div>
+
+</div>
+
+<footer>
+  <a class="footer-logo" href="index.html">⚽ THE WORLD CUP</a>
+  <ul class="footer-links">
+    <li><a href="pools.html">Live Pools</a></li>
+    <li><a href="index.html#tokens">All Tokens</a></li>
+    <li><a href="https://x.com/TWC26" target="_blank" rel="noopener noreferrer">Twitter / X</a></li>
+  </ul>
+  <div class="footer-disclaimer">Ranking reflects live market cap / volume from public market data, not the prize pool — see the Pools page for the on-chain pool. Market data can lag for freshly launched tokens. Speculative assets; not affiliated with FIFA. DYOR.</div>
+</footer>
+
+<script>
+/* =====================================================================
+   CONFIG
+   Add each nation's CA below as it launches — exactly like index.html's
+   tokenCAs. A nation joins the live ranking automatically once it has a CA
+   and market data appears. Until then it shows under "Launching soon".
+   ===================================================================== */
+const tokenCAs = window.TWC_TOKENS || {};
+
+const iso2 = {
+  MEX:'mx',RSA:'za',KOR:'kr',CZE:'cz',
+  CAN:'ca',BIH:'ba',QAT:'qa',SUI:'ch',
+  BRA:'br',MAR:'ma',HAI:'ht',SCO:'gb-sct',
+  USA:'us',PAR:'py',AUS:'au',TUR:'tr',
+  GER:'de',CUW:'cw',CIV:'ci',ECU:'ec',
+  NED:'nl',JPN:'jp',SWE:'se',TUN:'tn',
+  BEL:'be',EGY:'eg',IRN:'ir',NZL:'nz',
+  ESP:'es',CPV:'cv',KSA:'sa',URU:'uy',
+  FRA:'fr',SEN:'sn',IRQ:'iq',NOR:'no',
+  ARG:'ar',ALG:'dz',AUT:'at',JOR:'jo',
+  POR:'pt',COD:'cd',UZB:'uz',COL:'co',
+  ENG:'gb-eng',CRO:'hr',GHA:'gh',PAN:'pa',
+};
+const NATIONS = [
+  ['MEX','Mexico','A'],['RSA','South Africa','A'],['KOR','South Korea','A'],['CZE','Czechia','A'],
+  ['CAN','Canada','B'],['BIH','Bosnia & Herzegovina','B'],['QAT','Qatar','B'],['SUI','Switzerland','B'],
+  ['BRA','Brazil','C'],['MAR','Morocco','C'],['HAI','Haiti','C'],['SCO','Scotland','C'],
+  ['USA','United States','D'],['PAR','Paraguay','D'],['AUS','Australia','D'],['TUR','Turkey','D'],
+  ['GER','Germany','E'],['CUW','Curacao','E'],['CIV','Ivory Coast','E'],['ECU','Ecuador','E'],
+  ['NED','Netherlands','F'],['JPN','Japan','F'],['SWE','Sweden','F'],['TUN','Tunisia','F'],
+  ['BEL','Belgium','G'],['EGY','Egypt','G'],['IRN','Iran','G'],['NZL','New Zealand','G'],
+  ['ESP','Spain','H'],['CPV','Cape Verde','H'],['KSA','Saudi Arabia','H'],['URU','Uruguay','H'],
+  ['FRA','France','I'],['SEN','Senegal','I'],['IRQ','Iraq','I'],['NOR','Norway','I'],
+  ['ARG','Argentina','J'],['ALG','Algeria','J'],['AUT','Austria','J'],['JOR','Jordan','J'],
+  ['POR','Portugal','K'],['COD','DR Congo','K'],['UZB','Uzbekistan','K'],['COL','Colombia','K'],
+  ['ENG','England','L'],['CRO','Croatia','L'],['GHA','Ghana','L'],['PAN','Panama','L'],
+].map(n => ({code:n[0], name:n[1], group:n[2]}));.map(n => ({code:n[0], name:n[1], group:n[2]}));
+
+let METRIC = 'mc';   // 'mc' | 'vol'
+let GROUP  = 'ALL';  // 'ALL' | 'A'..'L'
+let SEARCH = '';     // lowercased query
+let DATA = {};       // code -> { price, mc, vol, chg }
+
+const $ = id => document.getElementById(id);
+const flag = code => `https://flagcdn.com/w80/${iso2[code]}.png`;
+
+function fmtUsd(n){
+  if(n==null || isNaN(n)) return '—';
+  if(n >= 1e9) return '$'+(n/1e9).toFixed(2)+'B';
+  if(n >= 1e6) return '$'+(n/1e6).toFixed(2)+'M';
+  if(n >= 1e3) return '$'+(n/1e3).toFixed(1)+'K';
+  return '$'+n.toFixed(0);
+}
+function fmtPrice(n){
+  if(n==null || isNaN(n)) return '—';
+  return n < 0.001 ? '$'+n.toExponential(2) : '$'+n.toFixed(6);
+}
+
+async function fetchChunk(addrs){
+  const url = 'https://api.dexscreener.com/latest/dex/tokens/' + addrs.join(',');
+  const r = await fetch(url);
+  if(!r.ok) throw new Error('dex '+r.status);
+  const j = await r.json();
+  return j.pairs || [];
+}
+
+async function load(){
+  const dot = $('livedot'), txt = $('livetext');
+  const entries = Object.entries(tokenCAs).filter(([c,ca]) => ca && !ca.includes('PASTE'));
+  if(entries.length === 0){
+    dot.classList.remove('err');
+    txt.textContent = 'No nation tokens live yet — launching Jun 7–10';
+    DATA = {};
+    render();
+    $('lastread').textContent = new Date().toLocaleTimeString();
+    return;
+  }
+
+  const cas = entries.map(e => e[1]);
+  const caToCode = {}; entries.forEach(([c,ca]) => caToCode[ca.toLowerCase()] = c);
+
+  try{
+    // chunk into groups of 30 (DexScreener limit)
+    const chunks = [];
+    for(let i=0;i<cas.length;i+=30) chunks.push(cas.slice(i,i+30));
+    const pairLists = await Promise.all(chunks.map(fetchChunk));
+    const pairs = pairLists.flat();
+
+    // best pair per token = highest liquidity
+    const best = {};
+    for(const p of pairs){
+      const addr = p.baseToken && p.baseToken.address ? p.baseToken.address.toLowerCase() : null;
+      const code = addr ? caToCode[addr] : null;
+      if(!code) continue;
+      const liq = (p.liquidity && p.liquidity.usd) || 0;
+      if(!best[code] || liq > best[code]._liq){
+        best[code] = {
+          _liq: liq,
+          price: parseFloat(p.priceUsd),
+          mc: (p.marketCap != null ? p.marketCap : p.fdv),
+          vol: (p.volume && p.volume.h24) || 0,
+          chg: (p.priceChange && p.priceChange.h24)
+        };
+      }
+    }
+    DATA = best;
+    dot.classList.remove('err');
+    txt.textContent = 'Live — Solana market data';
+  }catch(e){
+    dot.classList.add('err');
+    txt.textContent = 'Live data unavailable — retrying';
+  }
+  $('lastread').textContent = new Date().toLocaleTimeString();
+  render();
+}
+
+function render(){
+  const hasCA = c => { const ca = tokenCAs[c]; return ca && !ca.includes('PASTE'); };
+
+  const live = [], indexing = [], soon = [];
+  for(const n of NATIONS){
+    if(!hasCA(n.code)){ soon.push(n); continue; }
+    const d = DATA[n.code];
+    if(d && (d.mc || d.vol)){ live.push({...n, ...d}); }
+    else { indexing.push(n); }
+  }
+  live.sort((a,b) => (METRIC==='mc' ? (b.mc||0)-(a.mc||0) : (b.vol||0)-(a.vol||0)));
+  live.forEach((n,i) => n._rank = i+1);   // global rank, kept under filtering
+
+  // stat strip = global (ignores filter)
+  $('s-live').innerHTML = live.length + '<small>/ 48</small>';
+  const totalMc = live.reduce((s,n)=>s+(n.mc||0),0);
+  $('s-total').textContent = live.length ? fmtUsd(totalMc) : '—';
+  $('s-top').textContent = live.length ? live[0].code : '—';
+
+  // apply group + search filter for display
+  const f = n => (GROUP==='ALL' || n.group===GROUP) &&
+                 (SEARCH==='' || n.code.toLowerCase().includes(SEARCH) || n.name.toLowerCase().includes(SEARCH));
+  const liveF = live.filter(f), indexingF = indexing.filter(f), soonF = soon.filter(f);
+
+  const board = $('board');
+  if(liveF.length === 0){
+    const msg = (GROUP!=='ALL' || SEARCH) && (indexingF.length || soonF.length)
+      ? 'No live trading nations match this filter yet — see below.'
+      : 'No nations are trading yet. As tokens launch (Jun 7–10) and market data appears, the live ranking fills in here — backed nations climb automatically.';
+    board.innerHTML = `<div class="empty">${msg}</div>`;
+  }else{
+    board.innerHTML = liveF.map(n => {
+      const rank = n._rank;
+      const primary = METRIC==='mc' ? fmtUsd(n.mc) : fmtUsd(n.vol);
+      const primaryLbl = METRIC==='mc' ? 'market cap' : '24h vol';
+      const chg = n.chg;
+      const chgCls = chg==null ? 'flat' : (chg>0?'up':(chg<0?'down':'flat'));
+      const chgTxt = chg==null ? '—' : (chg>0?'+':'')+chg.toFixed(1)+'%';
+      return `<div class="row ${rank<=3?'r'+rank:''}">
+        <div class="rank">${rank}</div>
+        <div class="nat">
+          <img src="${flag(n.code)}" alt="${n.code}" onerror="this.style.display='none'">
+          <div><div class="code">${n.code}</div><div class="name">${n.name}</div></div>
+          <span class="grp">${n.group}</span>
+        </div>
+        <div class="metric">${primary}<span class="sub">${primaryLbl} · ${fmtPrice(n.price)}</span></div>
+        <div class="chg ${chgCls}">${chgTxt}<span style="display:block;font-size:0.6rem;color:var(--muted)">24h</span></div>
+        <div class="act"><a class="bbtn" href="swap.html?token=${n.code}">Buy $${n.code}</a></div>
+      </div>`;
+    }).join('');
+  }
+
+  const pw = $('pendingWrap');
+  let html = '';
+  if(indexingF.length){
+    html += `<div class="subhead">Just launched · indexing</div><div class="pending">` +
+      indexingF.map(n => pcard(n,'idx','Indexing')).join('') + `</div>`;
+  }
+  if(soonF.length){
+    html += `<div class="subhead">Launching soon · ${soonF.length} nations</div><div class="pending">` +
+      soonF.map(n => pcard(n,'','Soon')).join('') + `</div>`;
+  }
+  pw.innerHTML = html;
+}
+function pcard(n, cls, label){
+  return `<div class="pcard">
+    <img src="${flag(n.code)}" alt="${n.code}" onerror="this.style.display='none'">
+    <span class="code">${n.code}</span>
+    <span class="st ${cls}">${label}</span>
+  </div>`;
+}
+
+function buildChips(){
+  const groups = ['ALL','A','B','C','D','E','F','G','H','I','J','K','L'];
+  $('groupChips').innerHTML = groups.map(g =>
+    `<button class="chip ${g===GROUP?'active':''}" onclick="setGroup('${g}')">${g==='ALL'?'All':g}</button>`
+  ).join('');
+}
+function setGroup(g){
+  GROUP = g;
+  document.querySelectorAll('#groupChips .chip').forEach(c =>
+    c.classList.toggle('active', c.textContent === (g==='ALL'?'All':g)));
+  render();
+}
+function onSearch(v){ SEARCH = (v||'').trim().toLowerCase(); render(); }
+
+function setMetric(m){
+  METRIC = m;
+  $('t-mc').classList.toggle('active', m==='mc');
+  $('t-vol').classList.toggle('active', m==='vol');
+  render();
+}
+
+buildChips();
+load();
+setInterval(load, 45000);
+</script>
+</body>
+</html>
