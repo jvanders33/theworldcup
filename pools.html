@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Treasury &amp; Pools — Live On-Chain | theworldcup.gg</title>
+<meta name="description" content="The World Cup prize pools, read live from the Solana blockchain. Verify the treasury yourself.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#060709; --surface:#0c0e12; --surface2:#12151c;
+    --border:rgba(255,255,255,0.06); --gold:#f5c518; --gold2:#e8a900;
+    --green:#00e676; --red:#ff1744; --text:#f0f2f5; --muted:#5a6070; --muted2:#8892a4;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-height:100vh;overflow-x:hidden}
+  body::after{content:'';position:fixed;inset:0;z-index:1000;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;opacity:0.4}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:64px;background:rgba(6,7,9,0.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:0.08em;color:var(--gold);text-decoration:none;display:flex;align-items:center;gap:10px}
+  .nav-links{display:flex;gap:28px;list-style:none}
+  .nav-links a{color:var(--muted2);text-decoration:none;font-size:0.82rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;transition:color 0.2s}
+  .nav-links a:hover,.nav-links a.active{color:var(--gold)}
+
+  .page-hero{padding:110px 48px 36px;max-width:1280px;margin:0 auto}
+  .section-tag{font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:18px;display:flex;align-items:center;gap:12px}
+  .section-tag::before{content:'';width:24px;height:1px;background:var(--gold);opacity:0.6}
+  .page-hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(3.5rem,7vw,7rem);letter-spacing:0.03em;line-height:1;margin-bottom:14px}
+  .page-hero h1 .gold{color:var(--gold)}
+  .page-hero p{color:var(--muted2);font-size:1.05rem;max-width:560px;line-height:1.7}
+
+  .inner{max-width:1280px;margin:0 auto;padding:0 48px 90px}
+
+  /* live pill */
+  .livepill{display:inline-flex;align-items:center;gap:9px;margin-top:22px;background:rgba(245,197,24,0.08);border:1px solid rgba(245,197,24,0.2);border-radius:100px;padding:7px 15px}
+  .livedot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:livePulse 2s ease-in-out infinite;flex-shrink:0}
+  .livedot.err{background:var(--red);animation:none}
+  .livepill span{font-family:'DM Mono',monospace;font-size:0.74rem;color:var(--muted2);letter-spacing:0.04em}
+  @keyframes livePulse{0%,100%{opacity:1}50%{opacity:0.3}}
+
+  /* treasury truth cards */
+  .truth-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:14px}
+  .tcell{background:var(--surface);padding:28px 30px}
+  .tcell .tlbl{font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted)}
+  .tcell .tval{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.6rem,5vw,3.6rem);letter-spacing:0.03em;line-height:1.05;margin-top:10px}
+  .tcell .tval .u{font-size:0.4em;color:var(--gold);letter-spacing:0.06em;margin-left:8px;font-family:'Barlow Condensed',sans-serif;font-weight:700}
+  .tcell .tusd{font-family:'DM Mono',monospace;font-size:0.82rem;color:var(--muted2);margin-top:6px;min-height:1.1em}
+  .tcell .tsub{font-size:0.84rem;color:var(--muted2);margin-top:8px;line-height:1.6}
+  .tcell .tverify{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);margin-top:12px}
+  .tcell .tverify a{color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(245,197,24,0.3)}
+  .tcell .tverify a:hover{border-color:var(--gold)}
+
+  /* split bar */
+  .splitcard{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:22px 26px;margin-bottom:40px}
+  .splitcard h3{font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+  .bar{height:16px;border-radius:6px;overflow:hidden;display:flex;border:1px solid var(--border)}
+  .bar i{display:block;height:100%}
+  .bar .g{background:rgba(0,230,118,0.55)}
+  .bar .c{background:rgba(245,197,24,0.7)}
+  .bar .p{background:rgba(255,255,255,0.12)}
+  .legend{display:flex;gap:26px;flex-wrap:wrap;margin-top:14px;font-family:'Barlow Condensed',sans-serif;font-size:0.82rem;letter-spacing:0.04em;color:var(--muted2)}
+  .legend b{color:var(--text);font-weight:700}
+  .sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:8px;vertical-align:middle}
+
+  /* countdown */
+  .cd-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:48px}
+  .cd-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:22px 24px}
+  .cd-when{font-family:'Barlow Condensed',sans-serif;font-size:0.66rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold)}
+  .cd-title{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:0.04em;margin:5px 0 14px}
+  .cd-clock{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:0.04em;color:var(--gold)}
+  .cd-clock small{font-family:'Barlow Condensed',sans-serif;font-size:0.85rem;color:var(--muted);font-weight:600}
+  .cd-date{font-family:'DM Mono',monospace;font-size:0.74rem;color:var(--muted);margin-top:6px}
+
+  .blockhead{margin:0 0 22px}
+  .blockhead h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.4rem,4vw,3.4rem);letter-spacing:0.03em;line-height:1}
+  .blockhead p{color:var(--muted2);font-size:0.95rem;max-width:640px;margin-top:10px;line-height:1.7}
+
+  /* group pool grid */
+  .pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(248px,1fr));gap:10px;margin-bottom:48px}
+  .pcard{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:border-color 0.2s,transform 0.2s}
+  .pcard:hover{border-color:rgba(245,197,24,0.3);transform:translateY(-2px)}
+  .phead{background:rgba(245,197,24,0.06);border-bottom:1px solid var(--border);padding:11px 15px;display:flex;justify-content:space-between;align-items:center}
+  .pletter{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:0.08em;color:var(--gold)}
+  .ppool{font-family:'DM Mono',monospace;font-size:0.82rem;font-weight:500;color:var(--green)}
+  .pnations{display:flex;flex-wrap:wrap;gap:6px;padding:14px 15px}
+  .pnat{font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.04em;color:var(--muted2);background:var(--bg);border:1px solid var(--border);border-radius:5px;padding:3px 8px}
+  .ppay{font-family:'Barlow Condensed',sans-serif;font-size:0.66rem;letter-spacing:0.04em;color:var(--muted);padding:0 15px 13px}
+
+  /* trust model */
+  .trust{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface);margin-bottom:16px}
+  .trow{display:grid;grid-template-columns:128px 1fr;border-top:1px solid var(--border)}
+  .trow:first-child{border-top:none}
+  .tlabel{padding:18px 20px;background:rgba(255,255,255,0.015);display:flex;align-items:flex-start}
+  .tbody{padding:18px 22px;font-size:0.9rem;color:var(--muted2);line-height:1.65}
+  .tbody b{color:var(--text);font-weight:600}
+  .badge{font-family:'Barlow Condensed',sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:4px 9px;border-radius:5px;white-space:nowrap}
+  .b-chain{background:rgba(0,230,118,0.12);color:var(--green);border:1px solid rgba(0,230,118,0.3)}
+  .b-verif{background:rgba(245,197,24,0.12);color:var(--gold);border:1px solid rgba(245,197,24,0.3)}
+  .b-trust{background:rgba(255,23,68,0.1);color:var(--red);border:1px solid rgba(255,23,68,0.3)}
+
+  .paybar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:48px}
+  .paypill{font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.05em;padding:5px 12px;border-radius:100px}
+  .pp1{background:rgba(245,197,24,0.12);color:var(--gold)}
+  .pp2{background:rgba(255,255,255,0.05);color:var(--muted2)}
+  .pp3{background:rgba(255,255,255,0.03);color:var(--muted)}
+  .ppx{background:rgba(255,23,68,0.08);color:var(--red)}
+
+  .lastread{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);text-align:center;margin-bottom:40px}
+
+  footer{border-top:1px solid var(--border);padding:32px 48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+  .footer-logo{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:0.08em;color:var(--gold);text-decoration:none}
+  .footer-links{display:flex;gap:24px;list-style:none}
+  .footer-links a{color:var(--muted);text-decoration:none;font-size:0.78rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;transition:color 0.2s}
+  .footer-links a:hover{color:var(--text)}
+  .footer-disclaimer{font-size:0.7rem;color:var(--muted);max-width:420px;line-height:1.5}
+
+  @media(max-width:768px){
+    nav{padding:0 20px}.nav-links{display:none}
+    .page-hero{padding:100px 24px 28px}.inner{padding:0 24px 70px}
+    .truth-grid{grid-template-columns:1fr}.cd-grid{grid-template-columns:1fr}
+    .trow{grid-template-columns:1fr}.tlabel{padding-bottom:0}
+    footer{padding:24px;flex-direction:column;align-items:flex-start}
+  }
+
+  /* --- mobile nav (injected) --- */
+  .mnav-btn{display:none;background:none;border:0;cursor:pointer;width:40px;height:40px;flex-direction:column;justify-content:center;align-items:center;gap:5px;padding:0;z-index:1002}
+  .mnav-btn span{display:block;width:22px;height:2px;background:var(--gold,#f5c518);border-radius:2px;transition:transform .25s,opacity .25s}
+  .mnav-btn.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+  .mnav-btn.open span:nth-child(2){opacity:0}
+  .mnav-btn.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+  .mnav-panel{display:none;position:fixed;top:64px;left:0;right:0;z-index:501;background:rgba(6,7,9,0.98);backdrop-filter:blur(24px);border-bottom:1px solid var(--border,rgba(255,255,255,0.08));flex-direction:column;padding:8px 0}
+  .mnav-panel.open{display:flex}
+  .mnav-panel a{color:var(--text,#f0f2f5);text-decoration:none;font-family:'Barlow Condensed','Barlow',sans-serif;font-weight:700;font-size:1.05rem;letter-spacing:0.06em;text-transform:uppercase;padding:15px 28px;border-bottom:1px solid rgba(255,255,255,0.04)}
+  .mnav-panel a:last-child{border-bottom:0}
+  .mnav-panel a.active,.mnav-panel a:hover{color:var(--gold,#f5c518)}
+  @media(max-width:1024px){.mnav-btn{display:flex}}
+  html,body{overflow-x:hidden;max-width:100%}
+
+</style>
+</head>
+<body>
+
+<nav>
+  <button class="mnav-btn" id="mnavBtn" aria-label="Menu" onclick="(function(b){var p=document.getElementById('mnavPanel');var o=p.classList.toggle('open');b.classList.toggle('open',o);})(this)">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="mnav-panel" id="mnavPanel">
+    <a href="index.html">Home</a>
+    <a href="nations.html">Nations</a>
+    <a href="pools.html" class="active">Pools</a>
+    <a href="banner.html">Banners</a>
+    <a href="claim.html">Claim</a>
+  </div>
+
+  <a class="nav-logo" href="index.html">⚽ THE WORLD CUP</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="nations.html">Nations</a></li>
+    <li><a href="pools.html" class="active">Pools</a></li>
+    <li><a href="banner.html">Banners</a></li>
+    <li><a href="claim.html">Claim</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div class="section-tag">Treasury · Live On-Chain</div>
+  <h1>The Prize Pools<br>Are <span class="gold">Real.</span></h1>
+  <p>Every figure below the headline is read straight from the Solana blockchain or recomputed from public transactions. If the chain can't be reached, this page says so and points you to Solscan — it never shows a number it can't back up.</p>
+  <div class="livepill"><span class="livedot" id="livedot"></span><span id="livetext">Reading the chain…</span></div>
+</div>
+
+<div class="inner">
+
+  <!-- TREASURY TRUTH -->
+  <div class="truth-grid">
+    <div class="tcell">
+      <div class="tlbl">Treasury Vault — Total Held</div>
+      <div class="tval" id="vaultVal">—<span class="u">SOL</span></div>
+      <div class="tusd" id="vaultUsd">&nbsp;</div>
+      <div class="tverify">Squads vault · <a id="vaultLink" target="_blank" rel="noopener" href="#">verify on Solscan ↗</a></div>
+    </div>
+    <div class="tcell">
+      <div class="tlbl">Unswept Rewards — Phantom</div>
+      <div class="tval" id="phantomVal">—<span class="u">SOL</span></div>
+      <div class="tusd" id="phantomUsd">&nbsp;</div>
+      <div class="tsub">Creator rewards land here, then get swept to the vault on a published cadence.</div>
+      <div class="tverify">Treasury wallet · <a id="phantomLink" target="_blank" rel="noopener" href="#">verify on Solscan ↗</a></div>
+    </div>
+  </div>
+
+  <div class="splitcard">
+    <h3>How the total splits — fixed formula</h3>
+    <div class="bar"><i class="g" style="width:50%"></i><i class="c" style="width:25%"></i><i class="p" style="width:25%"></i></div>
+    <div class="legend">
+      <span><span class="sw" style="background:rgba(0,230,118,0.55)"></span><b>50%</b> Group-stage pools</span>
+      <span><span class="sw" style="background:rgba(245,197,24,0.7)"></span><b>25%</b> Champion pool</span>
+      <span><span class="sw" style="background:rgba(255,255,255,0.2)"></span><b>25%</b> Platform</span>
+    </div>
+  </div>
+
+  <!-- COUNTDOWN -->
+  <div class="cd-grid">
+    <div class="cd-card">
+      <div class="cd-when">Payout window 1</div>
+      <div class="cd-title">Group-Stage Pools Settle</div>
+      <div class="cd-clock" id="cd1">—</div>
+      <div class="cd-date" id="cd1date"></div>
+    </div>
+    <div class="cd-card">
+      <div class="cd-when">Payout window 2</div>
+      <div class="cd-title">Champion Pool — The Final</div>
+      <div class="cd-clock" id="cd2">—</div>
+      <div class="cd-date" id="cd2date"></div>
+    </div>
+  </div>
+
+  <!-- GROUP POOLS -->
+  <div class="blockhead">
+    <div class="section-tag">12 Groups · 48 Nations</div>
+    <h2>Pool By Group</h2>
+    <p>Each group's pool is its share of the 50% group allocation. These are <b>derived</b> from a published per-token ledger — the vault total above is the on-chain ground truth; this breakdown is reproducible from public sweep transactions. They read "—" until tokens launch and rewards begin to accrue.</p>
+  </div>
+  <div class="pgrid" id="poolGrid"></div>
+
+  <!-- PAYOUT STRUCTURE -->
+  <div class="blockhead">
+    <div class="section-tag">Per group</div>
+    <h2>How Each Group Pool Pays</h2>
+    <p>When the group stage settles, each pool is distributed by final standing. 4th place isn't a loss for the pool — it funds a buy-back-and-burn of $TWC.</p>
+  </div>
+  <div class="paybar">
+    <span class="paypill pp1">🥇 1st → 50%</span>
+    <span class="paypill pp2">🥈 2nd → 25%</span>
+    <span class="paypill pp3">🥉 3rd → 15%</span>
+    <span class="paypill ppx">💀 4th → 10% buys &amp; burns $TWC</span>
+  </div>
+
+  <!-- TRUST MODEL -->
+  <div class="blockhead">
+    <div class="section-tag">Read this before you back a nation</div>
+    <h2>What's Trustless — And What Isn't</h2>
+    <p>Most "prize pool" projects show a number and ask you to trust it. Here's exactly which parts you take on faith and which you can verify yourself.</p>
+  </div>
+  <div class="trust">
+    <div class="trow"><div class="tlabel"><span class="badge b-trust">Trusted</span></div><div class="tbody"><b>Money entering the system.</b> pump.fun pays creator rewards to a wallet we control — it can't pay a contract directly, so the first hop is custodial. We reduce this by sweeping on a published cadence, every sweep a public transaction you can audit.</div></div>
+    <div class="trow"><div class="tlabel"><span class="badge b-chain">On-Chain</span></div><div class="tbody"><b>Funds held.</b> Pools sit in the Squads treasury vault. The balance above is read live from the chain — it can't be faked on this page. <span id="multisigNote" style="color:var(--muted)"></span></div></div>
+    <div class="trow"><div class="tlabel"><span class="badge b-verif">Verifiable</span></div><div class="tbody"><b>Pool attribution.</b> The split into 12 group pools, champion and platform follows a fixed published formula. Every per-pool figure traces back to a specific on-chain sweep, so you can recompute it and get our numbers.</div></div>
+    <div class="trow"><div class="tlabel"><span class="badge b-trust">Trusted</span></div><div class="tbody"><b>The result oracle.</b> "Who finished top 3" comes from the real world. The result is committed on-chain from a named public data source, with a short challenge window before payout locks.</div></div>
+    <div class="trow"><div class="tlabel"><span class="badge b-chain">Trustless</span></div><div class="tbody"><b>The payout itself.</b> At settlement we publish the full holder snapshot, commit a Merkle root, and fund an audited distributor. You <b>claim your own share</b> against the published snapshot — we never send you anything, and anyone can verify the root.</div></div>
+  </div>
+
+  <div class="lastread">Refreshes every 30s · Last read: <span id="lastRead">—</span></div>
+
+</div>
+
+<footer>
+  <a class="footer-logo" href="index.html">⚽ THE WORLD CUP</a>
+  <ul class="footer-links">
+    <li><a id="footVault" target="_blank" rel="noopener" href="#">Treasury on Solscan</a></li>
+    <li><a href="https://x.com/TWC26" target="_blank" rel="noopener noreferrer">Twitter / X</a></li>
+    <li><a href="https://pump.fun/coin/TWC_CONTRACT_PENDING" target="_blank" rel="noopener noreferrer">$TWC</a></li>
+  </ul>
+  <div class="footer-disclaimer">Figures are read from public Solana state and recomputed from public transactions. Informational only, not a guarantee of returns. Backing a nation's token is a high-risk speculative purchase — you can lose what you put in. Not affiliated with FIFA. DYOR.</div>
+</footer>
+
+<script>
+/* ============================================================
+   CONFIG — operator-maintained values live here.
+   Update LEDGER as you sweep; the page recomputes group pools.
+   ============================================================ */
+const CFG = {
+  vault:   '7sjJ5Hjd8zK9hqSM6fTyLw3Dab5BwyBBXvAQcK8mK75t',
+  phantom: '66jUsP4ndWNYjMVLRT1VqKvVDT79Gjq2pqRMffYW2Mzn',
+  rpcs: ['https://api.mainnet-beta.solana.com','https://solana-rpc.publicnode.com'],
+  // Tell the truth here. While the vault is 1-of-1 we SAY so.
+  multisig: { threshold: 1, signers: 1 },
+  groupSettle: '2026-06-28T00:00:00Z',
+  final:       '2026-07-19T20:00:00Z',
+  groups: {
+    A:['MEX','RSA','KOR','CZE'], B:['CAN','BIH','QAT','SUI'],
+    C:['BRA','MAR','HAI','SCO'], D:['USA','PAR','AUS','TUR'],
+    E:['GER','CUW','CIV','ECU'], F:['NED','JPN','SWE','TUN'],
+    G:['BEL','EGY','IRN','NZL'], H:['ESP','CPV','KSA','URU'],
+    I:['FRA','SEN','IRQ','NOR'], J:['ARG','ALG','AUT','JOR'],
+    K:['POR','COD','UZB','COL'], L:['ENG','CRO','GHA','PAN']
+  },
+  /* PUBLISHED LEDGER — swept creator rewards per token (SOL).
+     Add to a nation as its token's rewards are swept; keep the
+     sweep tx signatures on record so holders can recompute. */
+  ledger: {}
+};
+const SPLIT = { group:0.50, champion:0.25, platform:0.25 };
+const SOL_MINT = 'So11111111111111111111111111111111111111112';
+
+const $ = id => document.getElementById(id);
+const SOLSCAN = a => 'https://solscan.io/account/' + a;
+const fmt = (n,d=2) => Number(n).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+let solUsd = null;
+
+async function rpcBalance(addr){
+  const body = JSON.stringify({jsonrpc:'2.0',id:1,method:'getBalance',params:[addr]});
+  for(const url of CFG.rpcs){
+    try{
+      const r = await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body});
+      if(!r.ok) continue;
+      const j = await r.json();
+      if(j && j.result && typeof j.result.value === 'number') return j.result.value/1e9;
+    }catch(e){}
+  }
+  return null;
+}
+
+async function fetchSolUsd(){
+  // Same Jupiter lite price API + access pattern as index.html (root-keyed by mint).
+  try{
+    const r = await fetch('https://lite-api.jup.ag/price/v3?ids=' + SOL_MINT);
+    const j = await r.json();
+    const p = j && j[SOL_MINT] && j[SOL_MINT].usdPrice;
+    if(p) solUsd = Number(p);
+  }catch(e){}
+}
+
+const ledgerTotal = () => Object.values(CFG.ledger).reduce((a,b)=>a+(+b||0),0);
+const groupTotal = g => CFG.groups[g].reduce((s,n)=>s+(+CFG.ledger[n]||0),0);
+
+function renderGroups(){
+  const total = ledgerTotal();
+  $('poolGrid').innerHTML = Object.entries(CFG.groups).map(([g,nations])=>{
+    const gPool = groupTotal(g)*SPLIT.group;
+    const poolTxt = total>0 ? fmt(gPool,3)+' SOL' : '— SOL';
+    const nats = nations.map(n=>`<span class="pnat">${n}</span>`).join('');
+    return `<div class="pcard">
+      <div class="phead"><span class="pletter">GROUP ${g}</span><span class="ppool">${poolTxt}</span></div>
+      <div class="pnations">${nats}</div>
+      <div class="ppay">1st 50% · 2nd 25% · 3rd 15% · 4th → 🔥 burn</div>
+    </div>`;
+  }).join('');
+}
+
+function renderMultisig(){
+  const m = CFG.multisig, el = $('multisigNote');
+  if(m.threshold>=2){
+    el.textContent = `Vault is ${m.threshold}-of-${m.signers} multisig — no single person can move funds.`;
+    el.style.color = 'var(--green)';
+  }else{
+    el.innerHTML = `<b style="color:var(--red)">Current config: 1-of-1 (single signer).</b> Upgrading to a real multisig is the next planned trust step.`;
+  }
+}
+
+async function refresh(){
+  $('vaultLink').href = SOLSCAN(CFG.vault);
+  $('phantomLink').href = SOLSCAN(CFG.phantom);
+  $('footVault').href = SOLSCAN(CFG.vault);
+
+  await fetchSolUsd();
+  const results = await Promise.all([rpcBalance(CFG.vault), rpcBalance(CFG.phantom)]);
+  const vault = results[0], phantom = results[1];
+
+  if(vault===null && phantom===null){
+    $('livedot').classList.add('err');
+    $('livetext').textContent = 'Could not reach an RPC — verify directly on Solscan';
+    $('vaultVal').innerHTML = 'see Solscan';
+    $('phantomVal').innerHTML = 'see Solscan';
+  }else{
+    $('livedot').classList.remove('err');
+    $('livetext').textContent = 'Live — reading Solana mainnet';
+    if(vault!==null){
+      $('vaultVal').innerHTML = fmt(vault)+'<span class="u">SOL</span>';
+      if(solUsd) $('vaultUsd').textContent = '≈ $'+fmt(vault*solUsd,0)+' USD';
+    }
+    if(phantom!==null){
+      $('phantomVal').innerHTML = fmt(phantom)+'<span class="u">SOL</span>';
+      if(solUsd) $('phantomUsd').textContent = '≈ $'+fmt(phantom*solUsd,0)+' USD';
+    }
+  }
+  $('lastRead').textContent = new Date().toLocaleTimeString();
+}
+
+function tick(){
+  const now = Date.now();
+  [['cd1','cd1date',CFG.groupSettle],['cd2','cd2date',CFG.final]].forEach(arr=>{
+    const cid=arr[0], did=arr[1], iso=arr[2];
+    const t = new Date(iso).getTime() - now;
+    $(did).textContent = new Date(iso).toUTCString().slice(5,16)+' UTC';
+    if(t<=0){ $(cid).textContent = 'Settling / settled'; return; }
+    const d=Math.floor(t/864e5), h=Math.floor(t%864e5/36e5), m=Math.floor(t%36e5/6e4), s=Math.floor(t%6e4/1e3);
+    $(cid).innerHTML = `${d}<small>d</small> ${String(h).padStart(2,'0')}<small>h</small> ${String(m).padStart(2,'0')}<small>m</small> ${String(s).padStart(2,'0')}<small>s</small>`;
+  });
+}
+
+renderGroups();
+renderMultisig();
+refresh();
+tick();
+setInterval(tick,1000);
+setInterval(refresh,30000);
+</script>
+</body>
+</html>
