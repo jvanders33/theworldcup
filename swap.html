@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Swap — Buy $TWC with SOL | theworldcup.gg</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Semi+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<!-- Jupiter Plugin (RPC-less, Ultra mode) -->
+<script src="https://plugin.jup.ag/plugin-v1.js" data-preload defer></script>
+<style>
+  :root {
+    --bg:#060709; --surface:#0c0e12; --surface2:#12151c;
+    --border:rgba(255,255,255,0.06); --gold:#f5c518; --gold2:#e8a900;
+    --green:#00e676; --text:#f0f2f5; --muted:#5a6070; --muted2:#8892a4;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Barlow',sans-serif; min-height:100vh; overflow-x:hidden; }
+
+  /* Ambient gold glow */
+  body::before {
+    content:''; position:fixed; top:-30%; left:50%; transform:translateX(-50%);
+    width:900px; height:700px; background:radial-gradient(ellipse, rgba(245,197,24,0.08), transparent 60%);
+    pointer-events:none; z-index:0;
+  }
+
+  nav {
+    position:fixed; top:0; left:0; right:0; z-index:500; display:flex; align-items:center;
+    justify-content:space-between; padding:0 48px; height:64px;
+    background:rgba(6,7,9,0.92); backdrop-filter:blur(24px); border-bottom:1px solid var(--border);
+  }
+  .nav-logo { font-family:'Bebas Neue',sans-serif; font-size:1.8rem; letter-spacing:0.08em; color:var(--gold); text-decoration:none; display:flex; align-items:center; gap:10px; }
+  .nav-links { display:flex; gap:28px; list-style:none; }
+  .nav-links a { color:var(--muted2); text-decoration:none; font-size:0.82rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; transition:color 0.2s; }
+  .nav-links a:hover, .nav-links a.active { color:var(--gold); }
+
+  .wrap { position:relative; z-index:1; max-width:520px; margin:0 auto; padding:120px 20px 80px; }
+
+  .kicker { font-family:'Barlow Condensed',sans-serif; font-size:0.78rem; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; color:var(--gold); text-align:center; margin-bottom:10px; }
+  h1 { font-family:'Bebas Neue',sans-serif; font-size:3.4rem; letter-spacing:0.04em; text-align:center; line-height:1; margin-bottom:14px; }
+  .sub { text-align:center; color:var(--muted2); font-size:1rem; max-width:400px; margin:0 auto 36px; line-height:1.6; }
+
+  /* Pre-fill confirmation chips */
+  .pair-row { display:flex; align-items:center; justify-content:center; gap:14px; margin-bottom:30px; }
+  .pair-chip { display:flex; align-items:center; gap:9px; background:var(--surface2); border:1px solid var(--border); border-radius:100px; padding:9px 16px; }
+  .pair-chip img, .pair-chip .tok-ico { width:26px; height:26px; border-radius:50%; }
+  .pair-chip .tok-ico { background:var(--gold); color:#000; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue',sans-serif; font-size:1rem; }
+  .pair-chip span { font-family:'Barlow Semi Condensed',sans-serif; font-weight:700; letter-spacing:0.04em; font-size:0.95rem; }
+  .pair-arrow { color:var(--gold); font-size:1.3rem; }
+
+  /* Terminal mount */
+  .terminal-shell {
+    background:var(--surface); border:1px solid var(--border); border-radius:18px;
+    padding:8px; box-shadow:0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(245,197,24,0.06);
+    position:relative; overflow:hidden;
+  }
+  .terminal-shell::before {
+    content:''; position:absolute; inset:0; border-radius:18px; padding:1px;
+    background:linear-gradient(160deg, rgba(245,197,24,0.25), transparent 40%);
+    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
+  }
+  #integrated-terminal { min-height:520px; border-radius:12px; overflow:hidden; }
+
+  /* Loading + fallback states */
+  .term-status { padding:60px 24px; text-align:center; }
+  .spinner { width:36px; height:36px; border:3px solid var(--border); border-top-color:var(--gold); border-radius:50%; margin:0 auto 18px; animation:spin 0.8s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .term-status p { color:var(--muted2); font-size:0.9rem; line-height:1.6; }
+
+  .fallback { display:none; padding:30px 24px; text-align:center; }
+  .fallback.show { display:block; }
+  .fallback h3 { font-family:'Bebas Neue',sans-serif; font-size:1.5rem; letter-spacing:0.04em; margin-bottom:8px; }
+  .fallback p { color:var(--muted2); font-size:0.88rem; margin-bottom:22px; line-height:1.6; }
+  .fallback-links { display:flex; flex-direction:column; gap:12px; }
+  .fl {
+    display:flex; align-items:center; gap:12px; padding:14px 18px; border-radius:10px;
+    text-decoration:none; transition:transform 0.15s;
+  }
+  .fl:hover { transform:translateY(-2px); }
+  .fl.gold { background:var(--gold); color:#000; }
+  .fl.ghost { background:var(--surface2); color:var(--text); border:1px solid var(--border); }
+  .fl .fl-t { font-family:'Bebas Neue',sans-serif; font-size:1.05rem; letter-spacing:0.05em; }
+  .fl .fl-s { font-size:0.72rem; font-family:'Barlow Condensed',sans-serif; opacity:0.7; }
+  .fl .fl-arrow { margin-left:auto; }
+
+  /* Reassurance footer */
+  .note { display:flex; align-items:flex-start; gap:10px; background:rgba(245,197,24,0.05); border:1px solid rgba(245,197,24,0.12); border-radius:10px; padding:16px 18px; margin-top:24px; }
+  .note-icon { font-size:1.1rem; flex-shrink:0; }
+  .note p { font-size:0.82rem; color:var(--muted2); line-height:1.6; }
+  .note strong { color:var(--gold); }
+
+  .ca-line { text-align:center; margin-top:22px; }
+  .ca-line span { font-family:'Barlow Condensed',sans-serif; font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); }
+  .ca-copy { display:inline-flex; align-items:center; gap:7px; margin-top:6px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:8px 14px; cursor:pointer; transition:border-color 0.2s; }
+  .ca-copy:hover { border-color:rgba(245,197,24,0.4); }
+  .ca-copy code { font-family:'Barlow',monospace; font-size:0.74rem; color:var(--text); word-break:break-all; }
+  .ca-copy .copy-ico { color:var(--gold); font-size:0.85rem; flex-shrink:0; }
+
+  footer { text-align:center; padding:40px 20px 24px; color:var(--muted); font-size:0.78rem; position:relative; z-index:1; }
+  footer a { color:var(--muted2); text-decoration:none; }
+  footer a:hover { color:var(--gold); }
+
+  @media (max-width:560px) {
+    nav { padding:0 20px; }
+    .nav-links { display:none; }
+    h1 { font-size:2.6rem; }
+    .wrap { padding:100px 16px 60px; }
+  }
+
+  /* --- mobile nav (injected) --- */
+  .mnav-btn{display:none;background:none;border:0;cursor:pointer;width:40px;height:40px;flex-direction:column;justify-content:center;align-items:center;gap:5px;padding:0;z-index:1002}
+  .mnav-btn span{display:block;width:22px;height:2px;background:var(--gold,#f5c518);border-radius:2px;transition:transform .25s,opacity .25s}
+  .mnav-btn.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+  .mnav-btn.open span:nth-child(2){opacity:0}
+  .mnav-btn.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+  .mnav-panel{display:none;position:fixed;top:64px;left:0;right:0;z-index:501;background:rgba(6,7,9,0.98);backdrop-filter:blur(24px);border-bottom:1px solid var(--border,rgba(255,255,255,0.08));flex-direction:column;padding:8px 0}
+  .mnav-panel.open{display:flex}
+  .mnav-panel a{color:var(--text,#f0f2f5);text-decoration:none;font-family:'Barlow Condensed','Barlow',sans-serif;font-weight:700;font-size:1.05rem;letter-spacing:0.06em;text-transform:uppercase;padding:15px 28px;border-bottom:1px solid rgba(255,255,255,0.04)}
+  .mnav-panel a:last-child{border-bottom:0}
+  .mnav-panel a.active,.mnav-panel a:hover{color:var(--gold,#f5c518)}
+  @media(max-width:1024px){.mnav-btn{display:flex}}
+  html,body{overflow-x:hidden;max-width:100%}
+
+</style>
+  <script src="tokens.js"></script>
+</head>
+<body>
+<nav>
+  <button class="mnav-btn" id="mnavBtn" aria-label="Menu" onclick="(function(b){var p=document.getElementById('mnavPanel');var o=p.classList.toggle('open');b.classList.toggle('open',o);})(this)">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="mnav-panel" id="mnavPanel">
+    <a href="index.html">Home</a>
+    <a href="nations.html">Nations</a>
+    <a href="pools.html">Pools</a>
+    <a href="banner.html">Banners</a>
+    <a href="claim.html">Claim</a>
+  </div>
+
+  <a class="nav-logo" href="index.html">⚽ THE WORLD CUP</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="nations.html">Nations</a></li>
+    <li><a href="pools.html">Pools</a></li>
+    <li><a href="banner.html">Banners</a></li>
+    <li><a href="claim.html">Claim</a></li>
+  </ul>
+</nav>
+
+<div class="wrap">
+  <div class="kicker">Instant Swap</div>
+  <h1 id="swap-title">BUY $TWC</h1>
+  <p class="sub" id="swap-sub">Swap SOL for $TWC right here. The pair is pre-set — just connect your wallet and trade.</p>
+
+  <div class="pair-row">
+    <div class="pair-chip">
+      <img src="https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png" alt="SOL" onerror="this.style.display='none'">
+      <span>SOL</span>
+    </div>
+    <div class="pair-arrow">→</div>
+    <div class="pair-chip">
+      <div class="tok-ico" id="pair-ico">M</div>
+      <span id="pair-name">THE WORLD CUP</span>
+    </div>
+  </div>
+
+  <div class="terminal-shell">
+    <div id="jupiter-plugin"></div>
+    <div id="integrated-terminal">
+      <div class="term-status" id="term-loading">
+        <div class="spinner"></div>
+        <p>Loading the swap terminal…</p>
+      </div>
+      <div class="fallback" id="term-fallback">
+        <h3>Swap on a Trusted Venue</h3>
+        <p id="fb-sub">Open the pre-filled SOL → $TWC swap on any of these. Your wallet, your keys.</p>
+        <div class="fallback-links">
+          <a class="fl gold" id="fb-jup" href="#" target="_blank" rel="noopener">
+            <span style="font-size:1.2rem">🪐</span>
+            <div><div class="fl-t">Swap on Jupiter</div><div class="fl-s">Best price routing · SOL → THE WORLD CUP pre-filled</div></div>
+            <span class="fl-arrow">→</span>
+          </a>
+          <a class="fl ghost" id="fb-pump" href="#" target="_blank" rel="noopener">
+            <span style="font-size:1.2rem">⚡</span>
+            <div><div class="fl-t">Buy on pump.fun</div><div class="fl-s">Most liquidity · Recommended</div></div>
+            <span class="fl-arrow">→</span>
+          </a>
+          <a class="fl ghost" id="fb-ray" href="#" target="_blank" rel="noopener">
+            <span style="font-size:1.2rem">☀️</span>
+            <div><div class="fl-t">Swap on Raydium</div><div class="fl-s">AMM trading</div></div>
+            <span class="fl-arrow">→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ca-line">
+    <span>Contract Address</span><br>
+    <div class="ca-copy" onclick="copyCA()">
+      <code id="ca-text">TWC_CONTRACT_PENDING</code>
+      <span class="copy-ico" id="copy-ico">⧉ Copy</span>
+    </div>
+  </div>
+
+  <div class="note">
+    <span class="note-icon">🔒</span>
+    <p><strong>You stay in control.</strong> The swap connects directly to your own Solana wallet — The World Cup never touches your funds or keys. Always confirm the contract address matches the one above before trading.</p>
+  </div>
+</div>
+
+<footer>
+  <a href="index.html">theworldcup.gg</a> · <a href="https://x.com/TWC26" target="_blank" rel="noopener noreferrer">@TWC26</a><br>
+  <span style="opacity:0.6">Community crypto platform on Solana. Not affiliated with FIFA. DYOR.</span>
+</footer>
+
+<script>
+  const SOL_MINT = 'So11111111111111111111111111111111111111112';
+
+  // ---- Token registry. Add each country's CA here as it launches on pump.fun. ----
+  // Until a token has a CA, it falls back to $TWC so the page always works.
+  const TWC_CA = 'TWC_CONTRACT_PENDING';
+  // Built from the shared registry (tokens.js). Falls back to THE WORLD CUP if it fails to load.
+  const _SRC = window.TWC_TOKENS || { TWC: TWC_CA };
+  const TOKENS = {};
+  for (const [code, ca] of Object.entries(_SRC)) {
+    if (!ca || ca.includes('PASTE')) continue;
+    TOKENS[code] = (code === 'THE WORLD CUP')
+      ? { ca, name:'THE WORLD CUP', label:'$TWC', ico:'M' }
+      : { ca, name:code, label:'$'+code, ico:code.slice(0,1) };
+  }
+
+  // Resolve which token from ?token=XXX (defaults to THE WORLD CUP)
+  function resolveToken() {
+    const p = new URLSearchParams(window.location.search);
+    const key = (p.get('token') || 'THE WORLD CUP').toUpperCase();
+    const t = TOKENS[key];
+    if (t && t.ca) return { key, ...t, launched:true };
+    // Unknown or not-yet-launched token: show THE WORLD CUP but note it
+    return { key:'TWC', ...TOKENS.TWC, launched:true, requested:key };
+  }
+
+  const TOKEN = resolveToken();
+  const ACTIVE_CA = TOKEN.ca;
+
+  // Apply token to all dynamic page elements
+  (function applyToken(){
+    document.getElementById('swap-title').textContent = 'BUY ' + TOKEN.label;
+    document.getElementById('swap-sub').textContent =
+      `Swap SOL for ${TOKEN.label} right here. The pair is pre-set — just connect your wallet and trade.`;
+    document.getElementById('pair-name').textContent = TOKEN.name;
+    document.getElementById('pair-ico').textContent = TOKEN.ico;
+    document.getElementById('fb-sub').innerHTML =
+      `Open the pre-filled SOL → ${TOKEN.label} swap on any of these. Your wallet, your keys.`;
+    document.getElementById('ca-text').textContent = ACTIVE_CA;
+    document.title = `Swap — Buy ${TOKEN.label} with SOL | theworldcup.gg`;
+  })();
+
+  // Pre-fill fallback links (always work, pair pre-selected for the active token)
+  document.getElementById('fb-jup').href  = `https://jup.ag/swap/SOL-${ACTIVE_CA}`;
+  document.getElementById('fb-pump').href = `https://pump.fun/coin/${ACTIVE_CA}`;
+  document.getElementById('fb-ray').href  = `https://raydium.io/swap/?inputCurrency=sol&outputCurrency=${ACTIVE_CA}`;
+
+  function copyCA(){
+    navigator.clipboard.writeText(ACTIVE_CA).then(()=>{
+      const i=document.getElementById('copy-ico');
+      i.textContent='✓ Copied';
+      setTimeout(()=>i.textContent='⧉ Copy',1600);
+    });
+  }
+
+  // Show the manual venue links (always reliable) as fallback.
+  function showFallback(){
+    const l=document.getElementById('term-loading');
+    const f=document.getElementById('term-fallback');
+    const p=document.getElementById('jupiter-plugin');
+    if(l) l.style.display='none';
+    if(p) p.style.display='none';
+    if(f) f.classList.add('show');
+  }
+
+  // Initialise Jupiter Plugin (RPC-less Ultra mode), pre-set SOL -> THE WORLD CUP.
+  // The plugin-v1.js script is loaded in <head> with data-preload defer.
+  function initPlugin(){
+    try{
+      if(!window.Jupiter || typeof window.Jupiter.init!=='function'){ showFallback(); return; }
+      window.Jupiter.init({
+        displayMode:'integrated',
+        integratedTargetId:'jupiter-plugin',
+        formProps:{
+          initialInputMint: SOL_MINT,      // Sell = SOL
+          initialOutputMint: ACTIVE_CA,    // Buy  = active token
+          fixedMint: ACTIVE_CA             // keep the token locked
+        }
+      });
+      // hide our loading placeholder once the plugin mounts
+      const l=document.getElementById('term-loading');
+      if(l) l.style.display='none';
+    }catch(e){ showFallback(); }
+  }
+
+  // The script may already be loaded (defer) by the time we run.
+  if(window.Jupiter && typeof window.Jupiter.init==='function'){
+    initPlugin();
+  } else {
+    window.addEventListener('load', function(){
+      // give the deferred plugin script a moment to register window.Jupiter
+      setTimeout(function(){
+        if(window.Jupiter && typeof window.Jupiter.init==='function') initPlugin();
+        else showFallback();
+      }, 1200);
+    });
+  }
+  // Final safety net: if nothing mounted within 8s, show reliable links
+  setTimeout(function(){
+    const host=document.getElementById('jupiter-plugin');
+    const mounted = host && (host.querySelector('iframe') || host.children.length>0);
+    if(!mounted) showFallback();
+  },8000);
+</script>
+</body>
+</html>
