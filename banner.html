@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>THE WORLD CUP — Banner Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:#060709; --surface:#0c0e12; --surface2:#12151c;
+      --border:rgba(255,255,255,0.06); --gold:#f5c518; --gold2:#e8a900;
+      --green:#00e676; --red:#ff1744; --text:#f0f2f5; --muted:#5a6070; --muted2:#8892a4;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-height:100vh}
+    body::after{content:'';position:fixed;inset:0;z-index:1000;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;opacity:0.4}
+
+    nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:64px;background:rgba(6,7,9,0.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
+    .nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:0.08em;color:var(--gold);text-decoration:none;display:flex;align-items:center;gap:10px}
+    .nav-links{display:flex;gap:28px;list-style:none}
+    .nav-links a{color:var(--muted2);text-decoration:none;font-size:0.82rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;transition:color 0.2s}
+    .nav-links a:hover,.nav-links a.active{color:var(--gold)}
+    .btn-gold{background:var(--gold);color:#000;border:none;cursor:pointer;padding:10px 22px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.9rem;letter-spacing:0.06em;text-transform:uppercase;border-radius:4px;transition:all 0.15s}
+    .btn-gold:hover{background:var(--gold2);transform:translateY(-1px)}
+
+    .main{padding:90px 48px 80px;max-width:1400px;margin:0 auto}
+
+    /* PAGE HEADER */
+    .page-header{margin-bottom:48px}
+    .section-tag{font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;display:flex;align-items:center;gap:12px}
+    .section-tag::before{content:'';width:24px;height:1px;background:var(--gold);opacity:0.6}
+    .page-header h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,6vw,5rem);letter-spacing:0.03em;line-height:1;margin-bottom:16px}
+    .page-header h1 span{color:var(--gold)}
+    .page-header p{color:var(--muted2);font-size:1rem;max-width:600px;line-height:1.7}
+
+    /* CONTROLS BAR */
+    .controls-bar{display:flex;gap:16px;align-items:center;margin-bottom:36px;flex-wrap:wrap;padding:20px 24px;background:var(--surface);border:1px solid var(--border);border-radius:12px}
+    .ctrl-label{font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+    .ctrl-group{display:flex;flex-direction:column}
+    .ctrl-divider{width:1px;height:48px;background:var(--border);flex-shrink:0}
+    .style-pills{display:flex;gap:6px}
+    .style-pill{padding:8px 16px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--muted2);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.78rem;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:6px;white-space:nowrap}
+    .style-pill:hover{border-color:rgba(255,255,255,0.2);color:var(--text)}
+    .style-pill.active{border-color:var(--gold);color:var(--gold);background:rgba(245,197,24,0.08)}
+    .style-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+    .format-pills{display:flex;gap:6px}
+    .format-pill{padding:8px 14px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--muted2);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.78rem;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;transition:all 0.2s}
+    .format-pill:hover{border-color:rgba(255,255,255,0.2);color:var(--text)}
+    .format-pill.active{border-color:var(--gold);color:var(--gold);background:rgba(245,197,24,0.08)}
+
+    .search-wrap{flex:1;min-width:180px}
+    .search-input{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:6px;font-family:'Barlow',sans-serif;font-size:0.88rem;outline:none;transition:border-color 0.2s}
+    .search-input:focus{border-color:rgba(245,197,24,0.4)}
+    .search-input::placeholder{color:var(--muted)}
+
+    .btn-dl-all{background:rgba(245,197,24,0.1);border:1px solid rgba(245,197,24,0.3);color:var(--gold);cursor:pointer;padding:10px 20px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.82rem;letter-spacing:0.06em;text-transform:uppercase;border-radius:6px;transition:all 0.2s;white-space:nowrap}
+    .btn-dl-all:hover{background:rgba(245,197,24,0.18)}
+
+    /* BANNER GRID */
+    .banner-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px}
+
+    .banner-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color 0.2s,transform 0.2s}
+    .banner-card:hover{border-color:rgba(245,197,24,0.3);transform:translateY(-2px)}
+
+    .banner-canvas-wrap{position:relative;overflow:hidden;background:#000}
+    .banner-canvas-wrap canvas{width:100%;display:block}
+
+    .banner-card-footer{padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .bcf-left{display:flex;align-items:center;gap:10px}
+    .bcf-flag{width:32px;height:32px;border-radius:50%;object-fit:cover;border:1px solid rgba(255,255,255,0.1);flex-shrink:0}
+    .bcf-code{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:0.06em;color:var(--gold)}
+    .bcf-name{font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;color:var(--muted2);letter-spacing:0.04em;text-transform:uppercase}
+    .bcf-group{font-family:'Barlow Condensed',sans-serif;font-size:0.62rem;color:var(--muted);padding:2px 6px;background:rgba(255,255,255,0.04);border-radius:4px;letter-spacing:0.04em}
+    .btn-dl-card{background:var(--gold);color:#000;border:none;cursor:pointer;padding:8px 16px;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:0.78rem;letter-spacing:0.06em;text-transform:uppercase;border-radius:6px;transition:all 0.15s;white-space:nowrap;flex-shrink:0}
+    .btn-dl-card:hover{background:var(--gold2);transform:translateY(-1px)}
+
+    /* Loading state */
+    .loading-bar{height:3px;background:var(--border);border-radius:100px;overflow:hidden;margin-bottom:20px}
+    .loading-fill{height:100%;background:var(--gold);border-radius:100px;transition:width 0.3s ease;width:0%}
+    .loading-text{font-family:'Barlow Condensed',sans-serif;font-size:0.78rem;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:20px}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:28px;right:28px;z-index:800;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;display:flex;align-items:center;gap:10px;transform:translateY(80px);opacity:0;transition:all 0.3s ease;max-width:300px}
+    .toast.show{transform:translateY(0);opacity:1}
+    .toast-text strong{color:var(--green);display:block;font-family:'Barlow Condensed',sans-serif;font-size:0.88rem;letter-spacing:0.04em;text-transform:uppercase}
+    .toast-text span{font-size:0.78rem;color:var(--muted2)}
+
+    /* SHARE SECTION */
+    .share-section{background:rgba(245,197,24,0.04);border:1px solid rgba(245,197,24,0.12);border-radius:12px;padding:28px 32px;margin-bottom:40px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+    .share-left h3{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:0.04em;margin-bottom:6px}
+    .share-left p{font-size:0.85rem;color:var(--muted2);line-height:1.6}
+    .share-left p strong{color:var(--gold)}
+    .share-pills{display:flex;gap:8px;flex-wrap:wrap}
+    .share-pill{padding:8px 16px;border-radius:100px;border:1px solid var(--border);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.78rem;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+    .share-pill.x{color:#fff;border-color:rgba(255,255,255,0.2);background:rgba(255,255,255,0.04)}
+    .share-pill.x:hover{background:rgba(255,255,255,0.1)}
+    .share-pill.copy{color:var(--gold);border-color:rgba(245,197,24,0.3);background:rgba(245,197,24,0.06)}
+    .share-pill.copy:hover{background:rgba(245,197,24,0.14)}
+
+    footer{border-top:1px solid var(--border);padding:28px 48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;margin-top:60px}
+    .footer-logo{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:0.08em;color:var(--gold)}
+    .footer-disclaimer{font-size:0.7rem;color:var(--muted);max-width:400px}
+
+    @media(max-width:900px){nav{padding:0 20px}.nav-links{display:none}.main{padding:90px 20px 60px}.banner-grid{grid-template-columns:1fr}.controls-bar{padding:14px}.ctrl-divider{display:none}footer{padding:24px;flex-direction:column;align-items:flex-start}}
+  
+  /* --- mobile nav (injected) --- */
+  .mnav-btn{display:none;background:none;border:0;cursor:pointer;width:40px;height:40px;flex-direction:column;justify-content:center;align-items:center;gap:5px;padding:0;z-index:1002}
+  .mnav-btn span{display:block;width:22px;height:2px;background:var(--gold,#f5c518);border-radius:2px;transition:transform .25s,opacity .25s}
+  .mnav-btn.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+  .mnav-btn.open span:nth-child(2){opacity:0}
+  .mnav-btn.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+  .mnav-panel{display:none;position:fixed;top:64px;left:0;right:0;z-index:501;background:rgba(6,7,9,0.98);backdrop-filter:blur(24px);border-bottom:1px solid var(--border,rgba(255,255,255,0.08));flex-direction:column;padding:8px 0}
+  .mnav-panel.open{display:flex}
+  .mnav-panel a{color:var(--text,#f0f2f5);text-decoration:none;font-family:'Barlow Condensed','Barlow',sans-serif;font-weight:700;font-size:1.05rem;letter-spacing:0.06em;text-transform:uppercase;padding:15px 28px;border-bottom:1px solid rgba(255,255,255,0.04)}
+  .mnav-panel a:last-child{border-bottom:0}
+  .mnav-panel a.active,.mnav-panel a:hover{color:var(--gold,#f5c518)}
+  @media(max-width:1024px){.mnav-btn{display:flex}}
+  html,body{overflow-x:hidden;max-width:100%}
+
+</style>
+</head>
+<body>
+
+<nav>
+  <button class="mnav-btn" id="mnavBtn" aria-label="Menu" onclick="(function(b){var p=document.getElementById('mnavPanel');var o=p.classList.toggle('open');b.classList.toggle('open',o);})(this)">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="mnav-panel" id="mnavPanel">
+    <a href="index.html">Home</a>
+    <a href="nations.html">Nations</a>
+    <a href="pools.html">Pools</a>
+    <a href="banner.html" class="active">Banners</a>
+    <a href="claim.html">Claim</a>
+  </div>
+
+  <a class="nav-logo" href="index.html">⚽ THE WORLD CUP</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="nations.html">Nations</a></li>
+    <li><a href="pools.html">Pools</a></li>
+    <li><a href="banner.html" class="active">Banners</a></li>
+    <li><a href="claim.html">Claim</a></li>
+  </ul>
+  <button class="btn-gold" onclick="window.location.href='index.html'">Buy $TWC</button>
+</nav>
+
+<div class="main">
+
+  <div class="page-header">
+    <div class="section-tag">Fan Banners</div>
+    <h1>Back Your Nation. <span>Show The World.</span></h1>
+    <p>Download your country's The World Cup X banner. The circular flag IS the token — same image, same identity. Pick your style, download, post on X with <strong style="color:var(--gold)">#TheWorldCup</strong> and back your team publicly.</p>
+  </div>
+
+  <!-- SHARE BAR -->
+  <div class="share-section">
+    <div class="share-left">
+      <h3>Post & Grow The Pool</h3>
+      <p>Every share brings more buyers to your nation's token — which grows the prize pool you're already in.<br>Tag <strong>@TWC26</strong> and use <strong>#TheWorldCup</strong> on every post.</p>
+    </div>
+    <div class="share-pills">
+      <a class="share-pill x" href="https://x.com/TWC26" target="_blank" rel="noopener noreferrer">𝕏 Follow @TWC26</a>
+      <button class="share-pill copy" onclick="copyHashtag()">📋 Copy Hashtags</button>
+    </div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="controls-bar">
+    <div class="ctrl-group">
+      <div class="ctrl-label">Style</div>
+      <div class="style-pills">
+        <button class="style-pill active" onclick="setStyle('dark',this)"><span class="style-dot" style="background:#1a1a2e"></span>Dark Pitch</button>
+        <button class="style-pill" onclick="setStyle('gold',this)"><span class="style-dot" style="background:#f5c518"></span>Gold Strike</button>
+        <button class="style-pill" onclick="setStyle('flame',this)"><span class="style-dot" style="background:#ff1744"></span>Flame</button>
+        <button class="style-pill" onclick="setStyle('night',this)"><span class="style-dot" style="background:#7b61ff"></span>Night Game</button>
+        <button class="style-pill" onclick="setStyle('nation',this)"><span class="style-dot" style="background:conic-gradient(red,yellow,green,blue,red)"></span>Nation Colours</button>
+      </div>
+    </div>
+    <div class="ctrl-divider"></div>
+    <div class="ctrl-group">
+      <div class="ctrl-label">Format</div>
+      <div class="format-pills">
+        <button class="format-pill active" onclick="setFormat('twitter',this)">X Banner</button>
+        <button class="format-pill" onclick="setFormat('square',this)">Square</button>
+        <button class="format-pill" onclick="setFormat('story',this)">Story</button>
+      </div>
+    </div>
+    <div class="ctrl-divider"></div>
+    <div class="ctrl-group search-wrap">
+      <div class="ctrl-label">Search</div>
+      <input type="text" class="search-input" placeholder="Search nation or code..." id="search-input" oninput="filterBanners()"/>
+    </div>
+    <div class="ctrl-divider"></div>
+    <button class="btn-dl-all" onclick="downloadAll()">⬇ Download All 48</button>
+  </div>
+
+  <!-- LOADING BAR -->
+  <div class="loading-bar"><div class="loading-fill" id="loading-fill"></div></div>
+  <div class="loading-text" id="loading-text"></div>
+
+  <!-- BANNER GRID -->
+  <div class="banner-grid" id="banner-grid"></div>
+
+</div>
+
+<div class="toast" id="toast">
+  <span style="font-size:1.2rem">✅</span>
+  <div class="toast-text" id="toast-text"></div>
+</div>
+
+<footer>
+  <div class="footer-logo">⚽ THE WORLD CUP</div>
+  <div class="footer-disclaimer">Banners are fan-made assets for community use. Not affiliated with FIFA or any national association. theworldcup.gg · @TWC26</div>
+</footer>
+
+<script>
+// ===================== DATA =====================
+const iso2 = {
+  MEX:'mx',RSA:'za',KOR:'kr',CZE:'cz',
+  CAN:'ca',BIH:'ba',QAT:'qa',SUI:'ch',
+  BRA:'br',MAR:'ma',HAI:'ht',SCO:'gb-sct',
+  USA:'us',PAR:'py',AUS:'au',TUR:'tr',
+  GER:'de',CUW:'cw',CIV:'ci',ECU:'ec',
+  NED:'nl',JPN:'jp',SWE:'se',TUN:'tn',
+  BEL:'be',EGY:'eg',IRN:'ir',NZL:'nz',
+  ESP:'es',CPV:'cv',KSA:'sa',URU:'uy',
+  FRA:'fr',SEN:'sn',IRQ:'iq',NOR:'no',
+  ARG:'ar',ALG:'dz',AUT:'at',JOR:'jo',
+  POR:'pt',COD:'cd',UZB:'uz',COL:'co',
+  ENG:'gb-eng',CRO:'hr',GHA:'gh',PAN:'pa',
+};
+const names = {
+  MEX:'Mexico',RSA:'South Africa',KOR:'South Korea',CZE:'Czechia',
+  CAN:'Canada',BIH:'Bosnia & Herzegovina',QAT:'Qatar',SUI:'Switzerland',
+  BRA:'Brazil',MAR:'Morocco',HAI:'Haiti',SCO:'Scotland',
+  USA:'United States',PAR:'Paraguay',AUS:'Australia',TUR:'Turkey',
+  GER:'Germany',CUW:'Curacao',CIV:'Ivory Coast',ECU:'Ecuador',
+  NED:'Netherlands',JPN:'Japan',SWE:'Sweden',TUN:'Tunisia',
+  BEL:'Belgium',EGY:'Egypt',IRN:'Iran',NZL:'New Zealand',
+  ESP:'Spain',CPV:'Cape Verde',KSA:'Saudi Arabia',URU:'Uruguay',
+  FRA:'France',SEN:'Senegal',IRQ:'Iraq',NOR:'Norway',
+  ARG:'Argentina',ALG:'Algeria',AUT:'Austria',JOR:'Jordan',
+  POR:'Portugal',COD:'DR Congo',UZB:'Uzbekistan',COL:'Colombia',
+  ENG:'England',CRO:'Croatia',GHA:'Ghana',PAN:'Panama',
+};
+const groupMap = {
+  MEX:'A',RSA:'A',KOR:'A',CZE:'A',CAN:'B',BIH:'B',
+  QAT:'B',SUI:'B',BRA:'C',MAR:'C',HAI:'C',SCO:'C',
+  USA:'D',PAR:'D',AUS:'D',TUR:'D',GER:'E',CUW:'E',
+  CIV:'E',ECU:'E',NED:'F',JPN:'F',SWE:'F',TUN:'F',
+  BEL:'G',EGY:'G',IRN:'G',NZL:'G',ESP:'H',CPV:'H',
+  KSA:'H',URU:'H',FRA:'I',SEN:'I',IRQ:'I',NOR:'I',
+  ARG:'J',ALG:'J',AUT:'J',JOR:'J',POR:'K',COD:'K',
+  UZB:'K',COL:'K',ENG:'L',CRO:'L',GHA:'L',PAN:'L',
+};
+// Nation-specific colour palettes
+const nationPalette = {
+  BIH:{bg1:'#000818',bg2:'#00102a',accent:'#002395',accent2:'#fecb00',glow:'rgba(0,35,149,0.3)'},
+  HAI:{bg1:'#00050d',bg2:'#000a1a',accent:'#00209f',accent2:'#d21034',glow:'rgba(0,32,159,0.3)'},
+  SCO:{bg1:'#00040d',bg2:'#000818',accent:'#005eb8',accent2:'#ffffff',glow:'rgba(0,94,184,0.3)'},
+  PAR:{bg1:'#0d0000',bg2:'#1a0000',accent:'#d52b1e',accent2:'#0038a8',glow:'rgba(213,43,30,0.28)'},
+  CUW:{bg1:'#00050d',bg2:'#000a1a',accent:'#002b7f',accent2:'#f9d616',glow:'rgba(0,43,127,0.3)'},
+  CIV:{bg1:'#100800',bg2:'#1a0f00',accent:'#f77f00',accent2:'#009e60',glow:'rgba(247,127,0,0.3)'},
+  SWE:{bg1:'#00060d',bg2:'#000c1a',accent:'#006aa7',accent2:'#fecc00',glow:'rgba(0,106,167,0.3)'},
+  CPV:{bg1:'#00040d',bg2:'#000818',accent:'#003893',accent2:'#cf2027',glow:'rgba(0,56,147,0.3)'},
+  IRQ:{bg1:'#0d0000',bg2:'#1a0000',accent:'#ce1126',accent2:'#007a3d',glow:'rgba(206,17,38,0.28)'},
+  NOR:{bg1:'#0a0005',bg2:'#15000a',accent:'#ba0c2f',accent2:'#00205b',glow:'rgba(186,12,47,0.28)'},
+  ALG:{bg1:'#001500',bg2:'#002200',accent:'#006233',accent2:'#d21034',glow:'rgba(0,98,51,0.3)'},
+  JOR:{bg1:'#0d0000',bg2:'#1a0000',accent:'#007a3d',accent2:'#ce1126',glow:'rgba(0,122,61,0.3)'},
+  UZB:{bg1:'#001500',bg2:'#002200',accent:'#1eb53a',accent2:'#0099b5',glow:'rgba(30,181,58,0.3)'},
+  USA:{bg1:'#00050f',bg2:'#000a1a',accent:'#b22234',accent2:'#3c3b6e',glow:'rgba(60,59,110,0.3)'},
+  MEX:{bg1:'#000d00',bg2:'#001500',accent:'#006847',accent2:'#ce1126',glow:'rgba(0,104,71,0.32)'},
+  CAN:{bg1:'#0d0000',bg2:'#1a0000',accent:'#ff0000',accent2:'#ffffff',glow:'rgba(255,0,0,0.22)'},
+  NZL:{bg1:'#00000d',bg2:'#00001a',accent:'#00247d',accent2:'#cc142b',glow:'rgba(0,36,125,0.28)'},
+  BRA:{bg1:'#001200',bg2:'#003300',accent:'#009c3b',accent2:'#ffdf00',glow:'rgba(0,156,59,0.35)'},
+  ARG:{bg1:'#00001a',bg2:'#00082e',accent:'#74acdf',accent2:'#ffffff',glow:'rgba(116,172,223,0.32)'},
+  COL:{bg1:'#100d00',bg2:'#1a1200',accent:'#fcd116',accent2:'#003087',glow:'rgba(252,209,22,0.25)'},
+  ECU:{bg1:'#0f0a00',bg2:'#1a1200',accent:'#ffda00',accent2:'#0072c6',glow:'rgba(255,218,0,0.22)'},
+  FRA:{bg1:'#000818',bg2:'#00102a',accent:'#002395',accent2:'#ed2939',glow:'rgba(0,35,149,0.3)'},
+  GER:{bg1:'#0a0a0a',bg2:'#141414',accent:'#ffcc00',accent2:'#dd0000',glow:'rgba(255,204,0,0.22)'},
+  SUI:{bg1:'#0d0000',bg2:'#1a0000',accent:'#ff0000',accent2:'#ffffff',glow:'rgba(255,0,0,0.22)'},
+  SEN:{bg1:'#001a00',bg2:'#002800',accent:'#00853f',accent2:'#fdef42',glow:'rgba(0,133,63,0.3)'},
+  ESP:{bg1:'#1a0400',bg2:'#2e0800',accent:'#c60b1e',accent2:'#ffc400',glow:'rgba(198,11,30,0.32)'},
+  POR:{bg1:'#0a0500',bg2:'#1a0a00',accent:'#006600',accent2:'#ff0000',glow:'rgba(0,102,0,0.3)'},
+  MAR:{bg1:'#0a0000',bg2:'#150000',accent:'#c1272d',accent2:'#006233',glow:'rgba(193,39,45,0.28)'},
+  TUR:{bg1:'#0d0000',bg2:'#1a0000',accent:'#e30a17',accent2:'#ffffff',glow:'rgba(227,10,23,0.28)'},
+  ENG:{bg1:'#0a0003',bg2:'#18000c',accent:'#cf081f',accent2:'#ffffff',glow:'rgba(207,8,31,0.3)'},
+  NED:{bg1:'#100800',bg2:'#1a0f00',accent:'#ff6600',accent2:'#ffffff',glow:'rgba(255,102,0,0.28)'},
+  CRC:{bg1:'#00050d',bg2:'#000a18',accent:'#002b7f',accent2:'#ce1126',glow:'rgba(0,43,127,0.28)'},
+  IRN:{bg1:'#001500',bg2:'#002000',accent:'#239f40',accent2:'#da0000',glow:'rgba(35,159,64,0.28)'},
+  JPN:{bg1:'#0a0000',bg2:'#180000',accent:'#bc002d',accent2:'#ffffff',glow:'rgba(188,0,45,0.28)'},
+  KOR:{bg1:'#0a0002',bg2:'#180004',accent:'#cd2e3a',accent2:'#003478',glow:'rgba(205,46,58,0.28)'},
+  AUS:{bg1:'#000810',bg2:'#001020',accent:'#ffcd00',accent2:'#00008b',glow:'rgba(255,205,0,0.28)'},
+  KSA:{bg1:'#001500',bg2:'#002000',accent:'#006c35',accent2:'#ffffff',glow:'rgba(0,108,53,0.3)'},
+  BEL:{bg1:'#0a0000',bg2:'#150000',accent:'#ef3340',accent2:'#fdda24',glow:'rgba(239,51,64,0.28)'},
+  CRO:{bg1:'#0a0002',bg2:'#180004',accent:'#ff0000',accent2:'#ffffff',glow:'rgba(255,0,0,0.22)'},
+  URU:{bg1:'#00050d',bg2:'#00091a',accent:'#0038a8',accent2:'#ffffff',glow:'rgba(0,56,168,0.28)'},
+  CMR:{bg1:'#001000',bg2:'#001a00',accent:'#007a5e',accent2:'#ce1126',glow:'rgba(0,122,94,0.3)'},
+  DEN:{bg1:'#0d0000',bg2:'#1a0000',accent:'#c60c30',accent2:'#ffffff',glow:'rgba(198,12,48,0.28)'},
+  POL:{bg1:'#0a0000',bg2:'#150000',accent:'#dc143c',accent2:'#ffffff',glow:'rgba(220,20,60,0.25)'},
+  TUN:{bg1:'#0d0000',bg2:'#1a0000',accent:'#e70013',accent2:'#ffffff',glow:'rgba(231,0,19,0.25)'},
+  GHA:{bg1:'#0f0500',bg2:'#1a0a00',accent:'#006b3f',accent2:'#fcd116',glow:'rgba(252,209,22,0.25)'},
+  ITA:{bg1:'#001500',bg2:'#002200',accent:'#009246',accent2:'#ce2b37',glow:'rgba(0,146,70,0.28)'},
+  AUT:{bg1:'#0d0000',bg2:'#1a0000',accent:'#ed2939',accent2:'#ffffff',glow:'rgba(237,41,57,0.28)'},
+  CHI:{bg1:'#00000d',bg2:'#00001a',accent:'#d52b1e',accent2:'#ffffff',glow:'rgba(213,43,30,0.28)'},
+  COD:{bg1:'#000f00',bg2:'#001800',accent:'#007fff',accent2:'#f7d618',glow:'rgba(0,127,255,0.25)'},
+  SRB:{bg1:'#0d0000',bg2:'#1a0000',accent:'#c6363c',accent2:'#0c4076',glow:'rgba(198,54,60,0.28)'},
+  CZE:{bg1:'#00000d',bg2:'#00001a',accent:'#d7141a',accent2:'#11457e',glow:'rgba(215,20,26,0.28)'},
+  PER:{bg1:'#0d0000',bg2:'#1a0000',accent:'#d91023',accent2:'#ffffff',glow:'rgba(217,16,35,0.28)'},
+  NGA:{bg1:'#001500',bg2:'#002200',accent:'#008751',accent2:'#ffffff',glow:'rgba(0,135,81,0.3)'},
+  EGY:{bg1:'#0d0000',bg2:'#1a0000',accent:'#ce1126',accent2:'#ffffff',glow:'rgba(206,17,38,0.28)'},
+  SVK:{bg1:'#00000d',bg2:'#00001a',accent:'#0b4ea2',accent2:'#ee1c25',glow:'rgba(11,78,162,0.28)'},
+  RSA:{bg1:'#001500',bg2:'#002200',accent:'#007a4d',accent2:'#ffb612',glow:'rgba(0,122,77,0.3)'},
+  QAT:{bg1:'#10000a',bg2:'#1a0010',accent:'#8d1b3d',accent2:'#ffffff',glow:'rgba(141,27,61,0.32)'},
+  GRE:{bg1:'#00050d',bg2:'#000a1a',accent:'#0d5eaf',accent2:'#ffffff',glow:'rgba(13,94,175,0.28)'},
+  ROU:{bg1:'#00000a',bg2:'#000014',accent:'#002b7f',accent2:'#fcd116',glow:'rgba(252,209,22,0.22)'},
+  PAN:{bg1:'#00000d',bg2:'#00001a',accent:'#da121a',accent2:'#005293',glow:'rgba(218,18,26,0.28)'},
+  BFA:{bg1:'#0d0000',bg2:'#1a0000',accent:'#ef2b2d',accent2:'#009a00',glow:'rgba(239,43,45,0.28)'},
+};
+
+const globalStyles = {
+  dark: {bg1:'#060709',bg2:'#0d0f1c',accent:'#f5c518',accent2:'#ffffff',glow:'rgba(245,197,24,0.14)'},
+  gold: {bg1:'#1a1000',bg2:'#2a1a00',accent:'#f5c518',accent2:'#ffd700',glow:'rgba(245,197,24,0.28)'},
+  flame:{bg1:'#0d0000',bg2:'#1a0505',accent:'#ff1744',accent2:'#ff6b35',glow:'rgba(255,23,68,0.22)'},
+  night:{bg1:'#020208',bg2:'#08091a',accent:'#7b61ff',accent2:'#a08bff',glow:'rgba(123,97,255,0.2)'},
+};
+
+const taglines = {
+  USA:"OUR WORLD CUP. OUR SOL.",BRA:'THE BEAUTIFUL GAME. THE BIGGEST PRIZE.',
+  ARG:'DEFENDING CHAMPIONS. ON-CHAIN.',ENG:"IT'S COMING HOME. SO IS THE SOL.",
+  AUS:'THE SOCCEROOS ARE ON-CHAIN.',MEX:'EL TRI ON THE BLOCKCHAIN.',
+  FRA:'LES BLEUS. LES POOLS. LES PAYOUTS.',GER:'EFFICIENCY ON AND OFF THE PITCH.',
+  ESP:'LA ROJA. BACKED ON-CHAIN.',POR:'BACK THE BEST. WIN THE REST.',
+  JPN:'THE SAMURAI BLUE GO DIGITAL.',KOR:'TAEGUK WARRIORS. REAL REWARDS.',
+  NED:'TOTAL FOOTBALL. TOTAL PAYOUT.',BEL:'GOLDEN GENERATION. GOLDEN RETURNS.',
+  URU:'PASSION. HISTORY. SOL.',ITA:'THE AZZURRI ARE BACK.',
+  DEFAULT:'BACK YOUR NATION. WIN REAL SOL.',
+};
+
+const allCodes = Object.keys(names);
+const formats = {
+  twitter:{w:1200,h:400},
+  square:{w:800,h:800},
+  story:{w:600,h:1067},
+};
+
+// ===================== STATE =====================
+let activeStyle = 'nation'; // default to nation colours
+let activeFormat = 'twitter';
+let flagCache = {};
+let filteredCodes = [...allCodes];
+
+// ===================== FLAG LOADER =====================
+function loadFlag(code) {
+  if(flagCache[code]) return Promise.resolve(flagCache[code]);
+  return new Promise(resolve => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => { flagCache[code] = img; resolve(img); };
+    img.onerror = () => resolve(null);
+    img.src = `https://flagcdn.com/w320/${iso2[code]}.png`;
+  });
+}
+
+// Preload all flags
+function preloadAllFlags() {
+  return Promise.all(allCodes.map(c => loadFlag(c)));
+}
+
+// ===================== DRAW BANNER =====================
+async function drawBanner(canvas, code) {
+  const ctx = canvas.getContext('2d');
+  const fmt = formats[activeFormat];
+  const W = fmt.w, H = fmt.h;
+  canvas.width = W; canvas.height = H;
+
+  const s = activeStyle === 'nation'
+    ? (nationPalette[code] || globalStyles.dark)
+    : globalStyles[activeStyle];
+
+  const isStory = activeFormat === 'story';
+  const isSquare = activeFormat === 'square';
+
+  // ---- BG ----
+  const bg = ctx.createLinearGradient(0,0,W,H);
+  bg.addColorStop(0, s.bg1); bg.addColorStop(1, s.bg2);
+  ctx.fillStyle = bg; ctx.fillRect(0,0,W,H);
+
+  // ---- GRID ----
+  ctx.strokeStyle='rgba(255,255,255,0.02)'; ctx.lineWidth=1;
+  for(let x=0;x<W;x+=Math.round(W/20)){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=0;y<H;y+=Math.round(H/12)){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+
+  // ---- FLAG POSITION ----
+  // Flag circle is the DOMINANT element — large and prominent
+  let flagCX, flagCY, flagR;
+  if(isStory) {
+    flagCX = W/2; flagCY = H*0.32; flagR = W*0.38;
+  } else if(isSquare) {
+    flagCX = W*0.68; flagCY = H*0.42; flagR = W*0.32;
+  } else {
+    // Twitter banner — flag on right, large
+    flagCX = W*0.74; flagCY = H*0.5; flagR = H*0.44;
+  }
+
+  // ---- PITCH RINGS (behind flag) ----
+  [flagR*1.55, flagR*1.25, flagR].forEach((r,i) => {
+    ctx.beginPath(); ctx.arc(flagCX, flagCY, r, 0, Math.PI*2);
+    ctx.strokeStyle = s.accent;
+    ctx.globalAlpha = 0.055 - i*0.012;
+    ctx.lineWidth = 1; ctx.stroke();
+  });
+  ctx.globalAlpha = 1;
+
+  // ---- GLOW behind flag ----
+  const gl = ctx.createRadialGradient(flagCX,flagCY,0,flagCX,flagCY,flagR*1.6);
+  gl.addColorStop(0, s.glow||'rgba(245,197,24,0.15)');
+  gl.addColorStop(1, 'transparent');
+  ctx.fillStyle=gl; ctx.fillRect(0,0,W,H);
+
+  // ---- FLAG IMAGE (BIG CIRCLE) ----
+  const flagImg = await loadFlag(code);
+  if(flagImg) {
+    // Shadow behind flag circle
+    ctx.save();
+    ctx.shadowColor = s.accent;
+    ctx.shadowBlur = 32;
+    ctx.beginPath(); ctx.arc(flagCX,flagCY,flagR,0,Math.PI*2);
+    ctx.fillStyle='transparent'; ctx.fill();
+    ctx.restore();
+
+    // Clip and draw flag
+    ctx.save();
+    ctx.beginPath(); ctx.arc(flagCX,flagCY,flagR,0,Math.PI*2); ctx.clip();
+    ctx.drawImage(flagImg, flagCX-flagR, flagCY-flagR, flagR*2, flagR*2);
+    ctx.restore();
+
+    // Subtle vignette inside flag
+    const vignet = ctx.createRadialGradient(flagCX,flagCY,flagR*0.5,flagCX,flagCY,flagR);
+    vignet.addColorStop(0,'transparent'); vignet.addColorStop(1,'rgba(0,0,0,0.18)');
+    ctx.save(); ctx.beginPath(); ctx.arc(flagCX,flagCY,flagR,0,Math.PI*2); ctx.clip();
+    ctx.fillStyle=vignet; ctx.fillRect(flagCX-flagR,flagCY-flagR,flagR*2,flagR*2);
+    ctx.restore();
+
+    // Flag border — gold ring (the token ring)
+    ctx.beginPath(); ctx.arc(flagCX,flagCY,flagR,0,Math.PI*2);
+    ctx.strokeStyle=s.accent; ctx.lineWidth=isStory?5:4; ctx.globalAlpha=1; ctx.stroke();
+    // Outer glow ring
+    ctx.beginPath(); ctx.arc(flagCX,flagCY,flagR+6,0,Math.PI*2);
+    ctx.strokeStyle=s.accent; ctx.lineWidth=1; ctx.globalAlpha=0.35; ctx.stroke();
+    ctx.beginPath(); ctx.arc(flagCX,flagCY,flagR+12,0,Math.PI*2);
+    ctx.strokeStyle=s.accent; ctx.lineWidth=0.5; ctx.globalAlpha=0.15; ctx.stroke();
+    ctx.globalAlpha=1;
+  }
+
+  // ---- LEFT TEXT FADE (twitter/square only) ----
+  if(!isStory) {
+    const fade = ctx.createLinearGradient(0,0,W,0);
+    fade.addColorStop(0, s.bg1);
+    fade.addColorStop(0.45, s.bg1+'ee');
+    fade.addColorStop(0.62, s.bg1+'55');
+    fade.addColorStop(0.78, 'transparent');
+    ctx.fillStyle=fade; ctx.fillRect(0,0,W,H);
+  }
+
+  // ---- BOTTOM FADE ----
+  const btm = ctx.createLinearGradient(0,0,0,H);
+  btm.addColorStop(isStory?0.55:0.45,'transparent');
+  btm.addColorStop(1,'rgba(0,0,0,0.72)');
+  ctx.fillStyle=btm; ctx.fillRect(0,0,W,H);
+
+  // ---- LEFT ACCENT BAR ----
+  const bar = ctx.createLinearGradient(0,0,0,H);
+  bar.addColorStop(0,s.accent2||'#fff'); bar.addColorStop(0.5,s.accent); bar.addColorStop(1,s.accent2||'#fff');
+  ctx.fillStyle=bar; ctx.fillRect(0,0,5,H);
+
+  // ---- TEXT ----
+  const tagline = taglines[code]||taglines.DEFAULT;
+  const grp = groupMap[code]||'?';
+  const fullName = (names[code]||code).toUpperCase();
+
+  if(isStory) {
+    // ---- STORY LAYOUT ----
+    // All sizes relative to W so they scale with canvas
+    const S = W; // scale unit
+    const textStartY = H * 0.65;
+    ctx.textAlign = 'center';
+
+    // THE WORLD CUP label
+    const mSize = Math.round(S*0.055);
+    ctx.font = `700 ${mSize}px 'Bebas Neue',sans-serif`;
+    ctx.fillStyle = s.accent; ctx.globalAlpha = 0.85;
+    ctx.fillText('THE WORLD CUP  ·  2026 WORLD CUP', W/2, textStartY);
+
+    // Divider
+    ctx.globalAlpha = 0.2; ctx.fillStyle = s.accent;
+    ctx.fillRect(W*0.25, textStartY+mSize*0.4, W*0.5, 1);
+    ctx.globalAlpha = 1;
+
+    // BIG CODE
+    const cSize = Math.round(S*0.32);
+    ctx.font = `700 ${cSize}px 'Bebas Neue',sans-serif`;
+    ctx.fillStyle = 'white';
+    ctx.fillText(code, W/2, textStartY + mSize*0.6 + cSize*0.85);
+
+    // Country name
+    const nSize = Math.round(S*0.065);
+    ctx.font = `300 ${nSize}px 'Barlow Condensed',sans-serif`;
+    ctx.fillStyle = 'white'; ctx.globalAlpha = 0.55;
+    ctx.fillText(fullName, W/2, textStartY + mSize*0.6 + cSize*0.85 + nSize*1.3);
+    ctx.globalAlpha = 1;
+
+    // Single pill: $CODE · GROUP X
+    const pText = '$' + code + '  ·  GROUP ' + grp;
+    const pSize = Math.round(S*0.048);
+    const pY = textStartY + mSize*0.6 + cSize*0.85 + nSize*1.3 + pSize*1.6;
+    const pW = S*0.44; const pH2 = pSize*1.8;
+    ctx.fillStyle = s.accent; ctx.globalAlpha = 0.14;
+    roundRect(ctx, W/2-pW/2, pY-pH2*0.75, pW, pH2, pH2/2); ctx.fill();
+    ctx.strokeStyle = s.accent; ctx.lineWidth = Math.round(S*0.003); ctx.globalAlpha = 0.55;
+    roundRect(ctx, W/2-pW/2, pY-pH2*0.75, pW, pH2, pH2/2); ctx.stroke();
+    ctx.globalAlpha = 1;
+    ctx.font = `700 ${pSize}px 'Bebas Neue',sans-serif`;
+    ctx.fillStyle = s.accent;
+    ctx.fillText(pText, W/2, pY);
+
+    // Tagline — truncate if too long for story width
+    const tSize = Math.round(S*0.036);
+    ctx.font = `500 ${tSize}px 'Barlow Condensed',sans-serif`;
+    ctx.fillStyle = 'white'; ctx.globalAlpha = 0.42;
+    const maxTagChars = 36;
+    const tLine = tagline.length > maxTagChars ? tagline.substring(0, maxTagChars)+'…' : tagline;
+    ctx.fillText(tLine, W/2, H*0.915);
+    ctx.globalAlpha = 1;
+
+    // Handle
+    const hSize = Math.round(S*0.042);
+    ctx.font = `700 ${hSize}px 'Barlow Condensed',sans-serif`;
+    ctx.fillStyle = s.accent; ctx.globalAlpha = 0.65;
+    ctx.fillText('@THE WORLD CUP2026_SOL', W/2, H*0.965);
+    ctx.globalAlpha = 1;
+
+  } else {
+    // ---- TWITTER / SQUARE LAYOUT (clean editorial design) ----
+    const S = H;                       // scale unit
+    const tx = Math.round(W*0.038);    // left margin
+    ctx.textAlign = 'left';
+
+    // ---- TOP: single letter-spaced line + rule ----
+    const topSize = Math.round(S*0.052);
+    ctx.font = `700 ${topSize}px 'Barlow Condensed',sans-serif`;
+    ctx.fillStyle = s.accent; ctx.globalAlpha = 0.85;
+    drawSpaced(ctx, 'THE WORLD CUP  ·  2026 WORLD CUP', tx, Math.round(S*0.16), topSize*0.32);
+    ctx.globalAlpha = 0.22;
+    ctx.fillRect(tx, Math.round(S*0.205), Math.round(W*0.26), 1);
+    ctx.globalAlpha = 1;
+
+    // ---- BIG CODE (serif, elegant) ----
+    const codeSize = Math.round(S*0.40);
+    const codeBaseline = Math.round(S*0.55);
+    ctx.font = `700 ${codeSize}px Georgia, 'DejaVu Serif', serif`;
+    ctx.fillStyle = 'white';
+    ctx.fillText(code, tx, codeBaseline);
+
+    // ---- COUNTRY NAME (letter-spaced, muted) ----
+    const nameSize = Math.round(S*0.066);
+    const nameY = codeBaseline + Math.round(S*0.105);
+    ctx.font = `400 ${nameSize}px 'Barlow Condensed',sans-serif`;
+    ctx.fillStyle = '#9aa0ad'; ctx.globalAlpha = 0.9;
+    drawSpaced(ctx, fullName, tx, nameY, nameSize*0.12);
+    ctx.globalAlpha = 1;
+
+    // ---- TAGLINE (its own line, muted) ----
+    const tagSize = Math.round(S*0.05);
+    const tagY = nameY + Math.round(S*0.085);
+    ctx.font = `500 ${tagSize}px 'Barlow Condensed',sans-serif`;
+    ctx.fillStyle = '#8a8f9c'; ctx.globalAlpha = 0.85;
+    // truncate to keep within left column
+    let tText = tagline;
+    const maxTagW = W*0.52;
+    while(ctx.measureText(tText).width > maxTagW && tText.length > 8){ tText = tText.slice(0,-2); }
+    if(tText !== tagline) tText = tText.trim() + '…';
+    drawSpaced(ctx, tText, tx, tagY, tagSize*0.02);
+    ctx.globalAlpha = 1;
+
+    // ---- SINGLE PILL: $CODE (theme-accent outline) ----
+    const pillH = Math.round(S*0.085);
+    const pillY = tagY + Math.round(S*0.06);
+    const pFont = Math.round(S*0.05);
+    ctx.font = `700 ${pFont}px 'Bebas Neue',sans-serif`;
+    const pillLabel = '$' + code;
+    const pillTextW = ctx.measureText(pillLabel).width;
+    const pillW = Math.max(Math.round(S*0.26), pillTextW + Math.round(S*0.13));
+    ctx.fillStyle = s.accent; ctx.globalAlpha = 0.10;
+    roundRect(ctx, tx, pillY, pillW, pillH, pillH/2); ctx.fill();
+    ctx.strokeStyle = s.accent; ctx.lineWidth = 1.5; ctx.globalAlpha = 0.7;
+    roundRect(ctx, tx, pillY, pillW, pillH, pillH/2); ctx.stroke();
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = s.accent; ctx.textAlign = 'center';
+    ctx.fillText(pillLabel, tx + pillW/2, pillY + pillH*0.68);
+    ctx.textAlign = 'left';
+
+    // ---- BOTTOM RIGHT: URL + handle ----
+    const urlSize = Math.round(S*0.058);
+    ctx.textAlign = 'right';
+    const brX = W - Math.round(W*0.03);
+    ctx.font = `700 ${urlSize}px 'Bebas Neue',sans-serif`;
+    ctx.fillStyle = s.accent; ctx.globalAlpha = 0.7;
+    ctx.fillText('THE WORLD CUP.GG', brX, Math.round(H*0.83));
+    ctx.font = `600 ${Math.round(urlSize*0.62)}px 'Barlow Condensed',sans-serif`;
+    ctx.fillStyle = '#8a8f9c'; ctx.globalAlpha = 0.6;
+    ctx.fillText('@THE WORLD CUP2026_SOL  ·  BUY · HOLD · WIN SOL', brX, Math.round(H*0.93));
+    ctx.globalAlpha = 1;
+    ctx.textAlign = 'left';
+  }
+}
+
+function drawSpaced(ctx, text, x, y, gap){
+  // draws text left-aligned with manual letter-spacing
+  const prevAlign = ctx.textAlign;
+  ctx.textAlign = 'left';
+  let cx = x;
+  for(const ch of text){
+    ctx.fillText(ch, cx, y);
+    cx += ctx.measureText(ch).width + gap;
+  }
+  ctx.textAlign = prevAlign;
+}
+
+function roundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);
+  ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);
+  ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);
+  ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);
+  ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();
+}
+
+// ===================== RENDER GRID =====================
+function buildGrid() {
+  const grid = document.getElementById('banner-grid');
+  const fmt = formats[activeFormat];
+  const aspectPct = (fmt.h/fmt.w*100).toFixed(1)+'%';
+
+  grid.innerHTML = filteredCodes.map(code => `
+    <div class="banner-card" id="card-${code}">
+      <div class="banner-canvas-wrap" style="padding-bottom:${aspectPct};position:relative;overflow:hidden">
+        <canvas id="canvas-${code}" style="position:absolute;top:0;left:0;width:100%;height:100%"></canvas>
+      </div>
+      <div class="banner-card-footer">
+        <div class="bcf-left">
+          <img class="bcf-flag" src="https://flagcdn.com/w40/${iso2[code]}.png" alt="${code}" onerror="this.style.display='none'"/>
+          <div>
+            <div class="bcf-code">${code}</div>
+            <div class="bcf-name">${names[code]}</div>
+          </div>
+          <span class="bcf-group">Group ${groupMap[code]||'?'}</span>
+        </div>
+        <button class="btn-dl-card" onclick="downloadOne('${code}')">⬇ Download</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function renderAll() {
+  buildGrid();
+  const total = filteredCodes.length;
+  let done = 0;
+  setLoading(0, total);
+
+  // Render in batches of 6
+  const batchSize = 6;
+  for(let i=0; i<filteredCodes.length; i+=batchSize) {
+    const batch = filteredCodes.slice(i, i+batchSize);
+    await Promise.all(batch.map(async code => {
+      const canvas = document.getElementById('canvas-'+code);
+      if(canvas) {
+        canvas.width = formats[activeFormat].w;
+        canvas.height = formats[activeFormat].h;
+        await drawBanner(canvas, code);
+      }
+      done++;
+      setLoading(done, total);
+    }));
+  }
+  setLoading(total, total);
+}
+
+function setLoading(done, total) {
+  const pct = total > 0 ? (done/total*100) : 0;
+  document.getElementById('loading-fill').style.width = pct+'%';
+  document.getElementById('loading-text').textContent = done < total
+    ? `Rendering ${done} of ${total} banners...`
+    : done > 0 ? `All ${total} banners ready — click any to download` : '';
+}
+
+// ===================== CONTROLS =====================
+function setStyle(style, el) {
+  activeStyle = style;
+  document.querySelectorAll('.style-pill').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  renderAll();
+}
+
+function setFormat(fmt, el) {
+  activeFormat = fmt;
+  document.querySelectorAll('.format-pill').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  renderAll();
+}
+
+function filterBanners() {
+  const q = document.getElementById('search-input').value.toLowerCase();
+  filteredCodes = allCodes.filter(c =>
+    !q || (names[c]||'').toLowerCase().includes(q) || c.toLowerCase().includes(q)
+  );
+  renderAll();
+}
+
+// ===================== DOWNLOAD =====================
+function downloadOne(code) {
+  const canvas = document.getElementById('canvas-'+code);
+  if(!canvas) return;
+  const link = document.createElement('a');
+  link.download = `theworldcup-${code}-${activeStyle}-${activeFormat}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+  showToast(`Downloaded $${code} banner`, `${names[code]} · ${activeStyle} · ${activeFormat}`);
+}
+
+async function downloadAll() {
+  showToast('Downloading all banners...', 'This may take a moment');
+  for(const code of filteredCodes) {
+    const canvas = document.getElementById('canvas-'+code);
+    if(!canvas) continue;
+    const link = document.createElement('a');
+    link.download = `theworldcup-${code}-${activeStyle}-${activeFormat}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    await new Promise(r => setTimeout(r, 120)); // stagger downloads
+  }
+}
+
+// ===================== SHARE =====================
+function copyHashtag() {
+  navigator.clipboard.writeText('#TheWorldCup #WorldCup2026 @TWC26').then(() => {
+    showToast('Hashtags copied!', '#TheWorldCup #WorldCup2026 @TWC26');
+  });
+}
+
+// ===================== TOAST =====================
+function showToast(title, msg) {
+  document.getElementById('toast-text').innerHTML = `<strong>${title}</strong><span>${msg}</span>`;
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 3500);
+}
+
+// ===================== INIT =====================
+// Set nation colours as default (most visually impressive)
+document.querySelector('.style-pill:last-child').click = null;
+// Mark nation pill active
+document.querySelectorAll('.style-pill').forEach(p => {
+  if(p.textContent.includes('Nation')) p.classList.add('active');
+  else p.classList.remove('active');
+});
+
+preloadAllFlags().then(() => renderAll());
+</script>
+</body>
+</html>
