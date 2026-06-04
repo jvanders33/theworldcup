@@ -227,15 +227,15 @@
   const TOKENS = {};
   for (const [code, ca] of Object.entries(_SRC)) {
     if (!ca || ca.includes('PASTE')) continue;
-    TOKENS[code] = (code === 'THE WORLD CUP')
-      ? { ca, name:'THE WORLD CUP', label:'$TWC', ico:'M' }
+    TOKENS[code] = (code === 'TWC')
+      ? { ca, name:'THE WORLD CUP', label:'$TWC', ico:'T' }
       : { ca, name:code, label:'$'+code, ico:code.slice(0,1) };
   }
 
   // Resolve which token from ?token=XXX (defaults to THE WORLD CUP)
   function resolveToken() {
     const p = new URLSearchParams(window.location.search);
-    const key = (p.get('token') || 'THE WORLD CUP').toUpperCase();
+    const key = (p.get('token') || 'TWC').toUpperCase();
     const t = TOKENS[key];
     if (t && t.ca) return { key, ...t, launched:true };
     // Unknown or not-yet-launched token: show THE WORLD CUP but note it
