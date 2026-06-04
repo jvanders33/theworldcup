@@ -12,7 +12,7 @@
    ============================================================ */
 window.TWC_TOKENS = {
   // Platform token
-  TWC: 'TWC_CONTRACT_PENDING',
+  TWC: 'AKsPAMgqf3Um5wY6L81L8sb5czGpdRLEsnojb9R4pump',
 
   // ---- Nation tokens — uncomment + paste the CA as each launches ----
   // Group A
