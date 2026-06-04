@@ -818,7 +818,7 @@
     }
 
     function showWalletModal() {
-      showBuyModal('THE WORLD CUP', 'Platform Token · Back Your Nation', '—');
+      showBuyModal('TWC', 'Platform Token · Back Your Nation', '—');
     }
 
     function copyCA() {
@@ -917,7 +917,7 @@
       const sig = m[2].replace(/0+$/,'') || '0';
       return '$0.'+m[1]+sig;
     }
-    async function fetchThe World CupPrice() {
+    async function fetchTwcPrice() {
       try {
         // Jupiter Price API V3 (public lite endpoint, no API key needed)
         const res = await fetch(`https://lite-api.jup.ag/price/v3?ids=${TWC_CA}`);
@@ -932,8 +932,8 @@
         // silently fail — keep showing "LIVE"
       }
     }
-    fetchThe World CupPrice();
-    setInterval(fetchThe World CupPrice, 30000);
+    fetchTwcPrice();
+    setInterval(fetchTwcPrice, 30000);
 
     // ===================== LIVE POOL (treasury, on-chain) =====================
     const POOL_VAULT   = '7sjJ5Hjd8zK9hqSM6fTyLw3Dab5BwyBBXvAQcK8mK75t';
