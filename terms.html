@@ -39,6 +39,11 @@
   .footer-links a{color:var(--muted);font-size:0.78rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;}
   .footer-disclaimer{font-size:0.7rem;color:var(--muted);max-width:420px;line-height:1.5;}
   @media(max-width:768px){nav{padding:0 20px;gap:14px}.nav-links{gap:16px}.nav-links a{font-size:0.72rem}footer{padding:24px;flex-direction:column;align-items:flex-start}}
+
+  /* --- mobile nav fix --- */
+  .nav-logo{white-space:nowrap !important}
+  @media(max-width:768px){ nav{padding:0 14px !important} .nav-logo{font-size:1.25rem !important} .nav-links{gap:13px !important} .nav-links a{font-size:0.64rem !important} }
+  @media(max-width:430px){ .nav-logo{font-size:1.02rem !important} .nav-links{gap:9px !important} .nav-links a{font-size:0.58rem !important} }
 </style>
 </head>
 <body>
