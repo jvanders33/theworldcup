@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The World Cup — Groups</title>
+<meta name="description" content="The 2026 World Cup groups — every nation, its live token, and the group-stage matchups. On Solana.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<script src="https://plugin.jup.ag/plugin-v1.js" data-preload defer></script>
+<script src="tokens.js"></script>
+<script src="hub-tokens.js"></script>
+<style>
+  :root{--bg:#060709;--card:rgba(255,255,255,0.03);--border:rgba(255,255,255,0.06);--gold:#f5c518;--gold2:#e8a900;--green:#00e676;--red:#ff5277;--text:#f0f2f5;--muted:#5a6070;--muted2:#8892a4}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  .radar{position:fixed;inset:0;z-index:0;background:radial-gradient(circle at 50% 16%,rgba(0,90,55,0.3),transparent 60%),radial-gradient(circle at 50% 16%,rgba(245,197,24,0.05),transparent 42%)}
+  nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:64px;background:rgba(6,7,9,0.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:.06em;color:var(--gold);display:flex;align-items:center;gap:9px;white-space:nowrap}
+  .nav-links{display:flex;gap:24px;list-style:none}
+  .nav-links a{color:var(--muted2);font-size:.8rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;transition:color .2s}
+  .nav-links a:hover,.nav-links a.active{color:var(--gold)}
+  .mnav-btn{display:none;background:none;border:none;color:var(--gold);font-size:1.6rem;line-height:1;cursor:pointer;padding:4px 8px}
+  .mnav{display:none;position:fixed;top:64px;left:0;right:0;z-index:490;background:rgba(6,7,9,0.98);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);flex-direction:column}
+  .mnav a{padding:15px 24px;border-top:1px solid var(--border);color:var(--text);font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:.92rem}
+  .mnav a.active,.mnav a:hover{color:var(--gold)}
+  .mnav.open{display:flex}
+  .wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:0 24px}
+  .hero{padding:118px 0 6px;text-align:center}
+  .eyebrow{font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);font-size:.82rem;margin-bottom:12px}
+  .hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.4rem,6.5vw,4.4rem);line-height:.96}
+  .hero p{color:var(--muted2);max-width:600px;margin:13px auto 0;font-size:.98rem;line-height:1.5}
+  .note{margin-top:12px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);font-size:.78rem}
+  .note b{color:var(--gold)}
+  .gwrap{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:34px 0 10px}
+  .g{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:2px}
+  .g h2{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:.05em;color:var(--text);margin-bottom:8px;display:flex;align-items:center;gap:9px}
+  .g h2 .ln{flex:1;height:1px;background:var(--border)}
+  .t{display:flex;align-items:center;gap:9px;padding:7px 4px;border-radius:9px;transition:background .15s}
+  .t.has{cursor:pointer}.t.has:hover{background:rgba(245,197,24,0.07)}
+  .t img{width:26px;height:26px;border-radius:50%;object-fit:cover;background:#11141a;border:1px solid var(--border);flex-shrink:0}
+  .t .nm{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.96rem;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .t .cd{color:var(--muted2);font-size:.64rem;font-weight:600;letter-spacing:.06em}
+  .t .right{margin-left:auto;text-align:right;flex-shrink:0}
+  .t .price{font-family:'DM Mono',monospace;font-size:.8rem}
+  .t .chg{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.72rem}
+  .up{color:var(--green)}.down{color:var(--red)}
+  .t .mc{color:var(--muted2);font-size:.64rem}
+  .t .none{color:var(--muted);font-size:.7rem;font-style:italic;margin-left:auto}
+  details{margin-top:10px;border-top:1px solid var(--border);padding-top:8px}
+  summary{cursor:pointer;color:var(--muted2);font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:.72rem;list-style:none}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:'▸ ';color:var(--gold)}
+  details[open] summary::before{content:'▾ '}
+  .fx{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;margin-top:8px}
+  .fx div{font-size:.74rem;color:var(--muted2);font-family:'DM Mono',monospace}
+  .disclaimer{color:var(--muted);font-size:.78rem;text-align:center;max-width:740px;margin:24px auto 0;line-height:1.6}
+  .disclaimer a{color:var(--muted2);text-decoration:underline}
+  footer{position:relative;z-index:1;border-top:1px solid var(--border);margin-top:46px;padding:24px 40px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color:var(--muted);font-size:.8rem}
+  footer a{color:var(--muted2)}
+  @media(max-width:900px){.gwrap{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:720px){.mnav-btn{display:block}.nav-links{display:none}nav{padding:0 16px}.gwrap{grid-template-columns:1fr}.hero{padding:100px 0 4px}}
+</style>
+</head>
+<body>
+<div class="radar"></div>
+<nav>
+  <a href="index.html" class="nav-logo">⚽ THE WORLD CUP</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="market.html">World Cup</a></li>
+    <li><a href="countries.html">Countries</a></li>
+    <li><a href="players.html">Players</a></li>
+    <li><a href="groups.html" class="active">Groups</a></li>
+    <li><a href="terms.html">Terms</a></li>
+  </ul>
+  <button class="mnav-btn" onclick="document.getElementById('mnav').classList.toggle('open')" aria-label="Menu">&#9776;</button>
+</nav>
+<div class="mnav" id="mnav">
+  <a href="index.html">Home</a>
+  <a href="market.html">World Cup</a>
+  <a href="countries.html">Countries</a>
+  <a href="players.html">Players</a>
+  <a href="groups.html" class="active">Groups</a>
+  <a href="terms.html">Terms</a>
+</div>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="eyebrow">World Cup 2026 · 12 groups · 48 nations</div>
+    <h1>THE GROUPS</h1>
+    <p>The full 2026 draw — every nation with its live token attached. Tap any team that's on-chain to buy it straight from your wallet.</p>
+    <div class="note" id="note">Standings &amp; results go live at <b>kickoff · June 11</b></div>
+  </header>
+  <div class="gwrap" id="groups"></div>
+  <p class="disclaimer">Token data is live from on-chain sources; a team shows a price only once its token is listed. Listings are information, not endorsements — always do your own research. Swaps route through Jupiter directly from your wallet; this site never holds your funds. See <a href="terms.html">Terms</a>.</p>
+</div>
+
+<footer>
+  <div>© 2026 The World Cup · On Solana</div>
+  <div><a href="https://x.com/TWC26" target="_blank" rel="noopener">@TWC26</a> · <a href="terms.html">Terms</a></div>
+</footer>
+
+<script>
+const L=window.HUBLIB;
+const NATION_META={
+ MEX:['Mexico','A','mx'],RSA:['South Africa','A','za'],KOR:['South Korea','A','kr'],CZE:['Czechia','A','cz'],
+ CAN:['Canada','B','ca'],BIH:['Bosnia & Herzegovina','B','ba'],QAT:['Qatar','B','qa'],SUI:['Switzerland','B','ch'],
+ BRA:['Brazil','C','br'],MAR:['Morocco','C','ma'],HAI:['Haiti','C','ht'],SCO:['Scotland','C','gb-sct'],
+ USA:['United States','D','us'],PAR:['Paraguay','D','py'],AUS:['Australia','D','au'],TUR:['Türkiye','D','tr'],
+ GER:['Germany','E','de'],CUW:['Curaçao','E','cw'],CIV:['Ivory Coast','E','ci'],ECU:['Ecuador','E','ec'],
+ NED:['Netherlands','F','nl'],JPN:['Japan','F','jp'],SWE:['Sweden','F','se'],TUN:['Tunisia','F','tn'],
+ BEL:['Belgium','G','be'],EGY:['Egypt','G','eg'],IRN:['Iran','G','ir'],NZL:['New Zealand','G','nz'],
+ ESP:['Spain','H','es'],CPV:['Cape Verde','H','cv'],KSA:['Saudi Arabia','H','sa'],URU:['Uruguay','H','uy'],
+ FRA:['France','I','fr'],SEN:['Senegal','I','sn'],IRQ:['Iraq','I','iq'],NOR:['Norway','I','no'],
+ ARG:['Argentina','J','ar'],ALG:['Algeria','J','dz'],AUT:['Austria','J','at'],JOR:['Jordan','J','jo'],
+ POR:['Portugal','K','pt'],COD:['DR Congo','K','cd'],UZB:['Uzbekistan','K','uz'],COL:['Colombia','K','co'],
+ ENG:['England','L','gb-eng'],CRO:['Croatia','L','hr'],GHA:['Ghana','L','gh'],PAN:['Panama','L','pa']
+};
+const GROUPS='ABCDEFGHIJKL'.split('');
+const T=window.TWC_TOKENS||{};
+const C=(window.HUB&&window.HUB.country)||{};
+const addrOf=code=>C[code]||T[code]||'';
+const RR=[[0,1],[2,3],[0,2],[1,3],[0,3],[1,2]]; // round-robin matchups
+
+const groupsEl=document.getElementById('groups');
+function render(prices){
+  prices=prices||{};
+  groupsEl.innerHTML='';
+  GROUPS.forEach(g=>{
+    const codes=Object.keys(NATION_META).filter(c=>NATION_META[c][1]===g);
+    const card=document.createElement('div');card.className='g';
+    let teams='';
+    codes.forEach(code=>{
+      const [name,,iso]=NATION_META[code]; const a=addrOf(code); const d=prices[a]||{};
+      const flag=`<img src="https://flagcdn.com/w80/${iso}.png" onerror="this.style.visibility='hidden'">`;
+      if(a){
+        const chgN=Number(d.chg), cls=isFinite(chgN)?(chgN>=0?'up':'down'):'';
+        const chg=isFinite(chgN)?(chgN>=0?'▲':'▼')+Math.abs(chgN).toFixed(1)+'%':'';
+        teams+=`<div class="t has" onclick="L.buy('${a}')">${flag}<div style="min-width:0"><div class="nm">${name}</div><div class="cd">$${code}</div></div>
+          <div class="right"><div class="price">${L.fmtP(d.price)}</div><div class="chg ${cls}">${chg}</div><div class="mc">MC ${L.fmtN(d.mc)}</div></div></div>`;
+      }else{
+        teams+=`<div class="t">${flag}<div style="min-width:0"><div class="nm">${name}</div><div class="cd">$${code}</div></div><div class="none">no token yet</div></div>`;
+      }
+    });
+    let fx='';
+    RR.forEach(p=>{ fx+=`<div>${codes[p[0]]} v ${codes[p[1]]}</div>`; });
+    card.innerHTML=`<h2>Group ${g}<span class="ln"></span></h2>${teams}
+      <details><summary>Group-stage matchups</summary><div class="fx">${fx}</div></details>`;
+    groupsEl.appendChild(card);
+  });
+}
+async function boot(){
+  render({});
+  const addrs=Object.keys(NATION_META).map(addrOf).filter(Boolean);
+  const prices=await L.fetchTokens(addrs);
+  render(prices);
+  setTimeout(boot,30000);
+}
+boot();
+</script>
+</body>
+</html>
