@@ -12,6 +12,8 @@ window.HUB = {
     {address:'33eum82LaAhtv5YkUq1BdwEviSErH5CnFxqVNLT5pump'},
     {address:'H3pH7frVidjqQTpBpZtDhvuMZu97VkBGPHkngYegpump'},
     {address:'DyMx8bQYFCw8Ng6qxT2zkNs9ijTm5W8wFoFj29v5pump'},
+    {address:'8GxLxKA8tf3h8JUkXFfP4dNyn6D2vvwyGif5wanRpump'},  // $MASCOTS — 2026 mascots; LP burned, mint+freeze revoked
+    {address:'3vcjvdljkvuy8aenl8lgksio52tzteg7w8d68rijpump'},  // $FWC26 — FIFA World Cup 2026 Coin (small cap)
     // {address:'<mint>'},
   ],
 
