@@ -51,6 +51,12 @@
   @media(max-width:720px){nav{padding:0 16px}.nav-links{display:none}.thead{display:none}
     .row{grid-template-columns:28px 1fr 96px;grid-template-areas:'rk meta price' 'rk meta chg' '. meta buy';row-gap:6px}
     .rk{grid-area:rk}.nmeta{grid-area:meta}.price{grid-area:price;text-align:right}.chg{grid-area:chg;text-align:right}.mc{display:none}.buy{grid-area:buy}}
+  .mnav-btn{display:none;background:none;border:none;color:var(--gold);font-size:1.6rem;line-height:1;cursor:pointer;padding:4px 8px}
+  .mnav{display:none;position:fixed;top:64px;left:0;right:0;z-index:490;background:rgba(6,7,9,0.98);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);flex-direction:column}
+  .mnav a{padding:15px 24px;border-top:1px solid var(--border);color:var(--text);font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:.92rem}
+  .mnav a.active,.mnav a:hover{color:var(--gold)}
+  .mnav.open{display:flex}
+  @media(max-width:720px){.mnav-btn{display:block}.nav-links{display:none}}
 </style>
 </head>
 <body>
@@ -62,10 +68,19 @@
     <li><a href="market.html">World Cup</a></li>
     <li><a href="countries.html">Countries</a></li>
     <li><a href="players.html" class="active">Players</a></li>
+      <li><a href="groups.html">Groups</a></li>
     <li><a href="terms.html">Terms</a></li>
-  </ul>
-  <div></div>
+    </ul>
+  <button class="mnav-btn" onclick="document.getElementById('mnav').classList.toggle('open')" aria-label="Menu">&#9776;</button>
 </nav>
+<div class="mnav" id="mnav">
+  <a href="index.html">Home</a>
+  <a href="market.html">World Cup</a>
+  <a href="countries.html">Countries</a>
+  <a href="players.html" class="active">Players</a>
+  <a href="groups.html">Groups</a>
+  <a href="terms.html">Terms</a>
+</div>
 
 <div class="wrap">
   <header class="hero">
