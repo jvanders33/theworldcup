@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The World Cup — Country Tokens</title>
+<meta name="description" content="Every World Cup nation token, organised by group. Live prices and one-tap buys on Solana.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<script src="https://plugin.jup.ag/plugin-v1.js" data-preload defer></script>
+<script src="tokens.js"></script>
+<script src="hub-tokens.js"></script>
+<style>
+  :root{--bg:#060709;--card:rgba(255,255,255,0.03);--border:rgba(255,255,255,0.06);--gold:#f5c518;--gold2:#e8a900;--green:#00e676;--red:#ff5277;--text:#f0f2f5;--muted:#5a6070;--muted2:#8892a4}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  .radar{position:fixed;inset:0;z-index:0;background:radial-gradient(circle at 50% 18%,rgba(0,90,55,0.3),transparent 60%),radial-gradient(circle at 50% 18%,rgba(245,197,24,0.05),transparent 45%)}
+  nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:64px;background:rgba(6,7,9,0.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:.06em;color:var(--gold);display:flex;align-items:center;gap:9px;white-space:nowrap}
+  .nav-links{display:flex;gap:28px;list-style:none}
+  .nav-links a{color:var(--muted2);font-size:.82rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;transition:color .2s}
+  .nav-links a:hover,.nav-links a.active{color:var(--gold)}
+  .wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:0 24px}
+  .hero{padding:120px 0 14px;text-align:center}
+  .eyebrow{font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);font-size:.82rem;margin-bottom:13px}
+  .hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.4rem,6.5vw,4.4rem);line-height:.96}
+  .hero p{color:var(--muted2);max-width:600px;margin:14px auto 0;font-size:1rem;line-height:1.5}
+  .seg{display:flex;gap:8px;justify-content:center;margin:22px 0 6px}
+  .seg a{border:1px solid var(--border);border-radius:100px;padding:8px 18px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:.82rem;color:var(--muted2)}
+  .seg a.on{background:rgba(245,197,24,.12);border-color:rgba(245,197,24,.4);color:var(--gold)}
+  .grp{margin:30px 0 0}
+  .grp h2{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:.06em;color:var(--muted2);margin-bottom:12px;display:flex;align-items:center;gap:10px}
+  .grp h2 .ln{flex:1;height:1px;background:var(--border)}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:12px}
+  .c{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:14px;display:flex;flex-direction:column;gap:9px;transition:border-color .2s,transform .15s}
+  .c.live:hover{border-color:rgba(245,197,24,.4);transform:translateY(-2px)}
+  .c .top{display:flex;align-items:center;gap:10px}
+  .c .flag{width:34px;height:34px;border-radius:50%;object-fit:cover;background:#11141a;border:1px solid var(--border);flex-shrink:0}
+  .c .nm{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.02rem;line-height:1.05}
+  .c .tk{color:var(--muted2);font-size:.72rem;font-weight:600;letter-spacing:.05em}
+  .c .price{font-family:'DM Mono',monospace;font-size:1.08rem}
+  .c .row{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted2)}
+  .chg{font-family:'Barlow Condensed',sans-serif;font-weight:700}.up{color:var(--green)}.down{color:var(--red)}
+  .c .buy{margin-top:2px;background:rgba(245,197,24,.12);border:1px solid rgba(245,197,24,.32);color:var(--gold);padding:9px;border-radius:8px;text-align:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;font-size:.84rem;transition:all .15s}
+  .c .buy:hover{background:rgba(245,197,24,.26);border-color:var(--gold)}
+  .c.soon{opacity:.42}
+  .c.soon .badge{margin-top:2px;text-align:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted2);font-size:.74rem;border:1px dashed var(--border);border-radius:8px;padding:9px}
+  .disclaimer{color:var(--muted);font-size:.78rem;text-align:center;max-width:740px;margin:30px auto 0;line-height:1.6}
+  .disclaimer a{color:var(--muted2);text-decoration:underline}
+  footer{position:relative;z-index:1;border-top:1px solid var(--border);margin-top:46px;padding:24px 40px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color:var(--muted);font-size:.8rem}
+  footer a{color:var(--muted2)}
+  @media(max-width:720px){nav{padding:0 16px}.nav-links{display:none}.hero{padding:100px 0 10px}}
+</style>
+</head>
+<body>
+<div class="radar"></div>
+<nav>
+  <a href="index.html" class="nav-logo">⚽ THE WORLD CUP</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="market.html">World Cup</a></li>
+    <li><a href="countries.html" class="active">Countries</a></li>
+    <li><a href="players.html">Players</a></li>
+    <li><a href="terms.html">Terms</a></li>
+  </ul>
+  <div></div>
+</nav>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="eyebrow">Nation tokens · By group · Solana</div>
+    <h1>BACK A NATION.</h1>
+    <p>Every World Cup country token, organised by the real 2026 draw. Live prices and one-tap buys, straight from your wallet.</p>
+    <div class="seg"><a href="market.html">World Cup</a><a href="countries.html" class="on">Countries</a><a href="players.html">Players</a></div>
+  </header>
+  <div id="groups"></div>
+  <p class="disclaimer">Country tokens are launched by independent projects across the meta. Listings are information, not endorsements — always do your own research. Swaps route through the Jupiter aggregator directly from your wallet; this site never holds your funds. See <a href="terms.html">Terms</a>.</p>
+</div>
+
+<footer>
+  <div>© 2026 The World Cup · On Solana</div>
+  <div><a href="https://x.com/TWC26" target="_blank" rel="noopener">@TWC26</a> · <a href="terms.html">Terms</a></div>
+</footer>
+
+<script>
+const SOL='So11111111111111111111111111111111111111112';
+const NATION_META={
+ MEX:['Mexico','A','mx'],RSA:['South Africa','A','za'],KOR:['South Korea','A','kr'],CZE:['Czechia','A','cz'],
+ CAN:['Canada','B','ca'],BIH:['Bosnia & Herzegovina','B','ba'],QAT:['Qatar','B','qa'],SUI:['Switzerland','B','ch'],
+ BRA:['Brazil','C','br'],MAR:['Morocco','C','ma'],HAI:['Haiti','C','ht'],SCO:['Scotland','C','gb-sct'],
+ USA:['United States','D','us'],PAR:['Paraguay','D','py'],AUS:['Australia','D','au'],TUR:['Türkiye','D','tr'],
+ GER:['Germany','E','de'],CUW:['Curaçao','E','cw'],CIV:['Ivory Coast','E','ci'],ECU:['Ecuador','E','ec'],
+ NED:['Netherlands','F','nl'],JPN:['Japan','F','jp'],SWE:['Sweden','F','se'],TUN:['Tunisia','F','tn'],
+ BEL:['Belgium','G','be'],EGY:['Egypt','G','eg'],IRN:['Iran','G','ir'],NZL:['New Zealand','G','nz'],
+ ESP:['Spain','H','es'],CPV:['Cape Verde','H','cv'],KSA:['Saudi Arabia','H','sa'],URU:['Uruguay','H','uy'],
+ FRA:['France','I','fr'],SEN:['Senegal','I','sn'],IRQ:['Iraq','I','iq'],NOR:['Norway','I','no'],
+ ARG:['Argentina','J','ar'],ALG:['Algeria','J','dz'],AUT:['Austria','J','at'],JOR:['Jordan','J','jo'],
+ POR:['Portugal','K','pt'],COD:['DR Congo','K','cd'],UZB:['Uzbekistan','K','uz'],COL:['Colombia','K','co'],
+ ENG:['England','L','gb-eng'],CRO:['Croatia','L','hr'],GHA:['Ghana','L','gh'],PAN:['Panama','L','pa']
+};
+
+/* ============================================================
+   COUNTRY_TOKENS — paste the VERIFIED contract address (mint) for
+   each nation token you want to list. Verify on DexScreener FIRST.
+   Anything left blank here falls back to tokens.js, then shows as
+   "Not listed yet". Example:  BRA:'<mint address>',
+   ============================================================ */
+const COUNTRY_TOKENS=(window.HUB&&window.HUB.country)||{};
+
+const T=window.TWC_TOKENS||{};
+const addrOf=code=>COUNTRY_TOKENS[code]||T[code]||'';
+const GROUPS='ABCDEFGHIJKL'.split('');
+
+function buy(address){if(!address)return;
+  if(!window.Jupiter||!window.Jupiter.init){alert('Swap is loading — try again in a second.');return;}
+  window.Jupiter.init({displayMode:'modal',formProps:{initialInputMint:SOL,initialOutputMint:address}});}
+function fmtP(p){p=Number(p);if(!isFinite(p)||p<=0)return '—';if(p>=1)return '$'+p.toFixed(3);if(p>=0.001)return '$'+p.toFixed(5);return '$'+p.toPrecision(2);}
+function fmtN(n){n=Number(n);if(!isFinite(n)||n<=0)return '—';if(n>=1e6)return '$'+(n/1e6).toFixed(2)+'M';if(n>=1e3)return '$'+(n/1e3).toFixed(1)+'K';return '$'+n.toFixed(0);}
+
+const groupsEl=document.getElementById('groups');
+function render(){
+  groupsEl.innerHTML='';
+  GROUPS.forEach(g=>{
+    const codes=Object.keys(NATION_META).filter(c=>NATION_META[c][1]===g);
+    const sec=document.createElement('div');sec.className='grp';
+    sec.innerHTML=`<h2>Group ${g}<span class="ln"></span></h2><div class="cards"></div>`;
+    const cards=sec.querySelector('.cards');
+    codes.forEach(code=>{
+      const [name,,iso]=NATION_META[code]; const a=addrOf(code); const live=!!a;
+      const card=document.createElement('div');card.className='c '+(live?'live':'soon');card.id='c-'+code;
+      const flag=`<img class="flag" src="https://flagcdn.com/w80/${iso}.png" alt="" onerror="this.style.visibility='hidden'">`;
+      if(live){
+        card.innerHTML=`<div class="top">${flag}<div><div class="nm">${name}</div><div class="tk">$${code}</div></div></div>
+          <div class="price" data-price>—</div>
+          <div class="row"><span data-chg>—</span><span data-mc>MC —</span></div>
+          <div class="buy" onclick="buy('${a}')">Buy $${code}</div>`;
+      }else{
+        card.innerHTML=`<div class="top">${flag}<div><div class="nm">${name}</div><div class="tk">$${code}</div></div></div><div class="badge">Not listed yet</div>`;
+      }
+      cards.appendChild(card);
+    });
+    groupsEl.appendChild(sec);
+  });
+}
+async function loadPrices(){
+  const codes=Object.keys(NATION_META).filter(c=>addrOf(c));
+  if(!codes.length)return;
+  const addrs=codes.map(addrOf);
+  try{
+    const best={};
+    for(let i=0;i<addrs.length;i+=30){
+      const res=await fetch('https://api.dexscreener.com/latest/dex/tokens/'+addrs.slice(i,i+30).join(','));
+      const data=await res.json();
+      (data.pairs||[]).forEach(p=>{const x=p.baseToken&&p.baseToken.address;if(!x)return;
+        const liq=(p.liquidity&&p.liquidity.usd)||0;
+        if(!best[x]||liq>best[x]._liq)best[x]={price:p.priceUsd,chg:p.priceChange&&p.priceChange.h24,mc:p.marketCap||p.fdv,_liq:liq};});
+    }
+    codes.forEach(code=>{const d=best[addrOf(code)];if(!d)return;
+      const card=document.getElementById('c-'+code);if(!card)return;
+      const chgN=Number(d.chg);const cls=isFinite(chgN)?(chgN>=0?'up':'down'):'';
+      const chgTxt=isFinite(chgN)?(chgN>=0?'▲ ':'▼ ')+Math.abs(chgN).toFixed(1)+'%':'—';
+      const pe=card.querySelector('[data-price]');if(pe)pe.textContent=fmtP(d.price);
+      const ce=card.querySelector('[data-chg]');if(ce){ce.textContent=chgTxt;ce.className='chg '+cls;}
+      const me=card.querySelector('[data-mc]');if(me)me.textContent='MC '+fmtN(d.mc);});
+  }catch(e){}
+}
+render(); loadPrices(); setInterval(loadPrices,30000);
+</script>
+</body>
+</html>
