@@ -1,1008 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="description" content="The World Cup — Back your nation on-chain. 48 country tokens. Real SOL payouts. World Cup 2026 on Solana."/>
-  <meta property="og:title" content="THE WORLD CUP — Back Your Nation. On-Chain."/>
-  <meta property="og:description" content="48 country tokens. One tournament. Real SOL payouts. World Cup 2026 on Solana."/>
-  <meta property="og:url" content="https://theworldcup.gg"/>
-  <link rel="canonical" href="https://theworldcup.gg"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>THE WORLD CUP — Back Your Nation. On-Chain. | theworldcup.gg</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Barlow+Condensed:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-  <style>
-    :root {
-      --bg: #060709;
-      --surface: #0c0e12;
-      --surface2: #12151c;
-      --border: rgba(255,255,255,0.06);
-      --gold: #f5c518;
-      --gold2: #e8a900;
-      --green: #00e676;
-      --red: #ff1744;
-      --text: #f0f2f5;
-      --muted: #5a6070;
-      --muted2: #8892a4;
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body { background: var(--bg); color: var(--text); font-family: 'Barlow', sans-serif; overflow-x: hidden; }
-    body::after { content:''; position:fixed; inset:0; z-index:1000; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events:none; opacity:0.4; }
-
-    /* FLAG IMAGE CIRCLE — the token identity */
-    .flag-img { border-radius:50%; object-fit:cover; border:2px solid rgba(255,255,255,0.12); display:block; flex-shrink:0; }
-    .flag-img.sm  { width:32px;  height:32px; }
-    .flag-img.md  { width:48px;  height:48px; }
-    .flag-img.lg  { width:72px;  height:72px; border-width:3px; }
-    .flag-img.xl  { width:96px;  height:96px; border-width:3px; }
-    .flag-img.hero-sz { width:56px; height:56px; border-width:2px; }
-
-    /* NAV */
-    nav { position:fixed; top:0; left:0; right:0; z-index:500; display:flex; align-items:center; justify-content:space-between; padding:0 48px; height:64px; background:rgba(6,7,9,0.92); backdrop-filter:blur(24px); border-bottom:1px solid var(--border); }
-    .nav-logo { font-family:'Bebas Neue',sans-serif; font-size:1.8rem; letter-spacing:0.08em; color:var(--gold); display:flex; align-items:center; gap:10px; cursor:pointer; }
-    .nav-links { display:flex; gap:32px; list-style:none; }
-    .nav-links a { color:var(--muted2); text-decoration:none; font-size:0.82rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; transition:color 0.2s; cursor:pointer; }
-    .nav-links a:hover, .nav-links a.active { color:var(--gold); }
-    .nav-right { display:flex; gap:12px; align-items:center; }
-    .btn-gold { background:var(--gold); color:#000; border:none; cursor:pointer; padding:10px 22px; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:0.9rem; letter-spacing:0.06em; text-transform:uppercase; border-radius:4px; transition:all 0.15s; }
-    .btn-gold:hover { background:var(--gold2); transform:translateY(-1px); }
-    .btn-outline { background:transparent; color:var(--muted2); border:1px solid var(--border); cursor:pointer; padding:9px 20px; font-family:'Barlow Condensed',sans-serif; font-weight:600; font-size:0.9rem; letter-spacing:0.06em; text-transform:uppercase; border-radius:4px; transition:all 0.2s; }
-    .btn-outline:hover { border-color:rgba(255,255,255,0.2); color:var(--text); }
-
-    /* PAGES */
-    .page { display:none; } .page.active { display:block; }
-
-    /* BUY PILL */
-    .buy-pill { display:inline-flex; align-items:center; gap:5px; background:rgba(245,197,24,0.12); border:1px solid rgba(245,197,24,0.3); color:var(--gold); font-family:'Barlow Condensed',sans-serif; font-size:0.72rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; padding:4px 10px; border-radius:100px; cursor:pointer; transition:all 0.15s; white-space:nowrap; }
-    .buy-pill:hover { background:rgba(245,197,24,0.25); border-color:var(--gold); }
-
-    /* HERO */
-    .hero { min-height:100vh; display:grid; grid-template-columns:1fr 460px; align-items:center; padding:104px 56px 64px; position:relative; overflow:hidden; gap:56px; max-width:1500px; margin:0 auto; }
-    .hero-left { display:flex; flex-direction:column; justify-content:center; gap:0; }
-    .hero-right { display:flex; flex-direction:column; justify-content:center; align-items:flex-start; position:relative; z-index:2; }
-    .countdown-card { background:rgba(13,15,28,0.75); border:1px solid rgba(245,197,24,0.2); border-radius:16px; padding:32px 28px; backdrop-filter:blur(20px); width:100%; }
-    .hero-pool { background:rgba(0,230,118,0.05); border:1px solid rgba(0,230,118,0.22); border-radius:12px; padding:16px 18px; margin-bottom:20px; }
-    .hero-pool-label { font-family:'Barlow Condensed',sans-serif; font-size:0.66rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--green); display:flex; align-items:center; gap:7px; margin-bottom:8px; }
-    .hero-pool-label .ld { width:7px; height:7px; border-radius:50%; background:var(--green); animation:livePulse 2s ease-in-out infinite; flex-shrink:0; }
-    .hero-pool-val { font-family:'Bebas Neue',sans-serif; font-size:2.7rem; line-height:1; letter-spacing:0.03em; color:var(--gold); }
-    .hero-pool-val .u { font-size:0.42em; color:var(--gold); letter-spacing:0.06em; margin-left:6px; font-family:'Barlow Condensed',sans-serif; font-weight:700; }
-    .hero-pool-usd { font-family:'DM Mono',monospace; font-size:0.74rem; color:var(--muted2); margin-top:5px; min-height:1em; }
-    .hero-pool-note { font-family:'Barlow Condensed',sans-serif; font-size:0.62rem; letter-spacing:0.04em; color:var(--muted); margin-top:9px; line-height:1.5; }
-    .hero-pool-note a { color:var(--gold); text-decoration:none; }
-    .hero-pool-note a:hover { text-decoration:underline; }
-    .countdown-card-label { font-family:'Barlow Condensed',sans-serif; font-size:0.7rem; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold); margin-bottom:20px; display:flex; align-items:center; gap:8px; }
-    .countdown-card-label::before { content:''; width:16px; height:1px; background:var(--gold); opacity:0.6; }
-    .countdown-big-units { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:24px; }
-    .countdown-big-unit { background:rgba(245,197,24,0.06); border:1px solid rgba(245,197,24,0.12); border-radius:8px; padding:16px 8px 12px; text-align:center; }
-    .countdown-big-num { font-family:'Bebas Neue',sans-serif; font-size:3rem; color:var(--gold); line-height:1; letter-spacing:0.04em; display:block; }
-    .countdown-big-sub { font-family:'Barlow Condensed',sans-serif; font-size:0.6rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; margin-top:4px; display:block; }
-    .hero-card-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border-radius:8px; overflow:hidden; margin-bottom:20px; }
-    .hero-card-stat { background:rgba(245,197,24,0.04); padding:14px 12px; text-align:center; }
-    .hero-card-stat-num { font-family:'Bebas Neue',sans-serif; font-size:1.6rem; color:var(--gold); letter-spacing:0.04em; line-height:1; }
-    .hero-card-stat-label { font-family:'Barlow Condensed',sans-serif; font-size:0.6rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-top:3px; }
-    .hero-card-cta { width:100%; background:var(--gold); color:#000; border:none; cursor:pointer; padding:14px; font-family:'Bebas Neue',sans-serif; font-size:1.1rem; letter-spacing:0.08em; border-radius:8px; transition:all 0.15s; }
-    .hero-card-cta:hover { background:var(--gold2); transform:translateY(-1px); box-shadow:0 6px 24px rgba(245,197,24,0.3); }
-    .pitch-bg { position:absolute; inset:0; background:radial-gradient(ellipse 80% 60% at 50% 100%,rgba(0,230,118,0.04) 0%,transparent 70%),radial-gradient(ellipse 120% 80% at 50% 110%,rgba(0,0,0,0.8) 0%,transparent 60%); }
-    .pitch-lines { position:absolute; inset:0; opacity:0.04; background-image:radial-gradient(circle 120px at 50% 52%,transparent 118px,rgba(255,255,255,0.8) 120px,transparent 122px),linear-gradient(rgba(255,255,255,0.8) 1px,transparent 1px); background-size:100% 100%,100% 2px; background-position:0 0,0 52%; }
-    .pitch-arc { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:900px; height:500px; border:1px solid rgba(255,255,255,0.05); border-radius:50%; pointer-events:none; }
-    .pitch-arc2 { width:1400px; height:700px; border-color:rgba(255,255,255,0.03); }
-    .hero-glow { position:absolute; width:800px; height:400px; background:radial-gradient(ellipse,rgba(245,197,24,0.06) 0%,transparent 70%); top:20%; left:50%; transform:translateX(-50%); animation:glowPulse 6s ease-in-out infinite; }
-    @keyframes glowPulse { 0%,100%{opacity:0.5;transform:translateX(-50%) scale(1)} 50%{opacity:1;transform:translateX(-50%) scale(1.1)} }
-    .hero-eyebrow { font-family:'Barlow Condensed',sans-serif; font-size:0.75rem; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); margin-bottom:24px; display:flex; align-items:center; gap:12px; position:relative; }
-    .eyebrow-line { width:40px; height:1px; background:var(--gold); opacity:0.5; }
-    .hero-countdown { position:relative; margin-bottom:24px; display:flex; align-items:center; gap:20px; }
-    .countdown-label { font-family:'Barlow Condensed',sans-serif; font-size:0.72rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); }
-    .countdown-units { display:flex; gap:8px; }
-    .countdown-unit { text-align:center; }
-    .countdown-num { font-family:'Bebas Neue',sans-serif; font-size:2rem; color:var(--gold); line-height:1; letter-spacing:0.04em; background:rgba(245,197,24,0.08); border:1px solid rgba(245,197,24,0.15); padding:4px 12px; border-radius:4px; min-width:56px; display:block; }
-    .countdown-sub { font-family:'Barlow Condensed',sans-serif; font-size:0.6rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; margin-top:3px; }
-    .hero h1 { font-family:'Bebas Neue',sans-serif; font-size:clamp(5rem,14vw,13rem); line-height:0.88; letter-spacing:0.02em; margin-bottom:8px; position:relative; }
-    .hero h1 .gold { color:var(--gold); }
-    .hero-sub-row { display:flex; align-items:flex-end; justify-content:space-between; margin-top:32px; flex-wrap:wrap; gap:32px; position:relative; }
-    .hero-tagline { font-size:1.1rem; color:var(--muted2); max-width:420px; line-height:1.6; }
-    .hero-tagline strong { color:var(--text); font-weight:600; }
-    .hero-stats { display:flex; gap:40px; }
-    .h-stat-num { font-family:'Bebas Neue',sans-serif; font-size:2.4rem; letter-spacing:0.04em; line-height:1; color:var(--gold); }
-    .h-stat-label { font-size:0.72rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; font-weight:600; margin-top:4px; }
-
-    /* TICKER */
-    .ticker-wrap { background:var(--gold); overflow:hidden; padding:10px 0; }
-    .ticker { display:flex; width:max-content; animation:ticker 60s linear infinite; }
-    .ticker-item { display:inline-flex; align-items:center; gap:8px; padding:0 20px; font-family:'Barlow Condensed',sans-serif; font-size:0.85rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:#000; white-space:nowrap; }
-    .ticker-item .buy-pill { background:rgba(0,0,0,0.12); border-color:rgba(0,0,0,0.3); color:#000; }
-    .ticker-item .buy-pill:hover { background:rgba(0,0,0,0.25); }
-    .ticker-sep { opacity:0.3; }
-    @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
-
-    /* SECTIONS */
-    .section { padding:110px 48px; max-width:1280px; margin:0 auto; position:relative; z-index:1; }
-    .section-tag { font-family:'Barlow Condensed',sans-serif; font-size:0.72rem; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); margin-bottom:20px; display:flex; align-items:center; gap:12px; }
-    .section-tag::before { content:''; width:24px; height:1px; background:var(--gold); opacity:0.6; }
-    .section h2 { font-family:'Bebas Neue',sans-serif; font-size:clamp(3rem,6vw,5.5rem); letter-spacing:0.03em; line-height:1; margin-bottom:56px; }
-
-    /* HOW */
-    .how-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:8px; overflow:hidden; }
-    .how-card { background:var(--surface); padding:36px 24px; transition:background 0.3s; }
-    .how-card:hover { background:var(--surface2); }
-    .how-num { font-family:'Bebas Neue',sans-serif; font-size:4.5rem; color:rgba(245,197,24,0.07); line-height:1; margin-bottom:14px; }
-    .how-icon { font-size:1.8rem; margin-bottom:14px; display:block; }
-    .how-card h3 { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:1.15rem; letter-spacing:0.04em; text-transform:uppercase; margin-bottom:10px; }
-    .how-card p { color:var(--muted2); font-size:0.87rem; line-height:1.7; }
-
-    /* GROUPS HOME */
-    .groups-section { background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:110px 48px; }
-    .groups-inner { max-width:1280px; margin:0 auto; }
-    .groups-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:40px; flex-wrap:wrap; gap:24px; }
-    .groups-header h2 { font-family:'Bebas Neue',sans-serif; font-size:clamp(3rem,5vw,5rem); letter-spacing:0.03em; line-height:1; }
-    .groups-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
-    .group-card { background:var(--bg); border:1px solid var(--border); border-radius:8px; overflow:hidden; transition:border-color 0.2s,transform 0.2s; cursor:pointer; }
-    .group-card:hover { border-color:rgba(245,197,24,0.3); transform:translateY(-2px); }
-    .group-header-bar { background:rgba(245,197,24,0.06); border-bottom:1px solid var(--border); padding:10px 14px; display:flex; justify-content:space-between; align-items:center; }
-    .group-letter { font-family:'Bebas Neue',sans-serif; font-size:1rem; letter-spacing:0.1em; color:var(--gold); }
-    .group-pool-amt { font-family:'Barlow Condensed',sans-serif; font-size:0.7rem; font-weight:700; color:var(--muted); }
-    .team-row { display:flex; align-items:center; gap:10px; padding:9px 14px; border-bottom:1px solid rgba(255,255,255,0.03); transition:background 0.15s; }
-    .team-row:last-child { border-bottom:none; }
-    .team-row:hover { background:rgba(255,255,255,0.03); }
-    .team-code-sm { font-family:'Bebas Neue',sans-serif; font-size:1rem; letter-spacing:0.06em; color:var(--gold); flex:1; }
-    .team-name-sm { font-family:'Barlow Condensed',sans-serif; font-size:0.75rem; color:var(--muted2); flex:2; }
-
-    /* TOKENOMICS */
-    .token-layout { display:grid; grid-template-columns:1fr 1fr; gap:72px; align-items:start; }
-    .token-left h2 { font-family:'Bebas Neue',sans-serif; font-size:clamp(3rem,5vw,4.5rem); letter-spacing:0.03em; line-height:1; margin-bottom:20px; }
-    .token-left > p { color:var(--muted2); line-height:1.7; font-size:0.95rem; margin-bottom:36px; }
-    .fee-breakdown { display:flex; flex-direction:column; gap:3px; margin-bottom:36px; }
-    .fee-row { display:flex; align-items:center; background:var(--surface); border:1px solid var(--border); border-radius:4px; overflow:hidden; height:50px; }
-    .fee-bar { height:100%; display:flex; align-items:center; padding:0 14px; font-family:'Bebas Neue',sans-serif; font-size:1.1rem; letter-spacing:0.06em; flex-shrink:0; }
-    .fee-label { flex:1; padding:0 16px; font-family:'Barlow Condensed',sans-serif; font-size:0.82rem; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted2); }
-    .fee-desc { padding:0 14px 0 0; font-size:0.74rem; color:var(--muted); font-style:italic; }
-    .payout-table { background:var(--surface); border:1px solid var(--border); border-radius:8px; overflow:hidden; }
-    .payout-header { background:rgba(245,197,24,0.06); border-bottom:1px solid var(--border); padding:14px 22px; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:0.78rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--gold); }
-    .payout-row { display:flex; align-items:center; justify-content:space-between; padding:13px 22px; border-bottom:1px solid rgba(255,255,255,0.03); }
-    .payout-row:last-child { border-bottom:none; }
-    .payout-stage { display:flex; align-items:center; gap:12px; }
-    .stage-name { font-family:'Barlow Condensed',sans-serif; font-weight:600; font-size:0.88rem; letter-spacing:0.04em; text-transform:uppercase; }
-    .stage-sub { font-size:0.7rem; color:var(--muted); margin-top:2px; }
-    .payout-mult { font-family:'Bebas Neue',sans-serif; font-size:1.4rem; letter-spacing:0.04em; }
-    .twc-token { background:linear-gradient(135deg,rgba(245,197,24,0.08) 0%,rgba(245,197,24,0.02) 100%); border:1px solid rgba(245,197,24,0.15); border-radius:12px; padding:26px; margin-top:26px; }
-    .twc-token-header { display:flex; align-items:center; gap:14px; margin-bottom:14px; }
-    .twc-logo { width:48px; height:48px; background:var(--gold); border-radius:50%; display:grid; place-items:center; font-family:'Bebas Neue',sans-serif; font-size:0.58rem; letter-spacing:0.05em; color:#000; flex-shrink:0; text-align:center; line-height:1.2; }
-    .twc-token-name { font-family:'Bebas Neue',sans-serif; font-size:1.5rem; letter-spacing:0.06em; color:var(--gold); line-height:1; }
-    .twc-token-sub { font-size:0.75rem; color:var(--muted2); margin-top:3px; }
-    .twc-token p { font-size:0.87rem; color:var(--muted2); line-height:1.7; }
-
-    /* FLYWHEEL */
-    .flywheel-section { background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:100px 48px; }
-    .flywheel-inner { max-width:1280px; margin:0 auto; text-align:center; }
-    .flywheel-inner h2 { font-family:'Bebas Neue',sans-serif; font-size:clamp(3rem,5vw,5rem); letter-spacing:0.03em; margin-bottom:14px; }
-    .flywheel-inner > p { color:var(--muted2); font-size:1rem; max-width:480px; margin:0 auto 60px; line-height:1.7; }
-    .flywheel-nodes { display:flex; justify-content:center; align-items:center; flex-wrap:wrap; }
-    .fw-node { background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:24px 18px; width:165px; text-align:center; }
-    .fw-node-icon { font-size:1.8rem; margin-bottom:10px; display:block; }
-    .fw-node h4 { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:0.82rem; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:6px; }
-    .fw-node p { font-size:0.75rem; color:var(--muted2); line-height:1.5; }
-    .fw-arrow { font-size:1.2rem; color:var(--gold); opacity:0.5; padding:0 6px; animation:arrowPulse 2s ease-in-out infinite; }
-    @keyframes arrowPulse { 0%,100%{opacity:0.25} 50%{opacity:0.7} }
-    @keyframes livePulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-    @keyframes spin { to{transform:rotate(360deg)} }
-
-    /* CTA */
-    .cta-section { text-align:center; padding:100px 48px; position:relative; overflow:hidden; }
-    .cta-section::before { content:''; position:absolute; width:700px; height:500px; background:radial-gradient(ellipse,rgba(245,197,24,0.06) 0%,transparent 70%); top:50%; left:50%; transform:translate(-50%,-50%); pointer-events:none; }
-    .cta-section h2 { font-family:'Bebas Neue',sans-serif; font-size:clamp(3rem,8vw,7rem); letter-spacing:0.03em; line-height:1; margin-bottom:20px; position:relative; }
-    .cta-section h2 .gold { color:var(--gold); }
-    .cta-section p { color:var(--muted2); font-size:1rem; max-width:400px; margin:0 auto 32px; line-height:1.7; position:relative; }
-    .cta-btns { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; position:relative; }
-    .btn-gold-lg { background:var(--gold); color:#000; border:none; cursor:pointer; padding:14px 36px; font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:1.1rem; letter-spacing:0.08em; text-transform:uppercase; border-radius:4px; transition:all 0.15s; }
-    .btn-gold-lg:hover { background:var(--gold2); transform:translateY(-2px); box-shadow:0 8px 32px rgba(245,197,24,0.25); }
-    .btn-outline-lg { background:transparent; color:var(--muted2); border:1px solid var(--border); cursor:pointer; padding:13px 32px; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:1.1rem; letter-spacing:0.08em; text-transform:uppercase; border-radius:4px; transition:all 0.2s; }
-    .btn-outline-lg:hover { border-color:rgba(255,255,255,0.2); color:var(--text); }
-
-    /* FOOTER */
-    footer { border-top:1px solid var(--border); padding:32px 48px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; }
-    .footer-logo { font-family:'Bebas Neue',sans-serif; font-size:1.4rem; letter-spacing:0.08em; color:var(--gold); cursor:pointer; }
-    .footer-links { display:flex; gap:24px; list-style:none; }
-    .footer-links a { color:var(--muted); text-decoration:none; font-size:0.78rem; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; transition:color 0.2s; }
-    .footer-links a:hover { color:var(--text); }
-    .footer-disclaimer { font-size:0.7rem; color:var(--muted); max-width:400px; line-height:1.5; }
-
-    /* PAGE HERO */
-    .page-hero { padding:110px 48px 48px; max-width:1280px; margin:0 auto; }
-    .page-hero h1 { font-family:'Bebas Neue',sans-serif; font-size:clamp(3.5rem,7vw,7rem); letter-spacing:0.03em; line-height:1; margin-bottom:14px; }
-    .page-hero p { color:var(--muted2); font-size:1.05rem; max-width:540px; line-height:1.7; }
-
-    /* GROUPS PAGE */
-    .groups-page-inner { max-width:1280px; margin:0 auto; padding:0 48px 100px; }
-    .group-full-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; overflow:hidden; margin-bottom:16px; }
-    .group-full-header { background:rgba(245,197,24,0.06); border-bottom:1px solid var(--border); padding:14px 22px; display:flex; justify-content:space-between; align-items:center; }
-    .group-full-letter { font-family:'Bebas Neue',sans-serif; font-size:1.3rem; letter-spacing:0.1em; color:var(--gold); }
-    .group-full-meta { font-family:'Barlow Condensed',sans-serif; font-size:0.73rem; color:var(--muted2); letter-spacing:0.05em; }
-    .group-full-teams { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); }
-    .team-full-card { background:var(--bg); padding:24px 14px; text-align:center; transition:background 0.2s; }
-    .team-full-card:hover { background:var(--surface2); }
-    .team-full-flag-wrap { display:flex; justify-content:center; margin-bottom:12px; }
-    .team-full-name { font-family:'Barlow Condensed',sans-serif; font-weight:600; font-size:0.82rem; letter-spacing:0.04em; text-transform:uppercase; color:var(--muted2); margin-bottom:4px; }
-    .team-full-code { font-family:'Bebas Neue',sans-serif; font-size:1.6rem; letter-spacing:0.08em; color:var(--gold); margin-bottom:12px; display:block; }
-    .team-buy-btn { display:inline-flex; align-items:center; gap:5px; background:var(--gold); color:#000; border:none; cursor:pointer; padding:7px 16px; border-radius:100px; font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:0.76rem; letter-spacing:0.06em; text-transform:uppercase; transition:all 0.15s; }
-    .team-buy-btn:hover { background:var(--gold2); transform:translateY(-1px); }
-    .group-payout-bar { padding:10px 22px; border-top:1px solid var(--border); display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
-    .payout-pill { font-family:'Barlow Condensed',sans-serif; font-size:0.7rem; font-weight:700; letter-spacing:0.06em; padding:3px 10px; border-radius:100px; }
-    .pill-1 { background:rgba(245,197,24,0.12); color:var(--gold); }
-    .pill-2 { background:rgba(255,255,255,0.05); color:var(--muted2); }
-    .pill-3 { background:rgba(255,255,255,0.03); color:var(--muted); }
-    .pill-x { background:rgba(255,23,68,0.08); color:var(--red); }
-
-    /* MATCHES */
-    .matches-page-inner { max-width:1280px; margin:0 auto; padding:0 48px 100px; }
-    .stage-section { margin-bottom:52px; }
-    .stage-title { font-family:'Bebas Neue',sans-serif; font-size:2rem; letter-spacing:0.06em; color:var(--gold); margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--border); }
-    .match-card { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:14px 20px; display:flex; align-items:center; gap:14px; margin-bottom:6px; transition:border-color 0.2s; }
-    .match-card:hover { border-color:rgba(245,197,24,0.2); }
-    .match-date { font-family:'Barlow Condensed',sans-serif; font-size:0.72rem; font-weight:700; color:var(--muted); letter-spacing:0.08em; text-transform:uppercase; width:68px; flex-shrink:0; }
-    .match-teams { flex:1; display:flex; align-items:center; gap:10px; justify-content:center; }
-    .match-team { display:flex; align-items:center; gap:8px; }
-    .match-team-code { font-family:'Bebas Neue',sans-serif; font-size:1.1rem; letter-spacing:0.06em; color:var(--gold); }
-    .match-vs { font-family:'Bebas Neue',sans-serif; font-size:1rem; color:var(--muted); letter-spacing:0.1em; padding:0 4px; }
-    .match-actions { display:flex; align-items:center; gap:6px; flex-shrink:0; }
-    .match-status { padding:3px 10px; border-radius:100px; font-family:'Barlow Condensed',sans-serif; font-size:0.7rem; font-weight:700; letter-spacing:0.06em; white-space:nowrap; }
-    .status-upcoming { background:rgba(255,255,255,0.05); color:var(--muted2); }
-
-    /* TOKENS */
-    .token-page-inner { max-width:1280px; margin:0 auto; padding:0 48px 100px; }
-    .token-search-bar { display:flex; gap:16px; align-items:center; margin-bottom:28px; flex-wrap:wrap; }
-    .token-search { background:var(--surface); border:1px solid var(--border); color:var(--text); padding:12px 18px; border-radius:8px; font-family:'Barlow',sans-serif; font-size:0.9rem; outline:none; transition:border-color 0.2s; width:300px; }
-    .token-search:focus { border-color:rgba(245,197,24,0.4); }
-    .token-search::placeholder { color:var(--muted); }
-    .tokens-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:10px; }
-    .token-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:20px; transition:all 0.2s; }
-    .token-card:hover { border-color:rgba(245,197,24,0.3); transform:translateY(-2px); }
-    .tc-top { display:flex; align-items:center; gap:14px; margin-bottom:16px; }
-    .tc-meta { flex:1; min-width:0; }
-    .tc-code { font-family:'Bebas Neue',sans-serif; font-size:1.9rem; letter-spacing:0.08em; color:var(--gold); line-height:1; }
-    .tc-name { font-family:'Barlow Condensed',sans-serif; font-size:0.78rem; color:var(--muted2); letter-spacing:0.04em; text-transform:uppercase; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .tc-group-badge { font-family:'Barlow Condensed',sans-serif; font-size:0.62rem; color:var(--muted); letter-spacing:0.06em; padding:2px 7px; background:rgba(255,255,255,0.04); border-radius:4px; margin-top:4px; display:inline-block; }
-    .tc-stats { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
-    .tc-stat-val { font-family:'Bebas Neue',sans-serif; font-size:1.05rem; letter-spacing:0.03em; line-height:1; }
-    .tc-stat-key { font-family:'Barlow Condensed',sans-serif; font-size:0.6rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; margin-top:2px; }
-    .tc-buy-btn { width:100%; background:var(--gold); color:#000; border:none; cursor:pointer; padding:9px; border-radius:6px; font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:0.88rem; letter-spacing:0.06em; text-transform:uppercase; transition:all 0.15s; display:flex; align-items:center; justify-content:center; gap:6px; }
-    .tc-buy-btn:hover { background:var(--gold2); }
-
-    /* MODAL */
-    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:900; display:none; align-items:center; justify-content:center; backdrop-filter:blur(8px); }
-    .modal-overlay.open { display:flex; }
-    .modal { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:32px; max-width:440px; width:90%; position:relative; }
-    .modal-close { position:absolute; top:14px; right:18px; background:none; border:none; color:var(--muted); font-size:1.4rem; cursor:pointer; line-height:1; }
-    .modal-close:hover { color:var(--text); }
-    .modal-flag-row { display:flex; align-items:center; gap:16px; margin-bottom:18px; }
-    .modal-country-code { font-family:'Bebas Neue',sans-serif; font-size:2.4rem; letter-spacing:0.08em; color:var(--gold); line-height:1; }
-    .modal-country-name { font-size:0.88rem; color:var(--muted2); margin-top:4px; }
-    .modal p { color:var(--muted2); font-size:0.87rem; line-height:1.6; margin-bottom:18px; }
-    .modal-note { background:rgba(245,197,24,0.06); border:1px solid rgba(245,197,24,0.15); border-radius:8px; padding:13px 15px; margin-bottom:18px; font-size:0.8rem; color:var(--muted2); line-height:1.6; }
-    .modal-note strong { color:var(--gold); }
-
-    /* REVEAL */
-    .reveal { opacity:0; transform:translateY(20px); transition:opacity 0.8s ease,transform 0.8s ease; }
-    .reveal.visible { opacity:1; transform:translateY(0); }
-
-
-
-    /* ===================== SCHEDULE PAGE ===================== */
-    .schedule-page-inner { max-width:900px; margin:0 auto; padding:0 48px 100px; }
-    .schedule-intro { color:var(--muted2); font-size:1rem; max-width:600px; line-height:1.7; margin-bottom:48px; }
-    .schedule-row {
-      display:grid; grid-template-columns:100px 1fr 80px;
-      align-items:center; gap:0;
-      padding:18px 20px;
-      border-left:3px solid rgba(245,197,24,0.2);
-      border-radius:0 8px 8px 0;
-      background:var(--surface);
-      margin-bottom:8px;
-      transition:border-color 0.2s, background 0.2s;
-    }
-    .schedule-row:hover { border-left-color:rgba(245,197,24,0.5); background:var(--surface2); }
-    .schedule-row.sr-twc { border-left-color:var(--gold); background:rgba(245,197,24,0.07); }
-    .schedule-row.sr-promo { border-left-color:rgba(245,197,24,0.3); background:rgba(245,197,24,0.02); }
-    .schedule-row.sr-kickoff { border-left-color:var(--green); background:rgba(0,230,118,0.06); }
-    .sr-date { }
-    .sr-date-num { font-family:'Bebas Neue',sans-serif; font-size:1.3rem; letter-spacing:0.04em; color:var(--gold); line-height:1; }
-    .sr-twc .sr-date-num { color:var(--gold); }
-    .sr-kickoff .sr-date-num { color:var(--green); }
-    .sr-promo .sr-date-num { color:rgba(255,255,255,0.4); }
-    .sr-day { font-family:'Barlow Condensed',sans-serif; font-size:0.65rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin-top:2px; }
-    .sr-content { padding-left:8px; }
-    .sr-title { font-family:'Bebas Neue',sans-serif; font-size:1.4rem; letter-spacing:0.04em; color:var(--text); line-height:1; }
-    .sr-twc .sr-title { color:var(--gold); }
-    .sr-kickoff .sr-title { color:var(--green); }
-    .sr-promo .sr-title { color:rgba(255,255,255,0.45); font-size:1.1rem; }
-    .sr-nations { font-family:'Barlow Condensed',sans-serif; font-size:0.78rem; font-weight:600; letter-spacing:0.06em; color:var(--muted2); margin-top:4px; }
-    .sr-count { font-family:'Bebas Neue',sans-serif; font-size:1rem; letter-spacing:0.04em; color:var(--muted); text-align:right; line-height:1.3; }
-    .sr-twc .sr-count { color:rgba(245,197,24,0.6); }
-    .sr-kickoff .sr-count { color:var(--green); }
-    /* Nation flag chips in schedule */
-    .nation-chips { display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; }
-    .nation-chip { display:inline-flex; align-items:center; gap:5px; background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:100px; padding:3px 10px; font-family:'Barlow Condensed',sans-serif; font-size:0.72rem; font-weight:700; letter-spacing:0.04em; color:var(--muted2); cursor:pointer; transition:all 0.15s; }
-    .nation-chip:hover { border-color:rgba(245,197,24,0.3); color:var(--gold); }
-    .nc-flag { width:16px; height:16px; border-radius:50%; object-fit:cover; }
-    /* Schedule stats bar */
-    .schedule-stats { display:flex; gap:32px; margin-bottom:40px; padding:20px 24px; background:var(--surface); border:1px solid var(--border); border-radius:10px; }
-    .ss-item { text-align:center; }
-    .ss-num { font-family:'Bebas Neue',sans-serif; font-size:2rem; color:var(--gold); letter-spacing:0.04em; line-height:1; }
-    .ss-label { font-family:'Barlow Condensed',sans-serif; font-size:0.65rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin-top:3px; }
-    .ss-divider { width:1px; background:var(--border); }
-
-    @media(max-width:1024px) { .how-grid{grid-template-columns:1fr 1fr} .groups-grid{grid-template-columns:1fr 1fr} .token-layout{grid-template-columns:1fr;gap:48px} .group-full-teams{grid-template-columns:1fr 1fr} .hero{grid-template-columns:1fr;min-height:auto;padding:100px 40px 64px;gap:36px} .hero-right{width:100%} .hero-right .countdown-card{max-width:520px} .hero-left h1{font-size:clamp(5rem,18vw,11rem)} }
-    @media(max-width:768px) { nav{padding:0 20px} .nav-links{display:none} .hero{padding:88px 24px 56px} .how-grid,.groups-grid{grid-template-columns:1fr} .section{padding:80px 24px} .groups-section,.flywheel-section{padding:80px 24px} .flywheel-nodes{flex-direction:column} .fw-arrow{transform:rotate(90deg)} footer{padding:24px;flex-direction:column;align-items:flex-start} .page-hero{padding:100px 24px 36px} .groups-page-inner,.matches-page-inner,.token-page-inner{padding-left:24px;padding-right:24px} .group-full-teams{grid-template-columns:1fr 1fr} }
-  
-  /* --- mobile nav (injected) --- */
-  .mnav-btn{display:none;background:none;border:0;cursor:pointer;width:40px;height:40px;flex-direction:column;justify-content:center;align-items:center;gap:5px;padding:0;z-index:1002}
-  .mnav-btn span{display:block;width:22px;height:2px;background:var(--gold,#f5c518);border-radius:2px;transition:transform .25s,opacity .25s}
-  .mnav-btn.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
-  .mnav-btn.open span:nth-child(2){opacity:0}
-  .mnav-btn.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
-  .mnav-panel{display:none;position:fixed;top:64px;left:0;right:0;z-index:501;background:rgba(6,7,9,0.98);backdrop-filter:blur(24px);border-bottom:1px solid var(--border,rgba(255,255,255,0.08));flex-direction:column;padding:8px 0}
-  .mnav-panel.open{display:flex}
-  .mnav-panel a{color:var(--text,#f0f2f5);text-decoration:none;font-family:'Barlow Condensed','Barlow',sans-serif;font-weight:700;font-size:1.05rem;letter-spacing:0.06em;text-transform:uppercase;padding:15px 28px;border-bottom:1px solid rgba(255,255,255,0.04)}
-  .mnav-panel a:last-child{border-bottom:0}
-  .mnav-panel a.active,.mnav-panel a:hover{color:var(--gold,#f5c518)}
-  @media(max-width:1024px){.mnav-btn{display:flex}}
-  /* prevent any horizontal scroll on mobile + hide overflowing nav items (hamburger handles nav) */
-  html,body{overflow-x:hidden;max-width:100%}
-  @media(max-width:1024px){ nav .nav-right{display:none} nav{gap:14px;justify-content:flex-start} }
-
-    /* --- mobile nav fix --- */
-    .nav-logo{white-space:nowrap !important}
-    @media(max-width:1024px){ nav .nav-price{margin-left:auto} }
-    @media(max-width:768px){ nav{padding:0 16px !important} .nav-logo{font-size:1.3rem !important;letter-spacing:0.04em !important;gap:7px !important} }
-    @media(max-width:430px){ .nav-logo{font-size:1.08rem !important} nav .nav-price{padding:4px 8px !important} nav .nav-price span{font-size:0.72rem !important} }
-  </style>
-  <script src="tokens.js"></script>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The World Cup — Every World Cup Token. One Place.</title>
+<meta name="description" content="The one-stop shop for all things World Cup crypto. Live prices and one-tap buys for World Cup tokens, country tokens and player tokens on Solana.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<script src="https://plugin.jup.ag/plugin-v1.js" data-preload defer></script>
+<script src="tokens.js"></script>
+<script src="hub-tokens.js"></script>
+<style>
+  :root{--bg:#060709;--card:rgba(255,255,255,0.03);--border:rgba(255,255,255,0.06);--gold:#f5c518;--gold2:#e8a900;--green:#00e676;--red:#ff5277;--text:#f0f2f5;--muted:#5a6070;--muted2:#8892a4}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  .radar{position:fixed;inset:0;z-index:0;background:radial-gradient(circle at 50% 16%,rgba(0,90,55,0.32),transparent 60%),radial-gradient(circle at 50% 16%,rgba(245,197,24,0.05),transparent 42%)}
+  nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:64px;background:rgba(6,7,9,0.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
+  .nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:.06em;color:var(--gold);display:flex;align-items:center;gap:9px;white-space:nowrap}
+  .nav-links{display:flex;gap:26px;list-style:none}
+  .nav-links a{color:var(--muted2);font-size:.82rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;transition:color .2s}
+  .nav-links a:hover,.nav-links a.active{color:var(--gold)}
+  .wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:0 24px}
+  .hero{padding:120px 0 8px;text-align:center}
+  .eyebrow{font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);font-size:.82rem;margin-bottom:14px}
+  .hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.6rem,7vw,5rem);line-height:.95}
+  .hero p{color:var(--muted2);max-width:640px;margin:16px auto 0;font-size:1.05rem;line-height:1.5}
+  .kick{margin-top:14px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted2);font-size:.82rem}
+  .kick b{color:var(--gold)}
+  .cols{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:40px 0 10px}
+  .col{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;display:flex;flex-direction:column}
+  .col-h{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:4px}
+  .col-h h2{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:.04em}
+  .col-h a{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}
+  .col-sub{color:var(--muted);font-size:.74rem;margin-bottom:12px}
+  .r{display:flex;align-items:center;gap:10px;padding:9px 8px;border-radius:10px;cursor:pointer;transition:background .15s}
+  .r:hover{background:rgba(245,197,24,0.07)}
+  .r .rk{color:var(--muted);font-family:'DM Mono',monospace;font-size:.8rem;width:14px;flex-shrink:0}
+  .r img{width:30px;height:30px;border-radius:50%;background:#11141a;border:1px solid var(--border);flex-shrink:0}
+  .r .nm{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.98rem;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .r .tk{color:var(--muted2);font-size:.68rem;font-weight:600;letter-spacing:.04em}
+  .r .right{margin-left:auto;text-align:right;flex-shrink:0}
+  .r .price{font-family:'DM Mono',monospace;font-size:.86rem}
+  .r .chg{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.78rem}
+  .up{color:var(--green)}.down{color:var(--red)}
+  .r .mc{color:var(--muted2);font-size:.68rem}
+  .col-empty{color:var(--muted2);font-size:.82rem;text-align:center;padding:26px 8px;border:1px dashed var(--border);border-radius:10px;line-height:1.5}
+  .col-foot{margin-top:auto;padding-top:12px}
+  .col-foot a{display:block;text-align:center;background:rgba(245,197,24,0.1);border:1px solid rgba(245,197,24,0.3);color:var(--gold);padding:10px;border-radius:9px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:.84rem;transition:all .15s}
+  .col-foot a:hover{background:rgba(245,197,24,0.22)}
+  .disclaimer{color:var(--muted);font-size:.78rem;text-align:center;max-width:760px;margin:26px auto 0;line-height:1.6}
+  .disclaimer a{color:var(--muted2);text-decoration:underline}
+  footer{position:relative;z-index:1;border-top:1px solid var(--border);margin-top:46px;padding:24px 40px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color:var(--muted);font-size:.8rem}
+  footer a{color:var(--muted2)}
+  @media(max-width:820px){.cols{grid-template-columns:1fr}}
+  @media(max-width:640px){nav{padding:0 16px}.nav-links{display:none}.hero{padding:100px 0 6px}}
+</style>
 </head>
 <body>
+<div class="radar"></div>
+<nav>
+  <a href="index.html" class="nav-logo">⚽ THE WORLD CUP</a>
+  <ul class="nav-links">
+    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="market.html">World Cup</a></li>
+    <li><a href="countries.html">Countries</a></li>
+    <li><a href="players.html">Players</a></li>
+    <li><a href="terms.html">Terms</a></li>
+  </ul>
+  <div></div>
+</nav>
 
-  <nav>
-  <button class="mnav-btn" id="mnavBtn" aria-label="Menu" onclick="(function(b){var p=document.getElementById('mnavPanel');var o=p.classList.toggle('open');b.classList.toggle('open',o);})(this)">
-    <span></span><span></span><span></span>
-  </button>
-  <div class="mnav-panel" id="mnavPanel">
-    <a href="index.html" class="active">Home</a>
-    <a href="nations.html">Nations</a>
-    <a href="pools.html">Pools</a>
-    <a href="banner.html">Banners</a>
-    <a href="claim.html">Claim</a>
-    <a href="terms.html">Terms</a>
-  </div>
+<div class="wrap">
+  <header class="hero">
+    <div class="eyebrow">The one-stop shop for World Cup crypto · Solana</div>
+    <h1>EVERY WORLD CUP TOKEN.<br>ONE PLACE.</h1>
+    <p>Live prices and one-tap buys for the entire World Cup token meta — themed tokens, country tokens and player tokens, all ranked by market cap and bought straight from your own wallet. Non-custodial.</p>
+    <div class="kick" id="kick">Kickoff <b>June 11</b></div>
+  </header>
 
-    <div class="nav-logo" onclick="location.href='index.html'">⚽ THE WORLD CUP</div>
-    <div class="nav-price" style="display:flex;align-items:center;gap:8px;background:rgba(245,197,24,0.08);border:1px solid rgba(245,197,24,0.2);border-radius:6px;padding:5px 12px;cursor:pointer" onclick="window.open('https://pump.fun/coin/AKsPAMgqf3Um5wY6L81L8sb5czGpdRLEsnojb9R4pump','_blank')">
-      <div style="width:8px;height:8px;border-radius:50%;background:#00e676;animation:livePulse 2s ease-in-out infinite;flex-shrink:0"></div>
-      <span style="font-family:'Bebas Neue',sans-serif;font-size:0.9rem;letter-spacing:0.06em;color:#f5c518">$TWC</span>
-      <span style="font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted2)" id="twc-price">LIVE</span>
+  <section class="cols">
+    <div class="col">
+      <div class="col-h"><h2>World Cup</h2><a href="market.html">All →</a></div>
+      <div class="col-sub">Themed &amp; meta tokens</div>
+      <div id="col-worldcup"></div>
+      <div class="col-foot"><a href="market.html">View all World Cup tokens</a></div>
     </div>
-    <ul class="nav-links">
-      <li><a href="index.html" class="active">Home</a></li>
-      <li><a href="nations.html">Nations</a></li>
-      <li><a href="pools.html">Pools</a></li>
-      <li><a href="banner.html">Banners</a></li>
-      <li><a href="claim.html">Claim</a></li><li><a href="terms.html">Terms</a></li>
-    </ul>
-    <div class="nav-right">
-      <button class="btn-outline" onclick="showWalletModal()">Buy / Connect</button>
-      <button class="btn-gold" onclick="window.open('https://pump.fun/coin/AKsPAMgqf3Um5wY6L81L8sb5czGpdRLEsnojb9R4pump','_blank')">Buy $TWC</button>
+    <div class="col">
+      <div class="col-h"><h2>Countries</h2><a href="countries.html">All →</a></div>
+      <div class="col-sub">Nation tokens, by group</div>
+      <div id="col-country"></div>
+      <div class="col-foot"><a href="countries.html">View all country tokens</a></div>
     </div>
-  </nav>
-
-  <!-- HOME -->
-  <div class="page active" id="page-home">
-    <section class="hero">
-      <div class="pitch-bg"></div><div class="pitch-lines"></div>
-      <div class="pitch-arc"></div><div class="pitch-arc pitch-arc2"></div>
-      <div class="hero-glow"></div>
-
-      <!-- LEFT — headline -->
-      <div class="hero-left">
-        <div class="hero-eyebrow" style="margin-bottom:12px"><span class="eyebrow-line"></span>World Cup 2026 · On Solana · 48 Nations</div>
-        <h1>BACK<br>YOUR<br><span class="gold">NATION.</span></h1>
-        <p class="hero-tagline" style="margin-top:20px;font-size:1.15rem"><strong>48 country tokens. One tournament. Real SOL payouts.</strong><br>Buy your nation's token, hold through the groups, claim when they win — or watch the losers fund your prize pool.</p>
-        <div style="display:flex;gap:12px;margin-top:28px;position:relative">
-          <button class="btn-gold-lg" onclick="location.href='nations.html'" style="font-size:1rem;padding:13px 28px">Pick Your Nation →</button>
-          <button class="btn-outline-lg" onclick="location.href='nations.html'" style="font-size:1rem;padding:12px 24px">View Groups</button>
-        </div>
-      </div>
-
-      <!-- RIGHT — countdown feature card -->
-      <div class="hero-right">
-        <div class="countdown-card">
-          <div class="hero-pool">
-            <div class="hero-pool-label"><span class="ld"></span>Total Pool Fees · Live On-Chain</div>
-            <div class="hero-pool-val" id="hero-pool-sol">—<span class="u">SOL</span></div>
-            <div class="hero-pool-usd" id="hero-pool-usd">&nbsp;</div>
-            <div class="hero-pool-note">Fills as the 48 nation tokens launch and trade — fees are swept in periodically. 75% to holder pools &amp; burns · <a href="pools.html">Verify on-chain →</a></div>
-          </div>
-          <div class="countdown-card-label">Tournament Begins In</div>
-          <div class="countdown-big-units">
-            <div class="countdown-big-unit"><span class="countdown-big-num" id="cd-days">--</span><span class="countdown-big-sub">Days</span></div>
-            <div class="countdown-big-unit"><span class="countdown-big-num" id="cd-hours">--</span><span class="countdown-big-sub">Hours</span></div>
-            <div class="countdown-big-unit"><span class="countdown-big-num" id="cd-mins">--</span><span class="countdown-big-sub">Mins</span></div>
-            <div class="countdown-big-unit"><span class="countdown-big-num" id="cd-secs">--</span><span class="countdown-big-sub">Secs</span></div>
-          </div>
-          <div class="hero-card-stats">
-            <div class="hero-card-stat">
-              <div class="hero-card-stat-num">48</div>
-              <div class="hero-card-stat-label">Nations</div>
-            </div>
-            <div class="hero-card-stat">
-              <div class="hero-card-stat-num">104</div>
-              <div class="hero-card-stat-label">Matches</div>
-            </div>
-            <div class="hero-card-stat">
-              <div class="hero-card-stat-num">32</div>
-              <div class="hero-card-stat-label">Days</div>
-            </div>
-          </div>
-          <button class="hero-card-cta" onclick="location.href='nations.html'">⚡ BUY YOUR NATION NOW</button>
-        </div>
-      </div>
-    </section>
-
-    <div class="ticker-wrap"><div class="ticker" id="main-ticker"></div></div>
-
-    <div class="section reveal">
-      <div class="section-tag">How It Works</div>
-      <h2>Simple.<br>On-chain.<br>Ruthless.</h2>
-      <div class="how-grid">
-        <div class="how-card"><div class="how-num">01</div><span class="how-icon">🪙</span><h3>Buy Your Nation</h3><p>Every nation has a token using the official 3-letter FIFA code — ARG, BRA, ENG, AUS. The flag is the token identity. Every trade pays a creator reward to the treasury, split 50% to the group pool, 25% to the champion pool, 25% to platform &amp; ops.</p></div>
-        <div class="how-card"><div class="how-num">02</div><span class="how-icon">📊</span><h3>Group Stage Pools</h3><p>All 4 teams in each group share a prize pool fed by the group's half of every creator reward. 1st takes 50%, 2nd 25%, 3rd 15%. 4th place share is used to buy back &amp; burn $TWC when group standings settle (12+ burn events across the tournament).</p></div>
-        <div class="how-card"><div class="how-num">03</div><span class="how-icon">🏆</span><h3>Champion Pool</h3><p>A quarter of every creator reward across all 48 tokens builds the Champion Pool across 32 days. At the final whistle it pays out — 70% to the World Cup winner holders, 20% runner-up, 10% third place.</p></div>
-        
-      <div class="how-card"><div class="how-num">04</div><span class="how-icon">💸</span><h3>Get Paid in SOL</h3><p>Payouts happen at two moments: end of the group stage and the final whistle. We publish the holder list and a Merkle root, then you claim your share yourself — see <a href="claim.html" style="color:var(--gold)">Claim</a>. Follow <a href="https://x.com/TWC26" target="_blank" rel="noopener noreferrer" style="color:var(--gold)">@TWC26</a> for timing.</p></div>
-      </div>
+    <div class="col">
+      <div class="col-h"><h2>Players</h2><a href="players.html">All →</a></div>
+      <div class="col-sub">Player tokens</div>
+      <div id="col-players"></div>
+      <div class="col-foot"><a href="players.html">View all player tokens</a></div>
     </div>
+  </section>
+  <p class="disclaimer">Everything is ranked from live on-chain data. Listings are information, not endorsements — always do your own research. Swaps route through the Jupiter aggregator directly from your wallet; this site never holds your funds. See <a href="terms.html">Terms</a>.</p>
+</div>
 
-    <div class="groups-section reveal">
-      <div class="groups-inner">
-        <div class="groups-header">
-          <div><div class="section-tag">2026 Groups</div><h2>12 Groups.<br>48 Nations.</h2></div>
-          <button class="btn-outline-lg" onclick="location.href='nations.html'">View All Groups →</button>
-        </div>
-        <div class="groups-grid" id="home-groups-grid"></div>
-      </div>
-    </div>
+<footer>
+  <div>© 2026 The World Cup · On Solana</div>
+  <div><a href="https://x.com/TWC26" target="_blank" rel="noopener">@TWC26</a> · <a href="terms.html">Terms</a></div>
+</footer>
 
-    <div class="section reveal">
-      <div class="section-tag">Tokenomics</div>
-      <div class="token-layout">
-        <div class="token-left">
-          <h2>Every trade.<br>Every match.<br>Every elimination.</h2>
-          <p>Every trade on pump.fun pays a creator reward to the treasury. pump.fun sets that rate dynamically — it varies with each coin's market cap — so we commit to a split of whatever's received: 50% to match &amp; group pools, 25% to the champion pool, 25% to platform &amp; ops.</p>
-          <div class="section-tag" style="margin-bottom:14px">How creator rewards split</div>
-          <div class="fee-breakdown">
-            <div class="fee-row"><div class="fee-bar" style="background:rgba(245,197,24,0.15);color:var(--gold);width:120px">50%</div><div class="fee-label">Match / Group Pool</div><div class="fee-desc">Paid to winning holders</div></div>
-            <div class="fee-row"><div class="fee-bar" style="background:rgba(255,23,68,0.1);color:var(--red);width:72px">25%</div><div class="fee-label">Champion Pool</div><div class="fee-desc">Builds all tournament</div></div>
-            <div class="fee-row"><div class="fee-bar" style="background:rgba(255,255,255,0.05);color:var(--muted2);width:72px">25%</div><div class="fee-label">Creator (Platform)</div><div class="fee-desc">Operations &amp; development</div></div>
-          </div>
-          <p style="font-size:0.74rem;color:var(--muted);font-style:italic;margin:-22px 0 36px;line-height:1.6">Of every creator reward received — pump.fun sets the reward rate and it varies with market cap, so the split is of whatever's earned.</p>
-          <div class="twc-token">
-            <div class="twc-token-header">
-              <div class="twc-logo">TWC</div>
-              <div><div class="twc-token-name">$TWC</div><div class="twc-token-sub">Live on pump.fun · <a href="https://pump.fun/coin/AKsPAMgqf3Um5wY6L81L8sb5czGpdRLEsnojb9R4pump" target="_blank" rel="noopener noreferrer" style="color:var(--gold);text-decoration:none">Buy now →</a></div></div>
-            </div>
-            <p>The platform token. $TWC is bought and burned from the 4th place group pool shares — every group stage produces one losing nation whose pool allocation goes straight to $TWC. 12 groups = 12 burn events minimum.</p>
-          </div>
-        </div>
-        <div>
-          <div class="section-tag" style="margin-bottom:14px">Payout structure</div>
-          <div class="payout-table">
-            <div class="payout-header">Stage → Pool distribution</div>
-            <div class="payout-row"><div class="payout-stage"><span style="font-size:1.1rem">🏅</span><div><div class="stage-name">Group 1st Place</div><div class="stage-sub">Per group pool</div></div></div><div class="payout-mult" style="color:var(--gold)">50%</div></div>
-            <div class="payout-row"><div class="payout-stage"><span style="font-size:1.1rem">🥈</span><div><div class="stage-name">Group 2nd Place</div><div class="stage-sub">Per group pool</div></div></div><div class="payout-mult" style="color:var(--muted2)">25%</div></div>
-            <div class="payout-row"><div class="payout-stage"><span style="font-size:1.1rem">🔄</span><div><div class="stage-name">Group 3rd Place</div><div class="stage-sub">May still progress</div></div></div><div class="payout-mult" style="color:var(--muted2)">15%</div></div>
-            <div class="payout-row"><div class="payout-stage"><span style="font-size:1.1rem">💀</span><div><div class="stage-name">Group 4th Place</div><div class="stage-sub">Eliminated → 10% burns $TWC</div></div></div><div class="payout-mult" style="color:var(--red)">10% 🔥</div></div>
-            <div style="padding:10px 22px 6px;display:flex;align-items:center;gap:10px">
-              <div style="flex:1;height:1px;background:rgba(245,197,24,0.15)"></div>
-              <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(245,197,24,0.5)">Champion Pool · Final Whistle</div>
-              <div style="flex:1;height:1px;background:rgba(245,197,24,0.15)"></div>
-            </div>
-            <div class="payout-row"><div class="payout-stage"><span style="font-size:1.1rem">🥇</span><div><div class="stage-name">Champion Pool — 1st</div><div class="stage-sub">World Cup Winner holders</div></div></div><div class="payout-mult" style="color:var(--gold)">70%</div></div>
-            <div class="payout-row"><div class="payout-stage"><span style="font-size:1.1rem">🥈</span><div><div class="stage-name">Champion Pool — 2nd</div><div class="stage-sub">Runner-up holders</div></div></div><div class="payout-mult" style="color:var(--muted2)">20%</div></div>
-            <div class="payout-row"><div class="payout-stage"><span style="font-size:1.1rem">🥉</span><div><div class="stage-name">Champion Pool — 3rd</div><div class="stage-sub">3rd place holders</div></div></div><div class="payout-mult" style="color:var(--muted2)">10%</div></div>
-          </div>
-        </div>
-      </div>
-    </div>
+<script>
+const L=window.HUBLIB;
+// kickoff countdown
+(function(){const k=new Date('2026-06-11T00:00:00');const d=Math.ceil((k-new Date())/864e5);
+  if(d>0)document.getElementById('kick').innerHTML='Kickoff <b>June 11</b> · '+d+' day'+(d>1?'s':'')+' to go';
+  else document.getElementById('kick').innerHTML='<b>The World Cup is live</b>';})();
 
-    <div class="flywheel-section reveal">
-      <div class="flywheel-inner">
-        <div class="section-tag" style="justify-content:center">The Flywheel</div>
-        <h2>How The Flywheel Works</h2>
-        <p>Every match drives trades. Every elimination triggers a burn. Here's how the pieces connect across 32 days.</p>
-        <div class="flywheel-nodes">
-          <div class="fw-node"><span class="fw-node-icon">🌍</span><h4>Fans buy tokens</h4><p>48 tokens, unlimited buyers</p></div>
-          <div class="fw-arrow">→</div>
-          <div class="fw-node"><span class="fw-node-icon">🔥</span><h4>Creator fee captured</h4><p>Split to pools, burn, platform</p></div>
-          <div class="fw-arrow">→</div>
-          <div class="fw-node"><span class="fw-node-icon">🪙</span><h4>$TWC burns</h4><p>4th-place pool shares buy &amp; burn supply</p></div>
-          <div class="fw-arrow">→</div>
-          <div class="fw-node"><span class="fw-node-icon">💀</span><h4>Teams eliminated</h4><p>Loser pools → treasury</p></div>
-          <div class="fw-arrow">→</div>
-          <div class="fw-node"><span class="fw-node-icon">🏆</span><h4>Champion pool</h4><p>Top 3 nations split 70/20/10%</p></div>
-        </div>
-      </div>
-    </div>
+// country addresses = HUB.country + any nation codes in tokens.js (excluding TWC)
+function countryAddrs(){
+  const out=Object.values((window.HUB&&window.HUB.country)||{}).filter(Boolean);
+  const T=window.TWC_TOKENS||{};
+  for(const k in T){ if(k!=='TWC'&&T[k]) out.push(T[k]); }
+  return out;
+}
+function addrsOf(list){return (list||[]).map(t=>typeof t==='string'?t:t.address).filter(Boolean);}
+function nameOf(t,d){if(t&&t.name)return t.name;if(d&&d.name)return d.name;const a=(typeof t==='string'?t:t.address)||'';return a.slice(0,4)+'…'+a.slice(-4);}
+function tickOf(t,d){if(t&&t.ticker)return t.ticker;if(d&&d.sym)return d.sym;return '';}
 
+function renderCol(elId,list,prices,n){
+  const el=document.getElementById(elId);
+  const items=(list||[]).map(t=>({t,a:(typeof t==='string'?t:t.address)})).filter(x=>x.a);
+  items.forEach(x=>x.d=prices[x.a]||{});
+  items.sort((p,q)=>((q.d.mc)||0)-((p.d.mc)||0));
+  const top=items.slice(0,n);
+  if(!top.length){el.innerHTML='<div class="col-empty">No listings yet — add verified addresses in <b>hub-tokens.js</b>.</div>';return;}
+  el.innerHTML='';
+  top.forEach((x,i)=>{
+    const d=x.d, chgN=Number(d.chg), cls=isFinite(chgN)?(chgN>=0?'up':'down'):'';
+    const chg=isFinite(chgN)?(chgN>=0?'▲':'▼')+Math.abs(chgN).toFixed(1)+'%':'';
+    const row=document.createElement('div');row.className='r';row.onclick=function(){L.buy(x.a);};
+    row.innerHTML=`<div class="rk">${i+1}</div>
+      <img src="${L.logo(x.a)}" onerror="this.style.visibility='hidden'">
+      <div style="min-width:0"><div class="nm">${nameOf(x.t,d)}</div><div class="tk">$${tickOf(x.t,d)}</div></div>
+      <div class="right"><div class="price">${L.fmtP(d.price)}</div><div class="chg ${cls}">${chg}</div><div class="mc">MC ${L.fmtN(d.mc)}</div></div>`;
+    el.appendChild(row);
+  });
+}
 
-    <!-- LAUNCH SCHEDULE -->
-    <section class="section reveal" id="schedule">
-      <div class="section-tag" style="justify-content:center">Token Launch Schedule</div>
-      <h2 style="text-align:center;font-family:'Bebas Neue',sans-serif;font-size:clamp(2.4rem,5vw,4rem);letter-spacing:0.02em;line-height:1;margin-bottom:14px">The Launch <span style="color:var(--gold)">Plan.</span></h2>
-      <p style="text-align:center;max-width:640px;margin:0 auto 40px;color:var(--muted2);line-height:1.7">$TWC launches first as the platform backbone. 48 hours of promotion follows. Then four days of country token drops — three groups per day — building to the World Cup kickoff on June 11.</p>
-      <div class="schedule-page-inner">
-
-      <div class="schedule-stats">
-        <div class="ss-item"><div class="ss-num">48</div><div class="ss-label">Nation Tokens</div></div>
-        <div class="ss-divider"></div>
-        <div class="ss-item"><div class="ss-num">5</div><div class="ss-label">Launch Days</div></div>
-        <div class="ss-divider"></div>
-        <div class="ss-item"><div class="ss-num">Jun 4</div><div class="ss-label">First Launch</div></div>
-        <div class="ss-divider"></div>
-        <div class="ss-item"><div class="ss-num">Jun 11</div><div class="ss-label">Kickoff</div></div>
-        <div class="ss-divider"></div>
-        <div class="ss-item"><div class="ss-num" id="ss-days-kickoff">—</div><div class="ss-label">Days to Kickoff</div></div>
-      </div>
-
-      <!-- THE WORLD CUP -->
-      <div class="schedule-row sr-twc">
-        <div class="sr-date"><div class="sr-date-num">JUN 4</div><div class="sr-day">Thursday</div></div>
-        <div class="sr-content">
-          <div class="sr-title">$TWC LAUNCHES</div>
-          <div class="sr-nations">Platform token · The backbone of the entire ecosystem · pump.fun</div>
-        </div>
-        <div class="sr-count">1<br>TOKEN</div>
-      </div>
-
-      <!-- PROMO -->
-      <div class="schedule-row sr-promo">
-        <div class="sr-date"><div class="sr-date-num">JUN 5–6</div><div class="sr-day">Fri – Sat</div></div>
-        <div class="sr-content">
-          <div class="sr-title">48 HOURS OF PROMOTION</div>
-          <div class="sr-nations">Build the audience · Share the schedule · Community grows before country tokens drop</div>
-        </div>
-        <div class="sr-count">🔥</div>
-      </div>
-
-      <!-- GROUPS A+B+C -->
-      <div class="schedule-row">
-        <div class="sr-date"><div class="sr-date-num">JUN 7</div><div class="sr-day">Sunday</div></div>
-        <div class="sr-content">
-          <div class="sr-title">GROUPS A + B + C</div>
-          <div class="nation-chips" id="chips-abc"></div>
-        </div>
-        <div class="sr-count">12<br>TOKENS</div>
-      </div>
-
-      <!-- GROUPS D+E+F -->
-      <div class="schedule-row">
-        <div class="sr-date"><div class="sr-date-num">JUN 8</div><div class="sr-day">Monday</div></div>
-        <div class="sr-content">
-          <div class="sr-title">GROUPS D + E + F</div>
-          <div class="nation-chips" id="chips-def"></div>
-        </div>
-        <div class="sr-count">12<br>TOKENS</div>
-      </div>
-
-      <!-- GROUPS G+H+I -->
-      <div class="schedule-row">
-        <div class="sr-date"><div class="sr-date-num">JUN 9</div><div class="sr-day">Tuesday</div></div>
-        <div class="sr-content">
-          <div class="sr-title">GROUPS G + H + I</div>
-          <div class="nation-chips" id="chips-ghi"></div>
-        </div>
-        <div class="sr-count">12<br>TOKENS</div>
-      </div>
-
-      <!-- GROUPS J+K+L -->
-      <div class="schedule-row">
-        <div class="sr-date"><div class="sr-date-num">JUN 10</div><div class="sr-day">Wednesday</div></div>
-        <div class="sr-content">
-          <div class="sr-title">GROUPS J + K + L</div>
-          <div class="nation-chips" id="chips-jkl"></div>
-        </div>
-        <div class="sr-count">12<br>TOKENS</div>
-      </div>
-
-      <!-- KICKOFF -->
-      <div class="schedule-row sr-kickoff">
-        <div class="sr-date"><div class="sr-date-num">JUN 11</div><div class="sr-day">Thursday</div></div>
-        <div class="sr-content">
-          <div class="sr-title">⚽ WORLD CUP KICKOFF — JUNE 11</div>
-          <div class="sr-nations">The tournament is on-chain · Group pools open · Champion pool building · Buy your nation</div>
-        </div>
-        <div class="sr-count">GO<br>LIVE</div>
-      </div>
-
-    </div>
-    </section>
-
-    <div class="cta-section reveal">
-      <h2>THE WORLD CUP<br>IS <span class="gold">ON-CHAIN.</span></h2>
-      <p>48 nations. One tournament. Your money where your flag is.</p>
-      <div class="cta-btns">
-        <button class="btn-gold-lg" onclick="window.open('https://pump.fun/coin/AKsPAMgqf3Um5wY6L81L8sb5czGpdRLEsnojb9R4pump','_blank')">Buy $TWC →</button>
-        <button class="btn-outline-lg" onclick="location.href='nations.html'">View Groups</button>
-      </div>
-    </div>
-
-    <footer>
-      <div class="footer-logo" onclick="location.href='index.html'">⚽ THE WORLD CUP</div>
-      <ul class="footer-links"><li><a href="https://x.com/TWC26" target="_blank" rel="noopener noreferrer">Twitter / X</a></li><li><a href="https://pump.fun" target="_blank" rel="noopener noreferrer">pump.fun</a></li><li><a href="terms.html">Terms</a></li></ul>
-      <div class="footer-disclaimer">The World Cup is a community-run crypto platform on Solana. Not affiliated with FIFA. Country tokens are speculative assets. Participate responsibly.</div>
-    </footer>
-  </div>
-
-  <!-- BUY MODAL -->
-  <!-- SWAP MODAL -->
-  <div class="modal-overlay" id="buy-modal">
-    <div class="modal" style="width:min(460px,95vw);padding:0;overflow:hidden">
-      <!-- Header -->
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 22px 16px;border-bottom:1px solid var(--border)">
-        <div style="display:flex;align-items:center;gap:12px">
-          <img id="modal-flag-img" class="flag-img" style="width:40px;height:40px" src="" alt=""/>
-          <div>
-            <div class="modal-country-code" id="modal-code" style="font-size:1.3rem;line-height:1"></div>
-            <div class="modal-country-name" id="modal-name" style="font-size:0.72rem;margin-top:2px"></div>
-          </div>
-        </div>
-        <button class="modal-close" onclick="closeSwapModal()" style="position:static;font-size:1.2rem">✕</button>
-      </div>
-
-      <!-- Buy options -->
-      <div style="padding:24px 22px">
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:16px">Buy on your preferred platform</div>
-
-        <div style="display:flex;flex-direction:column;gap:10px" id="modal-buy-links">
-          <!-- populated by JS -->
-        </div>
-
-        <!-- CA copy -->
-        <div style="margin-top:20px;background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:8px;padding:12px 14px">
-          <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Contract Address</div>
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
-            <div id="modal-ca" style="font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted2);word-break:break-all;line-height:1.5"></div>
-            <button onclick="copyCA()" style="background:none;border:1px solid var(--border);color:var(--muted2);cursor:pointer;padding:4px 10px;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;letter-spacing:0.06em;white-space:nowrap;transition:all 0.15s" id="copy-ca-btn">Copy</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Pool note -->
-      <div style="padding:0 22px 20px">
-        <div style="background:rgba(245,197,24,0.06);border:1px solid rgba(245,197,24,0.15);border-radius:8px;padding:10px 13px;font-size:0.75rem;color:var(--muted2);line-height:1.6">
-          ⚽ Every trade pays a creator reward that feeds the pools. <strong style="color:var(--gold)">Hold through the group stage to qualify for payouts.</strong>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // flag image helper — uses flagcdn.com (free, reliable)
-    // country code → ISO 2-letter for flag URL
-    const iso2 = {
-      MEX:'mx',RSA:'za',KOR:'kr',CZE:'cz',
-      CAN:'ca',BIH:'ba',QAT:'qa',SUI:'ch',
-      BRA:'br',MAR:'ma',HAI:'ht',SCO:'gb-sct',
-      USA:'us',PAR:'py',AUS:'au',TUR:'tr',
-      GER:'de',CUW:'cw',CIV:'ci',ECU:'ec',
-      NED:'nl',JPN:'jp',SWE:'se',TUN:'tn',
-      BEL:'be',EGY:'eg',IRN:'ir',NZL:'nz',
-      ESP:'es',CPV:'cv',KSA:'sa',URU:'uy',
-      FRA:'fr',SEN:'sn',IRQ:'iq',NOR:'no',
-      ARG:'ar',ALG:'dz',AUT:'at',JOR:'jo',
-      POR:'pt',COD:'cd',UZB:'uz',COL:'co',
-      ENG:'gb-eng',CRO:'hr',GHA:'gh',PAN:'pa',
-};
-
-
-    const names = {
-      MEX:'Mexico',RSA:'South Africa',KOR:'South Korea',CZE:'Czechia',
-      CAN:'Canada',BIH:'Bosnia & Herzegovina',QAT:'Qatar',SUI:'Switzerland',
-      BRA:'Brazil',MAR:'Morocco',HAI:'Haiti',SCO:'Scotland',
-      USA:'United States',PAR:'Paraguay',AUS:'Australia',TUR:'Turkey',
-      GER:'Germany',CUW:'Curacao',CIV:'Ivory Coast',ECU:'Ecuador',
-      NED:'Netherlands',JPN:'Japan',SWE:'Sweden',TUN:'Tunisia',
-      BEL:'Belgium',EGY:'Egypt',IRN:'Iran',NZL:'New Zealand',
-      ESP:'Spain',CPV:'Cape Verde',KSA:'Saudi Arabia',URU:'Uruguay',
-      FRA:'France',SEN:'Senegal',IRQ:'Iraq',NOR:'Norway',
-      ARG:'Argentina',ALG:'Algeria',AUT:'Austria',JOR:'Jordan',
-      POR:'Portugal',COD:'DR Congo',UZB:'Uzbekistan',COL:'Colombia',
-      ENG:'England',CRO:'Croatia',GHA:'Ghana',PAN:'Panama',
-};
-
-    function flagUrl(code, size=64) {
-      const iso = iso2[code];
-      if (!iso) return '';
-      return `https://flagcdn.com/w${size}/${iso}.png`;
-    }
-
-    function flagImg(code, cls='md') {
-      const url = flagUrl(code, cls==='xl'?128:cls==='lg'?80:cls==='sm'?40:64);
-      return `<img class="flag-img ${cls}" src="${url}" alt="${code}" onerror="this.style.display='none'"/>`;
-    }
-
-    // ===================== DATA =====================
-    const groups = [
-      {letter:'A', teams:[{name:'Mexico',code:'MEX'},{name:'South Africa',code:'RSA'},{name:'South Korea',code:'KOR'},{name:'Czechia',code:'CZE'}]},
-      {letter:'B', teams:[{name:'Canada',code:'CAN'},{name:'Bosnia & Herzegovina',code:'BIH'},{name:'Qatar',code:'QAT'},{name:'Switzerland',code:'SUI'}]},
-      {letter:'C', teams:[{name:'Brazil',code:'BRA'},{name:'Morocco',code:'MAR'},{name:'Haiti',code:'HAI'},{name:'Scotland',code:'SCO'}]},
-      {letter:'D', teams:[{name:'United States',code:'USA'},{name:'Paraguay',code:'PAR'},{name:'Australia',code:'AUS'},{name:'Turkey',code:'TUR'}]},
-      {letter:'E', teams:[{name:'Germany',code:'GER'},{name:'Curacao',code:'CUW'},{name:'Ivory Coast',code:'CIV'},{name:'Ecuador',code:'ECU'}]},
-      {letter:'F', teams:[{name:'Netherlands',code:'NED'},{name:'Japan',code:'JPN'},{name:'Sweden',code:'SWE'},{name:'Tunisia',code:'TUN'}]},
-      {letter:'G', teams:[{name:'Belgium',code:'BEL'},{name:'Egypt',code:'EGY'},{name:'Iran',code:'IRN'},{name:'New Zealand',code:'NZL'}]},
-      {letter:'H', teams:[{name:'Spain',code:'ESP'},{name:'Cape Verde',code:'CPV'},{name:'Saudi Arabia',code:'KSA'},{name:'Uruguay',code:'URU'}]},
-      {letter:'I', teams:[{name:'France',code:'FRA'},{name:'Senegal',code:'SEN'},{name:'Iraq',code:'IRQ'},{name:'Norway',code:'NOR'}]},
-      {letter:'J', teams:[{name:'Argentina',code:'ARG'},{name:'Algeria',code:'ALG'},{name:'Austria',code:'AUT'},{name:'Jordan',code:'JOR'}]},
-      {letter:'K', teams:[{name:'Portugal',code:'POR'},{name:'DR Congo',code:'COD'},{name:'Uzbekistan',code:'UZB'},{name:'Colombia',code:'COL'}]},
-      {letter:'L', teams:[{name:'England',code:'ENG'},{name:'Croatia',code:'CRO'},{name:'Ghana',code:'GHA'},{name:'Panama',code:'PAN'}]},
-    ];
-    const allTokens = groups.flatMap(g => g.teams.map(t => ({...t, group:g.letter})));
-
-
-    // ===================== MODAL =====================
-    // ===================== BUY MODAL =====================
-    const TWC_CA = 'AKsPAMgqf3Um5wY6L81L8sb5czGpdRLEsnojb9R4pump';
-    let currentModalCA = TWC_CA;
-
-    // Token CAs — add country token CAs here as they launch June 7-10
-    const tokenCAs = window.TWC_TOKENS || { TWC: TWC_CA };
-
-    // Buy button helper — shows "Coming Soon" until token CA exists
-    function buyButton(code, name, group, cls) {
-      cls = cls || 'buy-pill';
-      if (tokenCAs[code]) {
-        return `<button class="${cls}" onclick="showBuyModal('${code}','${name.replace(/'/g,"\\'")}','${group}')">⚡ Buy $${code}</button>`;
-      }
-      return `<button class="${cls}" style="opacity:0.45;cursor:default" disabled>${code} · Coming Soon</button>`;
-    }
-
-
-    function closeSwapModal() {
-      document.getElementById('buy-modal').classList.remove('open');
-    }
-    function closeModal(id) { if(!id) { document.querySelectorAll('.modal-overlay.open').forEach(m=>m.classList.remove('open')); return; } const el=document.getElementById(id); if(el) el.classList.remove('open'); }
-
-    function showBuyModal(code, name, group) {
-      const url = flagUrl(code, 64);
-      const mfi = document.getElementById('modal-flag-img');
-      mfi.src = url;
-      mfi.alt = code;
-      mfi.onerror = function(){ this.style.background='var(--surface2)'; this.style.border='1px solid var(--border)'; };
-      document.getElementById('modal-code').textContent = '$' + code;
-      document.getElementById('modal-name').textContent = name;
-
-      const ca = tokenCAs[code] || TWC_CA;
-      currentModalCA = ca;
-      document.getElementById('modal-ca').textContent = ca;
-
-      const isLive = !!tokenCAs[code];
-      const swapBtn = isLive ? `
-        <a href="swap.html?token=${code}" rel="noopener"
-           style="display:flex;align-items:center;gap:12px;background:var(--gold);color:#000;padding:14px 18px;border-radius:8px;text-decoration:none">
-          <span style="font-size:1.2rem">🔄</span>
-          <div>
-            <div style="font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:0.06em">Swap on theworldcup.gg</div>
-            <div style="font-size:0.72rem;opacity:0.65;font-family:'Barlow Condensed',sans-serif">SOL → $${code} pre-filled · Recommended</div>
-          </div>
-          <span style="margin-left:auto">→</span>
-        </a>` : '';
-      document.getElementById('modal-buy-links').innerHTML = swapBtn + `
-        <a href="https://pump.fun/coin/${ca}" target="_blank" rel="noopener"
-           style="display:flex;align-items:center;gap:12px;background:${isLive?'var(--surface2)':'var(--gold)'};color:${isLive?'var(--text)':'#000'};padding:14px 18px;border-radius:8px;text-decoration:none;${isLive?'border:1px solid var(--border)':''}">
-          <span style="font-size:1.2rem">⚡</span>
-          <div>
-            <div style="font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:0.06em">Buy on pump.fun</div>
-            <div style="font-size:0.72rem;opacity:0.65;font-family:'Barlow Condensed',sans-serif">Most liquidity</div>
-          </div>
-          <span style="margin-left:auto">→</span>
-        </a>
-        <a href="https://jup.ag/swap/SOL-${ca}" target="_blank" rel="noopener"
-           style="display:flex;align-items:center;gap:12px;background:var(--surface2);color:var(--text);padding:14px 18px;border-radius:8px;text-decoration:none;border:1px solid var(--border)">
-          <span style="font-size:1.2rem">🪐</span>
-          <div>
-            <div style="font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:0.06em">Swap on Jupiter</div>
-            <div style="font-size:0.72rem;color:var(--muted2);font-family:'Barlow Condensed',sans-serif">Best price routing</div>
-          </div>
-          <span style="margin-left:auto;color:var(--muted)">→</span>
-        </a>
-        <a href="https://raydium.io/swap/?inputCurrency=sol&outputCurrency=${ca}" target="_blank" rel="noopener"
-           style="display:flex;align-items:center;gap:12px;background:var(--surface2);color:var(--text);padding:14px 18px;border-radius:8px;text-decoration:none;border:1px solid var(--border)">
-          <span style="font-size:1.2rem">☀️</span>
-          <div>
-            <div style="font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:0.06em">Swap on Raydium</div>
-            <div style="font-size:0.72rem;color:var(--muted2);font-family:'Barlow Condensed',sans-serif">AMM trading</div>
-          </div>
-          <span style="margin-left:auto;color:var(--muted)">→</span>
-        </a>`;
-
-      document.getElementById('buy-modal').classList.add('open');
-    }
-
-    function showWalletModal() {
-      showBuyModal('TWC', 'Platform Token · Back Your Nation', '—');
-    }
-
-    function copyCA() {
-      navigator.clipboard.writeText(currentModalCA).then(() => {
-        const btn = document.getElementById('copy-ca-btn');
-        btn.textContent = 'Copied!';
-        btn.style.color = 'var(--green)';
-        btn.style.borderColor = 'var(--green)';
-        setTimeout(() => { btn.textContent = 'Copy'; btn.style.color='var(--muted2)'; btn.style.borderColor='var(--border)'; }, 2000);
-      });
-    }
-
-
-    // ESC closes modals
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') {
-        document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
-      }
-    });
-
-    document.getElementById('buy-modal').addEventListener('click', e => {
-      if (e.target === document.getElementById('buy-modal')) closeSwapModal();
-    });
-
-    // ESC closes modals
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') {
-        document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
-      }
-    });
-
-
-    // ===================== TICKER =====================
-    function buildTicker() {
-      const items = allTokens.map(t =>
-        `<div class="ticker-item">${flagImg(t.code,'sm')} <strong>${t.code}</strong> <span class="ticker-sep">·</span> ${tokenCAs[t.code] ? `<button class="buy-pill" onclick="showBuyModal('${t.code}','${t.name}','${t.group}')">Buy</button>` : `<button class="buy-pill" style="opacity:0.4;cursor:default" disabled>Soon</button>`}</div>`
-      ).join('');
-      document.getElementById('main-ticker').innerHTML = items + items;
-    }
-
-    // ===================== HOME GROUPS =====================
-    function buildHomeGroups() {
-      const grid = document.getElementById('home-groups-grid');
-      const preview = groups.slice(0,4);
-      grid.innerHTML = preview.map(g => `
-        <div class="group-card" onclick="location.href='nations.html'">
-          <div class="group-header-bar"><span class="group-letter">GROUP ${g.letter}</span><span class="group-pool-amt">Pool: Pre-launch</span></div>
-          ${g.teams.map(t => `
-            <div class="team-row">
-              ${flagImg(t.code,'sm')}
-              <span class="team-code-sm">${t.code}</span>
-              <span class="team-name-sm">${t.name}</span>
-              ${tokenCAs[t.code] ? `<button class="buy-pill" onclick="event.stopPropagation();showBuyModal('${t.code}','${t.name}','${g.letter}')">Buy</button>` : `<button class="buy-pill" style="opacity:0.4;cursor:default" disabled>Soon</button>`}
-            </div>
-          `).join('')}
-        </div>
-      `).join('') + `
-        <div class="group-card" style="display:flex;align-items:center;justify-content:center;min-height:180px" onclick="location.href='nations.html'">
-          <div style="text-align:center">
-            <div style="font-family:'Bebas Neue',sans-serif;font-size:3rem;color:rgba(245,197,24,0.15);margin-bottom:10px">+8</div>
-            <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.8rem;color:var(--muted2);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:14px">More Groups</div>
-            <button class="buy-pill">View All →</button>
-          </div>
-        </div>`;
-    }
-
-    // ===================== SCHEDULE PAGE =====================
-    const scheduleGroups = {
-      'abc': ['MEX','RSA','KOR','CZE','CAN','BIH','QAT','SUI','BRA','MAR','HAI','SCO'],
-      'def': ['USA','PAR','AUS','TUR','GER','CUW','CIV','ECU','NED','JPN','SWE','TUN'],
-      'ghi': ['BEL','EGY','IRN','NZL','ESP','CPV','KSA','URU','FRA','SEN','IRQ','NOR'],
-      'jkl': ['ARG','ALG','AUT','JOR','POR','COD','UZB','COL','ENG','CRO','GHA','PAN'],
-    };
-
-    function renderSchedule() {
-      Object.entries(scheduleGroups).forEach(([key, codes]) => {
-        const el = document.getElementById('chips-'+key);
-        if(!el) return;
-        el.innerHTML = codes.map(code => `
-          <span class="nation-chip" onclick="location.href='nations.html'">
-            <img class="nc-flag" src="https://flagcdn.com/w40/${iso2[code]}.png" alt="${code}" onerror="this.style.display='none'"/>
-            ${code}
-          </span>
-        `).join('');
-      });
-    }
-
-
-    // ===================== THE WORLD CUP PRICE =====================
-    function fmtUsdPrice(p){
-      if(!isFinite(p) || p<=0) return '$0';
-      if(p>=1)    return '$'+p.toFixed(2);
-      if(p>=0.01) return '$'+p.toFixed(4);
-      const m = p.toFixed(20).match(/^0\.(0*)(\d{1,3})/);
-      if(!m) return '$'+p.toFixed(6);
-      const sig = m[2].replace(/0+$/,'') || '0';
-      return '$0.'+m[1]+sig;
-    }
-    async function fetchTwcPrice() {
-      try {
-        // Jupiter Price API V3 (public lite endpoint, no API key needed)
-        const res = await fetch(`https://lite-api.jup.ag/price/v3?ids=${TWC_CA}`);
-        if(!res.ok) return;
-        const data = await res.json();
-        const price = data?.[TWC_CA]?.usdPrice;
-        if(price) {
-          const el = document.getElementById('twc-price');
-          if(el) el.textContent = fmtUsdPrice(Number(price));
-        }
-      } catch(e) {
-        // silently fail — keep showing "LIVE"
-      }
-    }
-    fetchTwcPrice();
-    setInterval(fetchTwcPrice, 30000);
-
-    // ===================== LIVE POOL (treasury, on-chain) =====================
-    const POOL_VAULT   = '7sjJ5Hjd8zK9hqSM6fTyLw3Dab5BwyBBXvAQcK8mK75t';
-    const POOL_PHANTOM = '66jUsP4ndWNYjMVLRT1VqKvVDT79Gjq2pqRMffYW2Mzn';
-    const POOL_RPCS    = ['https://api.mainnet-beta.solana.com','https://solana-rpc.publicnode.com'];
-    const SOL_MINT     = 'So11111111111111111111111111111111111111112';
-    let solUsdPrice = null;
-
-    async function rpcBal(addr){
-      const body = JSON.stringify({jsonrpc:'2.0',id:1,method:'getBalance',params:[addr]});
-      for(const url of POOL_RPCS){
-        try{
-          const r = await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body});
-          if(!r.ok) continue;
-          const j = await r.json();
-          if(j && j.result && typeof j.result.value === 'number') return j.result.value/1e9;
-        }catch(e){}
-      }
-      return null;
-    }
-    async function fetchSolUsd(){
-      try{
-        const r = await fetch(`https://lite-api.jup.ag/price/v3?ids=${SOL_MINT}`);
-        const j = await r.json();
-        const p = j && j[SOL_MINT] && j[SOL_MINT].usdPrice;
-        if(p) solUsdPrice = Number(p);
-      }catch(e){}
-    }
-    async function fetchPool(){
-      const solEl = document.getElementById('hero-pool-sol');
-      const usdEl = document.getElementById('hero-pool-usd');
-      if(!solEl) return;
-      await fetchSolUsd();
-      const r = await Promise.all([rpcBal(POOL_VAULT), rpcBal(POOL_PHANTOM)]);
-      if(r[0]===null && r[1]===null){ solEl.innerHTML = 'see Pools'; if(usdEl) usdEl.textContent=''; return; }
-      const total = (r[0]||0) + (r[1]||0);
-      solEl.innerHTML = total.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}) + '<span class="u">SOL</span>';
-      if(usdEl) usdEl.textContent = solUsdPrice ? '≈ $'+(total*solUsdPrice).toLocaleString('en-US',{maximumFractionDigits:0})+' USD' : '\u00a0';
-    }
-    fetchPool();
-    setInterval(fetchPool, 30000);
-
-    // ===================== COUNTDOWN =====================
-    function updateCountdown() {
-      const diff = new Date('2026-06-11T16:00:00Z') - new Date();
-      if(diff<=0){document.querySelector('.hero-countdown').style.display='none';return;}
-      document.getElementById('cd-days').textContent = String(Math.floor(diff/86400000)).padStart(2,'0');
-      document.getElementById('cd-hours').textContent = String(Math.floor((diff%86400000)/3600000)).padStart(2,'0');
-      document.getElementById('cd-mins').textContent = String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
-      document.getElementById('cd-secs').textContent = String(Math.floor((diff%60000)/1000)).padStart(2,'0');
-    }
-    setInterval(updateCountdown,1000); updateCountdown();
-    (function(){ var k=new Date('2026-06-11T16:00:00Z')-new Date(); var el=document.getElementById('ss-days-kickoff'); if(el) el.textContent=Math.max(0,Math.ceil(k/86400000)); })();
-
-    // ===================== REVEAL =====================
-    const obs = new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }), {threshold:0.08});
-    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
-
-    // ===================== INIT =====================
-    buildTicker();
-    buildHomeGroups();
-    renderSchedule();
-  </script>
+async function boot(){
+  const H=window.HUB||{worldcup:[],players:[],country:{}};
+  const all=[].concat(addrsOf(H.worldcup),addrsOf(H.players),countryAddrs());
+  // initial empty render
+  renderCol('col-worldcup',H.worldcup,{},5);
+  renderCol('col-country',countryAddrs(),{},5);
+  renderCol('col-players',H.players,{},5);
+  const prices=await L.fetchTokens(all);
+  renderCol('col-worldcup',H.worldcup,prices,5);
+  renderCol('col-country',countryAddrs(),prices,5);
+  renderCol('col-players',H.players,prices,5);
+  setTimeout(boot,30000);
+}
+boot();
+</script>
 </body>
 </html>
