@@ -11,6 +11,7 @@
 <script src="hub-tokens.js"></script>
 <script src="fixtures.js"></script>
 <script src="live.js"></script>
+<script src="fanzone.js"></script>
 <style>
   :root{--bg:#060709;--card:rgba(255,255,255,0.03);--border:rgba(255,255,255,0.06);--gold:#f5c518;--gold2:#e8a900;--green:#00e676;--red:#ff5277;--text:#f0f2f5;--muted:#5a6070;--muted2:#8892a4}
   *{box-sizing:border-box;margin:0;padding:0}
@@ -119,9 +120,10 @@
     <li><a href="index.html" class="active">Home</a></li>
     <li><a href="market.html">World Cup</a></li>
     <li><a href="countries.html">Countries</a></li>
-    <li><a href="players.html">Players</a></li>
-      <li><a href="groups.html">Groups</a></li>
-      <li><a href="banner.html">Fan Zone</a></li>
+    <li><a href="groups.html">Groups</a></li>
+    <li><a href="jersey.html">Kit</a></li>
+    <li><a href="game.html">Play</a></li>
+    <li><a href="#fanzone">Fan Zone</a></li>
     <li><a href="terms.html">Terms</a></li>
     </ul>
   <button class="mnav-btn" onclick="document.getElementById('mnav').classList.toggle('open')" aria-label="Menu">&#9776;</button>
@@ -130,9 +132,10 @@
   <a href="index.html" class="active">Home</a>
   <a href="market.html">World Cup</a>
   <a href="countries.html">Countries</a>
-  <a href="players.html">Players</a>
   <a href="groups.html">Groups</a>
-  <a href="banner.html">Fan Zone</a>
+  <a href="jersey.html">Kit</a>
+  <a href="game.html">Play</a>
+  <a href="#fanzone">Fan Zone</a>
   <a href="terms.html">Terms</a>
 </div>
 
@@ -175,8 +178,8 @@
     </div>
   </section>
 
-  <section class="fz">
-    <div class="fz-head"><h2>Fan Zone</h2><div class="fz-sub">Free downloads — back your nation. <a href="banner.html">More in Fan Zone →</a></div></div>
+  <section class="fz" id="fanzone">
+    <div class="fz-head"><h2>Fan Zone</h2><div class="fz-sub">Free downloads — back your nation. <a href="jersey.html">Build your kit →</a></div></div>
     <div class="fz-grid">
       <div class="fz-card">
         <div class="fz-prev"><img id="prev-banner" alt="Team banner preview"></div>
@@ -284,7 +287,7 @@ function renderMatchday(prices){
     const status=live?'<span class="md-liveb">● LIVE</span>':(done?'<span class="md-ft">FT</span>':(e.venue||''));
     let win='';
     if(done){const w=e.home.winner?e.home:(e.away.winner?e.away:null);
-      if(w&&w.code)win='<a class="md-win" href="assets/fanzone/posters/'+w.code+'.png" download="theworldcup-'+w.code.toLowerCase()+'-winner.png">🏆 '+(((window.NATION||{})[w.code]||{}).n||w.code)+' win — get the winner poster ↓</a>';
+      if(w&&w.code)win='<a class="md-win" href="#" onclick="FZGEN.download(\'poster\',\''+w.code+'\');return false;">🏆 '+(((window.NATION||{})[w.code]||{}).n||w.code)+' win — get the winner poster ↓</a>';
       else win='<div class="md-draw">Full time · draw</div>';}
     c.innerHTML='<div class="md-grp"><span class="gp">Group '+(groupOf(e)||'—')+'</span><span>'+status+'</span></div>'+
       mdSide(e.home,prices)+'<div class="md-vs">v</div>'+mdSide(e.away,prices)+win;
@@ -342,23 +345,26 @@ boot();
 
 const NATIONS=[['ALG','Algeria'],['ARG','Argentina'],['AUS','Australia'],['AUT','Austria'],['BEL','Belgium'],['BIH','Bosnia & Herzegovina'],['BRA','Brazil'],['CAN','Canada'],['CPV','Cape Verde'],['COL','Colombia'],['CRO','Croatia'],['CUW','Curaçao'],['CZE','Czechia'],['COD','DR Congo'],['ECU','Ecuador'],['EGY','Egypt'],['ENG','England'],['FRA','France'],['GER','Germany'],['GHA','Ghana'],['HAI','Haiti'],['IRN','Iran'],['IRQ','Iraq'],['CIV','Ivory Coast'],['JPN','Japan'],['JOR','Jordan'],['MEX','Mexico'],['MAR','Morocco'],['NED','Netherlands'],['NZL','New Zealand'],['NOR','Norway'],['PAN','Panama'],['PAR','Paraguay'],['POR','Portugal'],['QAT','Qatar'],['KSA','Saudi Arabia'],['SCO','Scotland'],['SEN','Senegal'],['RSA','South Africa'],['KOR','South Korea'],['ESP','Spain'],['SWE','Sweden'],['SUI','Switzerland'],['TUN','Tunisia'],['TUR','Türkiye'],['USA','United States'],['URU','Uruguay'],['UZB','Uzbekistan']];
 function initFZ(){
-  [['banner','assets/fanzone/banners/','prev-banner','sel-banner','dl-banner'],
-   ['poster','assets/fanzone/posters/','prev-poster','sel-poster','dl-poster'],
-   ['ball','assets/fanzone/balls/','prev-ball','sel-ball','dl-ball']].forEach(function(c){
-    const k=c[0],path=c[1],sel=document.getElementById(c[3]);if(!sel)return;
+  [['banner','prev-banner','sel-banner','dl-banner'],
+   ['poster','prev-poster','sel-poster','dl-poster'],
+   ['ball','prev-ball','sel-ball','dl-ball']].forEach(function(c){
+    const k=c[0],sel=document.getElementById(c[2]);if(!sel)return;
     NATIONS.forEach(function(n){const o=document.createElement('option');o.value=n[0];o.textContent=n[1];sel.appendChild(o);});
-    function upd(){const code=sel.value;document.getElementById(c[2]).src=path+code+'.png';
-      const dl=document.getElementById(c[4]);dl.href=path+code+'.png';dl.setAttribute('download','theworldcup-'+code.toLowerCase()+'-'+k+'.png');}
-    sel.value='BRA';sel.addEventListener('change',upd);upd();
+    function upd(){if(window.FZGEN)FZGEN.preview(k,sel.value,document.getElementById(c[1]));}
+    sel.value='BRA';sel.addEventListener('change',upd);
+    const dl=document.getElementById(c[3]);
+    if(dl)dl.addEventListener('click',function(e){e.preventDefault();if(window.FZGEN)FZGEN.download(k,sel.value);});
     const sh=document.getElementById('sh-'+k);
     if(sh)sh.addEventListener('click',function(){
       const code=sel.value,nm=(NATIONS.find(x=>x[0]===code)||[,code])[1];
+      if(window.FZGEN)FZGEN.download(k,code);
       const txt=encodeURIComponent('Backing '+nm+' at the crypto World Cup 🌍⚽\n\nEvery World Cup token — themed, country & more — one place 👇');
-      window.open('https://twitter.com/intent/tweet?text='+txt+'&url='+encodeURIComponent('https://theworldcup.gg'),'_blank','noopener');
+      setTimeout(()=>window.open('https://twitter.com/intent/tweet?text='+txt+'&url='+encodeURIComponent('https://theworldcup.gg'),'_blank','noopener'),350);
     });
+    upd();
   });
 }
-initFZ();
+if(document.fonts&&document.fonts.ready){document.fonts.ready.then(initFZ);}else{initFZ();}
 </script>
 </body>
 </html>
