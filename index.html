@@ -9,6 +9,8 @@
 <script src="https://plugin.jup.ag/plugin-v1.js" data-preload defer></script>
 <script src="tokens.js"></script>
 <script src="hub-tokens.js"></script>
+<script src="fixtures.js"></script>
+<script src="live.js"></script>
 <style>
   :root{--bg:#060709;--card:rgba(255,255,255,0.03);--border:rgba(255,255,255,0.06);--gold:#f5c518;--gold2:#e8a900;--green:#00e676;--red:#ff5277;--text:#f0f2f5;--muted:#5a6070;--muted2:#8892a4}
   *{box-sizing:border-box;margin:0;padding:0}
@@ -60,6 +62,53 @@
   .mnav a.active,.mnav a:hover{color:var(--gold)}
   .mnav.open{display:flex}
   @media(max-width:720px){.mnav-btn{display:block}.nav-links{display:none}}
+  .col-live{color:var(--green);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.7rem;letter-spacing:.12em}
+  .fz{position:relative;z-index:1;padding:34px 0 6px;border-top:1px solid var(--border);margin-top:30px}
+  .fz-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:6px}
+  .fz-head h2{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:.04em}
+  .fz-sub{color:var(--muted2);font-size:.82rem}
+  .fz-sub a{color:var(--gold)}
+  .fz-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .fz-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;display:flex;flex-direction:column}
+  .fz-prev{aspect-ratio:1/1;border-radius:11px;overflow:hidden;background:#0b0d11;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;margin-bottom:13px}
+  .fz-prev img{width:100%;height:100%;object-fit:contain}
+  .fz-card h3{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.03em}
+  .fz-card p{color:var(--muted);font-size:.76rem;margin:2px 0 13px;line-height:1.4}
+  .fz-controls{margin-top:auto;display:flex;gap:8px}
+  .fz-sel{flex:1;min-width:0;background:#0b0d11;color:var(--text);border:1px solid var(--border);border-radius:9px;padding:9px;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:.92rem}
+  .fz-dl{display:flex;align-items:center;background:rgba(245,197,24,0.14);border:1px solid rgba(245,197,24,0.35);color:var(--gold);padding:0 16px;border-radius:9px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:.82rem;white-space:nowrap;cursor:pointer}
+  .fz-dl:hover{background:rgba(245,197,24,0.26)}
+  @media(max-width:820px){.fz-grid{grid-template-columns:1fr}}
+  .ecostat{margin-top:16px;display:inline-flex;align-items:center;gap:8px;background:rgba(245,197,24,0.07);border:1px solid rgba(245,197,24,0.22);border-radius:999px;padding:7px 16px;font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.04em;font-size:.84rem;color:var(--muted2)}
+  .ecostat b{color:var(--gold);font-family:'DM Mono',monospace;font-weight:500}
+  .ecostat .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
+  .md{position:relative;z-index:1;padding:30px 0 4px}
+  .md-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:6px}
+  .md-head h2{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:.04em}
+  .md-meta{font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);font-size:.82rem}
+  .md-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+  .md-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:13px 14px}
+  .md-card .md-grp{display:flex;justify-content:space-between;color:var(--muted);font-size:.7rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:9px}
+  .md-card .md-grp .gp{color:var(--gold)}
+  .md-team{display:flex;align-items:center;gap:9px;padding:6px 6px;border-radius:9px;cursor:pointer;transition:background .15s}
+  .md-team:hover{background:rgba(245,197,24,0.08)}
+  .md-team img{width:26px;height:18px;border-radius:3px;object-fit:cover;background:#11141a;flex-shrink:0}
+  .md-team .mt-n{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.98rem}
+  .md-team .mt-r{margin-left:auto;text-align:right}
+  .md-team .mt-p{font-family:'DM Mono',monospace;font-size:.76rem;color:var(--muted2)}
+  .md-team .mt-c{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.72rem}
+  .md-vs{text-align:center;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.7rem;letter-spacing:.12em;margin:1px 0}
+  .md-note{color:var(--muted);font-size:.74rem;margin-top:11px}
+  .fz-share{display:flex;align-items:center;justify-content:center;width:40px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:9px;color:var(--muted2);cursor:pointer;font-size:.9rem;flex-shrink:0;transition:all .15s}
+  .fz-share:hover{color:var(--gold);border-color:rgba(245,197,24,0.35)}
+  .md-liveb{color:var(--red);font-weight:700;letter-spacing:.08em}
+  .md-ft{color:var(--muted2);font-weight:700;letter-spacing:.08em}
+  .mt-score{margin-left:auto;font-family:'DM Mono',monospace;font-size:1.1rem;color:var(--text)}
+  .mt-score.win{color:var(--gold)}
+  .md-team.is-win .mt-n{color:var(--gold)}
+  .md-win{display:block;margin-top:10px;text-align:center;background:rgba(245,197,24,0.12);border:1px solid rgba(245,197,24,0.32);color:var(--gold);padding:8px;border-radius:8px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.8rem;letter-spacing:.03em}
+  .md-win:hover{background:rgba(245,197,24,0.22)}
+  .md-draw{margin-top:10px;text-align:center;color:var(--muted2);font-size:.76rem;font-family:'Barlow Condensed',sans-serif;letter-spacing:.06em}
 </style>
 </head>
 <body>
@@ -93,7 +142,17 @@
     <h1>EVERY WORLD CUP TOKEN.<br>ONE PLACE.</h1>
     <p>Live prices and one-tap buys for the entire World Cup token meta — themed tokens, country tokens and player tokens, all ranked by market cap and bought straight from your own wallet. Non-custodial.</p>
     <div class="kick" id="kick">Kickoff <b>June 11</b></div>
+    <div class="ecostat" id="ecostat"></div>
   </header>
+
+  <section class="md">
+    <div class="md-head">
+      <h2>Matchday</h2>
+      <div class="md-meta"><span id="md-label">Next up</span> · <span id="md-date">—</span></div>
+    </div>
+    <div class="md-list" id="md-list"></div>
+    <div class="md-note">Tap a nation to back them — routes to their country token. Fixtures shown in tournament order.</div>
+  </section>
 
   <section class="cols">
     <div class="col">
@@ -109,12 +168,34 @@
       <div class="col-foot"><a href="countries.html">View all country tokens</a></div>
     </div>
     <div class="col">
-      <div class="col-h"><h2>Players</h2><a href="players.html">All →</a></div>
-      <div class="col-sub">Player tokens</div>
-      <div id="col-players"></div>
-      <div class="col-foot"><a href="players.html">View all player tokens</a></div>
+      <div class="col-h"><h2>Movers</h2><span class="col-live">● LIVE</span></div>
+      <div class="col-sub">Biggest 24h moves across the meta</div>
+      <div id="col-movers"></div>
+      <div class="col-foot"><a href="market.html">Browse all tokens</a></div>
     </div>
   </section>
+
+  <section class="fz">
+    <div class="fz-head"><h2>Fan Zone</h2><div class="fz-sub">Free downloads — back your nation. <a href="banner.html">More in Fan Zone →</a></div></div>
+    <div class="fz-grid">
+      <div class="fz-card">
+        <div class="fz-prev"><img id="prev-banner" alt="Team banner preview"></div>
+        <h3>Team Banner</h3><p>1500×500 — drop it straight in as your X / profile header.</p>
+        <div class="fz-controls"><select id="sel-banner" class="fz-sel"></select><button class="fz-share" id="sh-banner" title="Share to X" aria-label="Share to X">𝕏</button><a id="dl-banner" class="fz-dl" download>Get</a></div>
+      </div>
+      <div class="fz-card">
+        <div class="fz-prev"><img id="prev-poster" alt="Winners poster preview"></div>
+        <h3>Winners Poster</h3><p>1080×1350 — portrait "back your nation" poster, print or post.</p>
+        <div class="fz-controls"><select id="sel-poster" class="fz-sel"></select><button class="fz-share" id="sh-poster" title="Share to X" aria-label="Share to X">𝕏</button><a id="dl-poster" class="fz-dl" download>Get</a></div>
+      </div>
+      <div class="fz-card">
+        <div class="fz-prev"><img id="prev-ball" alt="Team ball preview"></div>
+        <h3>Team Ball</h3><p>1080×1080 — your nation's ball in flag colours, ready to share.</p>
+        <div class="fz-controls"><select id="sel-ball" class="fz-sel"></select><button class="fz-share" id="sh-ball" title="Share to X" aria-label="Share to X">𝕏</button><a id="dl-ball" class="fz-dl" download>Get</a></div>
+      </div>
+    </div>
+  </section>
+
   <p class="disclaimer">Everything is ranked from live on-chain data. Listings are information, not endorsements — always do your own research. Swaps route through the Jupiter aggregator directly from your wallet; this site never holds your funds. See <a href="terms.html">Terms</a>.</p>
 </div>
 
@@ -125,6 +206,7 @@
 
 <script>
 const L=window.HUBLIB;
+let LIVE=null, LASTPRICES={};
 // kickoff countdown
 (function(){const k=new Date('2026-06-11T00:00:00');const d=Math.ceil((k-new Date())/864e5);
   if(d>0)document.getElementById('kick').innerHTML='Kickoff <b>June 11</b> · '+d+' day'+(d>1?'s':'')+' to go';
@@ -161,20 +243,122 @@ function renderCol(elId,list,prices,n){
   });
 }
 
+function fmtDay(s){const p=s.split('-');const dt=new Date(+p[0],+p[1]-1,+p[2]);return dt.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});}
+function fxAsEvents(){return (window.FIXTURES||[]).map(function(f){return {date:f.d,state:'pre',done:false,venue:f.v||'',g:f.g,
+  home:{code:f.h,name:((window.NATION||{})[f.h]||{}).n,score:'',winner:false},
+  away:{code:f.a,name:((window.NATION||{})[f.a]||{}).n,score:'',winner:false}};});}
+function groupOf(e){if(e.g)return e.g;const f=(window.FIXTURES||[]).find(x=>(x.h===e.home.code&&x.a===e.away.code)||(x.h===e.away.code&&x.a===e.home.code));return f?f.g:'';}
+function pickDay(evs){
+  function dt(s){const p=s.split('-');return new Date(+p[0],+p[1]-1,+p[2]).getTime();}
+  const t=new Date();t.setHours(0,0,0,0);const tms=t.getTime();
+  const srt=evs.slice().sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0);
+  let day=srt.filter(e=>dt(e.date)===tms),label='Today';
+  if(!day.length){const up=srt.find(e=>dt(e.date)>=tms);if(up){day=srt.filter(e=>e.date===up.date);label='Next up';}}
+  if(!day.length&&srt.length){const last=srt[srt.length-1].date;day=srt.filter(e=>e.date===last);label='Latest';}
+  return {day:day,label:label};
+}
+function mdSide(s,prices){
+  const N=(window.NATION||{})[s.code]||{}; const iso=N.iso||'';
+  const mint=((window.HUB&&window.HUB.country)||{})[s.code]||'';
+  const flag=iso?('https://flagcdn.com/w40/'+iso+'.png'):(s.logo||'');
+  const hasScore=s.score!==''&&s.score!=null;
+  let right;
+  if(hasScore){right='<div class="mt-score'+(s.winner?' win':'')+'">'+s.score+'</div>';}
+  else{const d=(mint&&prices&&prices[mint])||{},chgN=Number(d.chg),ok=isFinite(chgN);
+    right='<div class="mt-r"><div class="mt-p">'+(mint&&d.price?L.fmtP(d.price):'')+'</div><div class="mt-c '+(ok?(chgN>=0?'up':'down'):'')+'">'+(ok?((chgN>=0?'▲':'▼')+Math.abs(chgN).toFixed(1)+'%'):'')+'</div></div>';}
+  return '<div class="md-team'+(s.winner?' is-win':'')+'" '+(mint?('onclick="L.buy(\''+mint+'\')"'):'')+'>'+
+    '<img src="'+flag+'" onerror="this.style.visibility=\'hidden\'">'+
+    '<div class="mt-n">'+((N.n||s.name||s.code||'TBD'))+(s.winner?' 🏆':'')+'</div>'+right+'</div>';
+}
+function renderMatchday(prices){
+  LASTPRICES=prices||LASTPRICES;
+  const wrap=document.getElementById('md-list');if(!wrap)return;
+  const evs=(LIVE&&LIVE.length)?LIVE:fxAsEvents();
+  const r=pickDay(evs),day=r.day;
+  const lab=document.getElementById('md-label'),dd=document.getElementById('md-date');
+  if(lab)lab.textContent=r.label;if(dd)dd.textContent=day.length?fmtDay(day[0].date):'—';
+  wrap.innerHTML='';
+  day.forEach(function(e){
+    const c=document.createElement('div');c.className='md-card';
+    const done=e.done||e.state==='post', live=e.state==='in';
+    const status=live?'<span class="md-liveb">● LIVE</span>':(done?'<span class="md-ft">FT</span>':(e.venue||''));
+    let win='';
+    if(done){const w=e.home.winner?e.home:(e.away.winner?e.away:null);
+      if(w&&w.code)win='<a class="md-win" href="assets/fanzone/posters/'+w.code+'.png" download="theworldcup-'+w.code.toLowerCase()+'-winner.png">🏆 '+(((window.NATION||{})[w.code]||{}).n||w.code)+' win — get the winner poster ↓</a>';
+      else win='<div class="md-draw">Full time · draw</div>';}
+    c.innerHTML='<div class="md-grp"><span class="gp">Group '+(groupOf(e)||'—')+'</span><span>'+status+'</span></div>'+
+      mdSide(e.home,prices)+'<div class="md-vs">v</div>'+mdSide(e.away,prices)+win;
+    wrap.appendChild(c);
+  });
+}
+function refreshLive(){ if(!window.WCLIVE)return;
+  window.WCLIVE.load().then(function(evs){LIVE=evs;renderMatchday(LASTPRICES);}).catch(function(){LIVE=null;});
+}
+function renderEco(prices){
+  const eco=document.getElementById('ecostat');if(!eco)return;
+  let tot=0,cnt=0;for(const a in prices){const m=Number(prices[a].mc);if(isFinite(m)&&m>0){tot+=m;cnt++;}}
+  if(!cnt){eco.style.display='none';return;}
+  eco.style.display='inline-flex';
+  eco.innerHTML='<span class="dot"></span> <b>'+L.fmtN(tot)+'</b> total ecosystem market cap · '+cnt+' tokens live';
+}
+function allItems(H){const a=[];(H.worldcup||[]).forEach(t=>a.push(t));(H.players||[]).forEach(t=>a.push(t));countryAddrs().forEach(x=>a.push(x));return a;}
+function renderMovers(prices,n){
+  const el=document.getElementById('col-movers');if(!el)return;
+  const H=window.HUB||{};
+  let items=allItems(H).map(t=>({t,a:(typeof t==='string'?t:t.address)})).filter(x=>x.a);
+  items.forEach(x=>x.d=prices[x.a]||{});
+  items=items.filter(x=>isFinite(Number(x.d.chg))&&(Number(x.d.mc)||0)>=5000);
+  items.sort((p,q)=>Number(q.d.chg)-Number(p.d.chg));
+  const top=items.slice(0,n);
+  if(!top.length){el.innerHTML='<div class="col-empty">Live moves appear once trading opens.</div>';return;}
+  el.innerHTML='';
+  top.forEach((x,i)=>{const d=x.d,chgN=Number(d.chg),cls=chgN>=0?'up':'down',chg=(chgN>=0?'▲':'▼')+Math.abs(chgN).toFixed(1)+'%';
+    const row=document.createElement('div');row.className='r';row.onclick=function(){L.buy(x.a);};
+    row.innerHTML=`<div class="rk">${i+1}</div>
+      <img src="${L.logo(x.a)}" onerror="this.style.visibility='hidden'">
+      <div style="min-width:0"><div class="nm">${nameOf(x.t,d)}</div><div class="tk">$${tickOf(x.t,d)}</div></div>
+      <div class="right"><div class="chg ${cls}" style="font-size:1.02rem">${chg}</div><div class="mc">MC ${L.fmtN(d.mc)}</div></div>`;
+    el.appendChild(row);});
+}
+
 async function boot(){
   const H=window.HUB||{worldcup:[],players:[],country:{}};
   const all=[].concat(addrsOf(H.worldcup),addrsOf(H.players),countryAddrs());
   // initial empty render
   renderCol('col-worldcup',H.worldcup,{},5);
   renderCol('col-country',countryAddrs(),{},5);
-  renderCol('col-players',H.players,{},5);
+  renderMovers({},5);
+  renderMatchday({});
   const prices=await L.fetchTokens(all);
   renderCol('col-worldcup',H.worldcup,prices,5);
   renderCol('col-country',countryAddrs(),prices,5);
-  renderCol('col-players',H.players,prices,5);
+  renderMovers(prices,5);
+  renderMatchday(prices);
+  renderEco(prices);
+  refreshLive();
   setTimeout(boot,30000);
 }
 boot();
+
+const NATIONS=[['ALG','Algeria'],['ARG','Argentina'],['AUS','Australia'],['AUT','Austria'],['BEL','Belgium'],['BIH','Bosnia & Herzegovina'],['BRA','Brazil'],['CAN','Canada'],['CPV','Cape Verde'],['COL','Colombia'],['CRO','Croatia'],['CUW','Curaçao'],['CZE','Czechia'],['COD','DR Congo'],['ECU','Ecuador'],['EGY','Egypt'],['ENG','England'],['FRA','France'],['GER','Germany'],['GHA','Ghana'],['HAI','Haiti'],['IRN','Iran'],['IRQ','Iraq'],['CIV','Ivory Coast'],['JPN','Japan'],['JOR','Jordan'],['MEX','Mexico'],['MAR','Morocco'],['NED','Netherlands'],['NZL','New Zealand'],['NOR','Norway'],['PAN','Panama'],['PAR','Paraguay'],['POR','Portugal'],['QAT','Qatar'],['KSA','Saudi Arabia'],['SCO','Scotland'],['SEN','Senegal'],['RSA','South Africa'],['KOR','South Korea'],['ESP','Spain'],['SWE','Sweden'],['SUI','Switzerland'],['TUN','Tunisia'],['TUR','Türkiye'],['USA','United States'],['URU','Uruguay'],['UZB','Uzbekistan']];
+function initFZ(){
+  [['banner','assets/fanzone/banners/','prev-banner','sel-banner','dl-banner'],
+   ['poster','assets/fanzone/posters/','prev-poster','sel-poster','dl-poster'],
+   ['ball','assets/fanzone/balls/','prev-ball','sel-ball','dl-ball']].forEach(function(c){
+    const k=c[0],path=c[1],sel=document.getElementById(c[3]);if(!sel)return;
+    NATIONS.forEach(function(n){const o=document.createElement('option');o.value=n[0];o.textContent=n[1];sel.appendChild(o);});
+    function upd(){const code=sel.value;document.getElementById(c[2]).src=path+code+'.png';
+      const dl=document.getElementById(c[4]);dl.href=path+code+'.png';dl.setAttribute('download','theworldcup-'+code.toLowerCase()+'-'+k+'.png');}
+    sel.value='BRA';sel.addEventListener('change',upd);upd();
+    const sh=document.getElementById('sh-'+k);
+    if(sh)sh.addEventListener('click',function(){
+      const code=sel.value,nm=(NATIONS.find(x=>x[0]===code)||[,code])[1];
+      const txt=encodeURIComponent('Backing '+nm+' at the crypto World Cup 🌍⚽\n\nEvery World Cup token — themed, country & more — one place 👇');
+      window.open('https://twitter.com/intent/tweet?text='+txt+'&url='+encodeURIComponent('https://theworldcup.gg'),'_blank','noopener');
+    });
+  });
+}
+initFZ();
 </script>
 </body>
 </html>
