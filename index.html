@@ -611,13 +611,17 @@ function fxAsEvents(){return (window.FIXTURES||[]).map(function(f){return {date:
   home:{code:f.h,name:((window.NATION||{})[f.h]||{}).n,score:'',winner:false},
   away:{code:f.a,name:((window.NATION||{})[f.a]||{}).n,score:'',winner:false}};});}
 function groupOf(e){if(e.g)return e.g;const f=(window.FIXTURES||[]).find(x=>(x.h===e.home.code&&x.a===e.away.code)||(x.h===e.away.code&&x.a===e.home.code));return f?f.g:'';}
+function ldate(e){if(e.iso){const d=new Date(e.iso);if(!isNaN(d))return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}return e.date;}
 function pickDay(evs){
   function dt(s){const p=s.split('-');return new Date(+p[0],+p[1]-1,+p[2]).getTime();}
   const t=new Date();t.setHours(0,0,0,0);const tms=t.getTime();
-  const srt=evs.slice().sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0);
-  let day=srt.filter(e=>dt(e.date)===tms),label='Today';
-  if(!day.length){const up=srt.find(e=>dt(e.date)>=tms);if(up){day=srt.filter(e=>e.date===up.date);label='Next up';}}
-  if(!day.length&&srt.length){const last=srt[srt.length-1].date;day=srt.filter(e=>e.date===last);label='Latest';}
+  evs=evs.map(function(e){e._ld=ldate(e);return e;});
+  const live=evs.filter(e=>e.state==='in');
+  if(live.length){const d=live[0]._ld;return {day:evs.filter(e=>e._ld===d),label:'Live now'};}
+  const srt=evs.slice().sort((a,b)=>a._ld<b._ld?-1:a._ld>b._ld?1:0);
+  let day=srt.filter(e=>dt(e._ld)===tms),label='Today';
+  if(!day.length){const up=srt.find(e=>dt(e._ld)>=tms);if(up){day=srt.filter(e=>e._ld===up._ld);label='Next up';}}
+  if(!day.length&&srt.length){const last=srt[srt.length-1]._ld;day=srt.filter(e=>e._ld===last);label='Latest';}
   return {day:day,label:label};
 }
 function mdSide(s,prices){
@@ -639,7 +643,7 @@ function renderMatchday(prices){
   const evs=(LIVE&&LIVE.length)?LIVE:fxAsEvents();
   const r=pickDay(evs),day=r.day;
   const lab=document.getElementById('md-label'),dd=document.getElementById('md-date');
-  if(lab)lab.textContent=r.label;if(dd)dd.textContent=day.length?fmtDay(day[0].date):'—';
+  if(lab)lab.textContent=r.label;if(dd)dd.textContent=day.length?fmtDay(day[0]._ld||day[0].date):'—';
   wrap.innerHTML='';
   day.forEach(function(e){
     const c=document.createElement('div');c.className='md-card';
