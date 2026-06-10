@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bracket Challenge — Predict the 2026 knockouts | The World Cup</title>
+<meta name="description" content="Fill out your World Cup 2026 knockout bracket — tap your winner in every tie, all the way to the champion. Share your call.">
+<meta property="og:title" content="My World Cup 2026 Bracket">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@500;600;700&family=Barlow+Condensed:wght@600;700;800&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#060709;--card:rgba(255,255,255,0.03);--border:rgba(255,255,255,0.07);--gold:#f5c518;--green:#00e676;--red:#ff5277;--text:#f0f2f5;--muted:#5a6070;--muted2:#8892a4}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-height:100vh}
+  .radar{position:fixed;inset:0;z-index:0;background:radial-gradient(circle at 50% 12%,rgba(0,90,55,0.32),transparent 58%)}
+  .topbar{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;max-width:760px;margin:0 auto;border-bottom:1px solid var(--border);flex-wrap:wrap}
+  .tb-logo{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.06em;color:var(--gold);text-decoration:none}
+  .tb-links{display:flex;gap:16px}
+  .tb-links a{color:var(--muted2);text-decoration:none;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.07em;text-transform:uppercase;font-size:.8rem}
+  .tb-links a:hover,.tb-links a.active{color:var(--gold)}
+  @media(max-width:560px){.tb-links{gap:12px}.tb-links a{font-size:.72rem}}
+  .wrap{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:26px 18px 70px}
+  .eyebrow{font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);font-size:.76rem;text-align:center}
+  h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.6rem,8vw,4.4rem);line-height:.9;text-align:center;margin-top:6px}
+  .sub{color:var(--muted2);text-align:center;max-width:560px;margin:12px auto 0;font-size:1rem;line-height:1.5}
+  .steps{display:flex;justify-content:center;gap:7px;margin:22px 0 6px;flex-wrap:wrap}
+  .step{font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:.72rem;color:var(--muted);padding:5px 10px;border:1px solid var(--border);border-radius:20px}
+  .step.on{color:var(--gold);border-color:rgba(245,197,24,0.5)}
+  .step.done{color:var(--green);border-color:rgba(0,230,118,0.35)}
+  .rhead{text-align:center;margin:18px 0 14px}
+  .rhead .rt{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:.03em}
+  .rhead .rs{color:var(--muted2);font-size:.86rem}
+  .ties{display:flex;flex-direction:column;gap:9px;max-width:560px;margin:0 auto}
+  .tie{display:flex;gap:8px;align-items:stretch}
+  .team{flex:1;display:flex;align-items:center;gap:9px;background:#0b0d11;border:1px solid var(--border);border-radius:10px;padding:11px 12px;cursor:pointer;color:var(--text);min-width:0}
+  .team img{width:25px;height:18px;border-radius:2px;flex-shrink:0;object-fit:cover;background:#222}
+  .team .tn{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.96rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .team.win{border-color:var(--gold);background:rgba(245,197,24,0.14)}
+  .team.out{opacity:.38}
+  .team:hover{border-color:rgba(245,197,24,0.5)}
+  .tievs{align-self:center;color:var(--muted);font-family:'DM Mono',monospace;font-size:.68rem;flex-shrink:0}
+  .go{display:block;width:100%;max-width:440px;margin:24px auto 0;border:none;cursor:pointer;background:var(--gold);color:#1a1205;padding:15px;border-radius:13px;font-family:'Barlow Condensed',sans-serif;font-weight:800;letter-spacing:.08em;text-transform:uppercase;font-size:1.05rem}
+  .go:disabled{opacity:.4;cursor:not-allowed}
+  .go:not(:disabled):hover{background:#ffd83a}
+  .row2{display:flex;gap:10px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+  .mini{background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--muted2);border-radius:9px;padding:9px 16px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.05em;text-transform:uppercase;font-size:.8rem}
+  .mini:hover{color:var(--gold);border-color:rgba(245,197,24,0.4)}
+  .cardprev{display:block;max-width:430px;width:100%;margin:8px auto 0;border-radius:14px;border:1px solid var(--border)}
+  .actions{display:flex;gap:10px;justify-content:center;margin-top:20px;flex-wrap:wrap}
+  .btn{border:none;cursor:pointer;padding:13px 22px;border-radius:11px;font-family:'Barlow Condensed',sans-serif;font-weight:800;letter-spacing:.06em;text-transform:uppercase;font-size:.92rem}
+  .btn-dl{background:var(--gold);color:#1a1205}
+  .btn-x{background:rgba(255,255,255,0.05);color:var(--text);border:1px solid var(--border)}
+  .btn-x:hover{border-color:rgba(245,197,24,0.4);color:var(--gold)}
+  .btn-again{background:transparent;color:var(--muted2);border:1px solid var(--border)}
+  canvas{display:none}
+  .foot{text-align:center;color:var(--muted);font-size:.78rem;margin-top:34px;line-height:1.5}
+  .foot a{color:var(--muted2)}
+</style>
+</head>
+<body>
+<div class="radar"></div>
+<nav class="topbar">
+  <a href="index.html" class="tb-logo">⚽ THE WORLD CUP</a>
+  <div class="tb-links">
+    <a href="index.html">Home</a>
+    <a href="jersey.html">Kit</a>
+    <a href="game.html">Play</a>
+    <a href="bracket.html" class="active">Bracket</a>
+    <a href="fanzone.html">Fan Zone</a>
+  </div>
+</nav>
+<div class="wrap">
+  <div class="eyebrow">The World Cup · on Solana</div>
+  <h1>Bracket Challenge</h1>
+  <p class="sub">Tap your winner in every knockout tie — Round of 32 all the way to the trophy. Then share your champion call and see if you nailed it.</p>
+
+  <div class="steps" id="steps"></div>
+
+  <div id="play">
+    <div class="rhead"><div class="rt" id="rt"></div><div class="rs" id="rs"></div></div>
+    <div class="ties" id="ties"></div>
+    <button class="go" id="adv" disabled>Pick all winners</button>
+    <div class="row2"><button class="mini" id="reset">Start over</button></div>
+  </div>
+
+  <div id="result" style="display:none">
+    <div class="rhead"><div class="rt" style="color:var(--gold)">Your bracket is in 🏆</div></div>
+    <img class="cardprev" id="cardprev" alt="Your bracket">
+    <div class="actions">
+      <button class="btn btn-dl" id="dl">Download</button>
+      <button class="btn btn-x" id="share">Share to X</button>
+      <button class="btn btn-again" id="again">New bracket</button>
+    </div>
+  </div>
+
+  <div class="foot">Prediction toy · not affiliated with FIFA · built on <a href="index.html">theworldcup.gg</a></div>
+</div>
+<canvas id="cv" width="1080" height="1060"></canvas>
+
+<script>
+const T={
+ ARG:['Argentina','ar'],FRA:['France','fr'],BRA:['Brazil','br'],ESP:['Spain','es'],ENG:['England','gb-eng'],POR:['Portugal','pt'],NED:['Netherlands','nl'],GER:['Germany','de'],
+ BEL:['Belgium','be'],CRO:['Croatia','hr'],URU:['Uruguay','uy'],COL:['Colombia','co'],MAR:['Morocco','ma'],USA:['United States','us'],MEX:['Mexico','mx'],JPN:['Japan','jp'],
+ SUI:['Switzerland','ch'],SEN:['Senegal','sn'],ECU:['Ecuador','ec'],AUT:['Austria','at'],NOR:['Norway','no'],SWE:['Sweden','se'],CIV:['Ivory Coast','ci'],KOR:['South Korea','kr'],
+ EGY:['Egypt','eg'],IRN:['Iran','ir'],AUS:['Australia','au'],CAN:['Canada','ca'],ALG:['Algeria','dz'],PAR:['Paraguay','py'],TUN:['Tunisia','tn'],CPV:['Cape Verde','cv']};
+const SEED=['ARG','FRA','BRA','ESP','ENG','POR','NED','GER','BEL','CRO','URU','COL','MAR','USA','MEX','JPN','SUI','SEN','ECU','AUT','NOR','SWE','CIV','KOR','EGY','IRN','AUS','CAN','ALG','PAR','TUN','CPV'];
+const ORDER=[1,32,16,17,8,25,9,24,4,29,13,20,5,28,12,21,2,31,15,18,7,26,10,23,3,30,14,19,6,27,11,22];
+function team(code){return {code:code,name:T[code][0],iso:T[code][1]};}
+const START=ORDER.map(s=>team(SEED[s-1]));
+const ROUNDS=[['Round of 32',16],['Round of 16',8],['Quarter-finals',4],['Semi-finals',2],['Final',1]];
+
+let ri,played,choice;
+function init(){ri=0;played=[START.slice()];choice={};renderSteps();renderRound();
+  document.getElementById('result').style.display='none';document.getElementById('play').style.display='block';}
+function renderSteps(){
+  const el=document.getElementById('steps');el.innerHTML='';
+  ROUNDS.forEach(function(r,k){const s=document.createElement('div');s.className='step'+(k<ri?' done':k===ri?' on':'');s.textContent=r[0].replace('Round of','R');el.appendChild(s);});
+}
+function renderRound(){
+  renderSteps();choice={};
+  const teams=played[ri],ties=teams.length/2;
+  document.getElementById('rt').textContent=ROUNDS[ri][0];
+  document.getElementById('rs').textContent=ti(ri);
+  const box=document.getElementById('ties');box.innerHTML='';
+  for(let t=0;t<ties;t++){
+    const tie=document.createElement('div');tie.className='tie';
+    [teams[2*t],teams[2*t+1]].forEach(function(tm,side){
+      const b=document.createElement('button');b.className='team';b.dataset.tie=t;b.dataset.side=side;
+      b.innerHTML='<img src="https://flagcdn.com/25x18/'+tm.iso+'.png" onerror="this.style.visibility=\'hidden\'"><span class="tn">'+tm.name+'</span>';
+      b.onclick=function(){choice[t]=side;paint(t);check();};
+      tie.appendChild(b);
+      if(side===0){const v=document.createElement('div');v.className='tievs';v.textContent='v';tie.appendChild(v);}
+    });
+    box.appendChild(tie);
+  }
+  const adv=document.getElementById('adv');adv.disabled=true;
+  adv.textContent=ri<4?('Pick all winners'):'See your bracket';
+}
+function ti(ri){const n=ROUNDS[ri][1];return ri===4?'Pick the champion':('Pick '+n+' winner'+(n>1?'s':''));}
+function paint(t){
+  document.querySelectorAll('.team[data-tie="'+t+'"]').forEach(function(b){
+    const side=+b.dataset.side;b.classList.toggle('win',choice[t]===side);b.classList.toggle('out',choice[t]!=null&&choice[t]!==side);});
+}
+function check(){
+  const ties=played[ri].length/2;let done=true;for(let t=0;t<ties;t++)if(choice[t]==null)done=false;
+  const adv=document.getElementById('adv');adv.disabled=!done;
+  adv.textContent=done?(ri<4?('Advance to '+ROUNDS[ri+1][0]+' →'):'See your bracket 🏆'):(ri<4?'Pick all winners':'Pick the champion');
+}
+document.getElementById('adv').onclick=function(){
+  const teams=played[ri],ties=teams.length/2,winners=[];
+  for(let t=0;t<ties;t++)winners.push(teams[2*t+(choice[t])]);
+  if(ri<4){played[ri+1]=winners;ri++;renderRound();window.scrollTo({top:0,behavior:'smooth'});}
+  else{finish(winners[0]);}
+};
+document.getElementById('reset').onclick=init;
+document.getElementById('again').onclick=init;
+
+function finish(champ){
+  document.getElementById('play').style.display='none';
+  document.getElementById('result').style.display='block';renderSteps();
+  drawCard(champ);
+  document.getElementById('result').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ---- card ----
+const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+function rr(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+function fit(t,px,max){let s=px;ctx.font='700 '+s+"px 'Barlow Condensed'";while(ctx.measureText(t).width>max&&s>14){s--;ctx.font='700 '+s+"px 'Barlow Condensed'";}return s;}
+function drawCard(champ){
+  const W=1080,H=1060;ctx.clearRect(0,0,W,H);ctx.fillStyle='#060709';ctx.fillRect(0,0,W,H);
+  const g=ctx.createRadialGradient(W/2,360,40,W/2,360,820);g.addColorStop(0,'rgba(40,33,8,0.95)');g.addColorStop(1,'rgba(6,7,9,0)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='rgba(245,197,24,0.4)';ctx.lineWidth=2;ctx.strokeRect(22,22,W-44,H-44);
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillStyle='#f5c518';ctx.font="700 30px 'Barlow Condensed'";ctx.letterSpacing='9px';ctx.fillText('MY WORLD CUP 2026 BRACKET',W/2,92);ctx.letterSpacing='0px';
+  // champion block
+  ctx.fillStyle='#8892a4';ctx.font="700 30px 'Barlow Condensed'";ctx.letterSpacing='6px';ctx.fillText('CHAMPION',W/2,196);ctx.letterSpacing='0px';
+  ctx.fillStyle='#f5c518';let cs=fit(champ.name.toUpperCase(),120,820);ctx.font=cs+"px 'Bebas Neue'";ctx.fillText(champ.name.toUpperCase(),W/2,278);
+  // final
+  const final=played[4],runner=final[0].code===champ.code?final[1]:final[0];
+  ctx.fillStyle='#8892a4';ctx.font="700 26px 'Barlow Condensed'";ctx.letterSpacing='5px';ctx.fillText('RUNNER-UP',W/2,372);ctx.letterSpacing='0px';
+  ctx.fillStyle='#f0f2f5';ctx.font="56px 'Bebas Neue'";ctx.fillText(runner.name,W/2,420);
+  function band(label,teams,y,size){
+    ctx.fillStyle='#5a6070';ctx.font="700 24px 'Barlow Condensed'";ctx.letterSpacing='4px';ctx.fillText(label,W/2,y);ctx.letterSpacing='0px';
+    ctx.fillStyle='#f0f2f5';ctx.font="700 "+size+"px 'Barlow Condensed'";
+    ctx.fillText(teams.map(function(t){return t.name;}).join('   ·   '),W/2,y+40);
+  }
+  band('SEMI-FINALISTS',played[3],512,40);
+  band('QUARTER-FINALISTS',played[2].slice(0,4),616,32);
+  band('',played[2].slice(4,8),664,32);
+  // mini bracket viz: list of last-16
+  ctx.fillStyle='#5a6070';ctx.font="700 24px 'Barlow Condensed'";ctx.letterSpacing='4px';ctx.fillText('YOUR LAST 16',W/2,748);ctx.letterSpacing='0px';
+  const r16=played[1];ctx.fillStyle='#8892a4';ctx.font="600 30px 'Barlow Condensed'";
+  for(let i=0;i<4;i++){ctx.fillText(r16.slice(i*4,i*4+4).map(function(t){return t.name;}).join('   ·   '),W/2,792+i*44);}
+  // footer
+  ctx.fillStyle='#f5c518';ctx.font="700 30px 'Barlow Condensed'";ctx.letterSpacing='3px';ctx.fillText('WHO'+String.fromCharCode(39)+'S YOUR CHAMPION?',W/2,980);ctx.letterSpacing='0px';
+  ctx.fillStyle='#5a6070';ctx.font="500 26px 'DM Mono'";ctx.letterSpacing='2px';ctx.fillText('theworldcup.gg',W/2,1018);ctx.letterSpacing='0px';
+  document.getElementById('cardprev').src=cv.toDataURL('image/png');
+}
+function download(){const a=document.createElement('a');a.download='theworldcup-bracket.png';cv.toBlob(function(b){a.href=URL.createObjectURL(b);a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000);});}
+function share(){download();
+  const t='My World Cup 2026 bracket is locked in 🏆 '+(window._champ||'')+' lifting the trophy. What'+String.fromCharCode(39)+'s your call? 👇';
+  setTimeout(()=>window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(t+'\n\n')+'&url='+encodeURIComponent('https://theworldcup.gg'),'_blank','noopener'),350);}
+document.getElementById('dl').onclick=download;document.getElementById('share').onclick=share;
+
+// track champion name for share text
+const _origFinish=finish;finish=function(champ){window._champ=champ.name;_origFinish(champ);};
+
+init();
+</script>
+</body>
+</html>

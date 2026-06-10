@@ -364,6 +364,8 @@ window.FIXTURES = [
   .r .chg{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.78rem}
   .up{color:var(--green)}.down{color:var(--red)}
   .r .mc{color:var(--muted2);font-size:.68rem}
+  .r .buy{flex-shrink:0;background:rgba(245,197,24,0.12);color:var(--gold);border:1px solid rgba(245,197,24,0.4);border-radius:8px;padding:7px 13px;font-family:'Barlow Condensed',sans-serif;font-weight:800;letter-spacing:.05em;text-transform:uppercase;font-size:.78rem;cursor:pointer;margin-left:8px}
+  .r .buy:hover{background:var(--gold);color:#1a1205}
   .col-empty{color:var(--muted2);font-size:.82rem;text-align:center;padding:26px 8px;border:1px dashed var(--border);border-radius:10px;line-height:1.5}
   .col-foot{margin-top:auto;padding-top:12px}
   .col-foot a{display:block;text-align:center;background:rgba(245,197,24,0.1);border:1px solid rgba(245,197,24,0.3);color:var(--gold);padding:10px;border-radius:9px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:.84rem;transition:all .15s}
@@ -431,7 +433,7 @@ window.FIXTURES = [
   .feat-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:6px}
   .feat-head h2{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:.04em}
   .feat-sub{color:var(--muted2);font-size:.9rem}
-  .feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
   .feat-card{display:block;position:relative;overflow:hidden;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;text-decoration:none;color:var(--text);transition:border-color .2s,transform .2s}
   .feat-card:hover{border-color:rgba(245,197,24,0.4);transform:translateY(-2px)}
   .feat-card .feat-ic{font-size:2.2rem;margin-bottom:10px}
@@ -441,7 +443,7 @@ window.FIXTURES = [
   .feat-cta{font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);font-size:.9rem}
   .feat-card.game{background:radial-gradient(120% 100% at 0% 0%,rgba(245,197,24,0.08),transparent 60%),var(--card)}
   .feat-card.kit{background:radial-gradient(120% 100% at 100% 0%,rgba(0,230,118,0.08),transparent 60%),var(--card)}
-  @media(max-width:640px){.feat-grid{grid-template-columns:1fr}}
+  @media(max-width:760px){.feat-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -455,6 +457,7 @@ window.FIXTURES = [
     <li><a href="groups.html">Groups</a></li>
     <li><a href="jersey.html">Kit</a></li>
     <li><a href="game.html">Play</a></li>
+    <li><a href="bracket.html">Bracket</a></li>
     <li><a href="fanzone.html">Fan Zone</a></li>
     <li><a href="terms.html">Terms</a></li>
     </ul>
@@ -467,6 +470,7 @@ window.FIXTURES = [
   <a href="groups.html">Groups</a>
   <a href="jersey.html">Kit</a>
   <a href="game.html">Play</a>
+  <a href="bracket.html">Bracket</a>
   <a href="fanzone.html">Fan Zone</a>
   <a href="terms.html">Terms</a>
 </div>
@@ -524,6 +528,12 @@ window.FIXTURES = [
         <h3>Build Your Kit</h3>
         <p>Put your name and number on your nation's shirt in authentic colours, then post it to X in one tap.</p>
         <span class="feat-cta">Open the kit builder →</span>
+      </a>
+      <a class="feat-card brk" href="bracket.html">
+        <div class="feat-ic">📋</div>
+        <h3>Bracket Challenge</h3>
+        <p>Fill out the whole knockout bracket — tap your winner in every tie to the trophy, then share your champion call.</p>
+        <span class="feat-cta">Pick your bracket →</span>
       </a>
     </div>
   </section>
@@ -591,7 +601,7 @@ function renderCol(elId,list,prices,n){
     row.innerHTML=`<div class="rk">${i+1}</div>
       <img src="${L.logo(x.a)}" onerror="this.style.visibility='hidden'">
       <div style="min-width:0"><div class="nm">${nameOf(x.t,d)}</div><div class="tk">$${tickOf(x.t,d)}</div></div>
-      <div class="right"><div class="price">${L.fmtP(d.price)}</div><div class="chg ${cls}">${chg}</div><div class="mc">MC ${L.fmtN(d.mc)}</div></div>`;
+      <div class="right"><div class="price">${L.fmtP(d.price)}</div><div class="chg ${cls}">${chg}</div><div class="mc">MC ${L.fmtN(d.mc)}</div></div><button class="buy" onclick="event.stopPropagation();L.buy('${x.a}')">Buy</button>`;
     el.appendChild(row);
   });
 }
@@ -670,7 +680,7 @@ function renderMovers(prices,n){
     row.innerHTML=`<div class="rk">${i+1}</div>
       <img src="${L.logo(x.a)}" onerror="this.style.visibility='hidden'">
       <div style="min-width:0"><div class="nm">${nameOf(x.t,d)}</div><div class="tk">$${tickOf(x.t,d)}</div></div>
-      <div class="right"><div class="chg ${cls}" style="font-size:1.02rem">${chg}</div><div class="mc">MC ${L.fmtN(d.mc)}</div></div>`;
+      <div class="right"><div class="chg ${cls}" style="font-size:1.02rem">${chg}</div><div class="mc">MC ${L.fmtN(d.mc)}</div></div><button class="buy" onclick="event.stopPropagation();L.buy('${x.a}')">Buy</button>`;
     el.appendChild(row);});
 }
 
