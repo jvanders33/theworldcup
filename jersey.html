@@ -50,7 +50,7 @@
     <a href="index.html">Home</a>
     <a href="jersey.html" class="active">Kit</a>
     <a href="game.html">Play</a>
-    <a href="index.html#fanzone">Fan Zone</a>
+    <a href="fanzone.html">Fan Zone</a>
   </div>
 </nav>
 <div class="wrap">
@@ -170,13 +170,13 @@ function draw(){
   // hem stripe
   ctx.fillStyle=trim; ctx.fillRect(cx-128, top+540, 256, 20);
 
-  // name
+  // name — up across the shoulders
   ctx.fillStyle=ink; ctx.textAlign='center';
-  const ns=fit(name,58,300); ctx.font='800 '+ns+"px 'Barlow Condensed'"; ctx.letterSpacing='2px';
-  ctx.fillText(name, cx, top+250); ctx.letterSpacing='0px';
-  // number
-  const numSize=fit(num,260,250); ctx.font='800 '+numSize+"px 'Barlow Condensed'";
-  ctx.fillStyle=ink; ctx.fillText(num, cx, top+400);
+  const ns=fit(name,52,290); ctx.font='800 '+ns+"px 'Barlow Condensed'"; ctx.letterSpacing='2px';
+  ctx.fillText(name, cx, top+138); ctx.letterSpacing='0px';
+  // number — centred on the shirt
+  const numSize=fit(num,250,240); ctx.font='800 '+numSize+"px 'Barlow Condensed'";
+  ctx.fillStyle=ink; ctx.fillText(num, cx, top+345);
 
   // ---- footer block ----
   // kit colour chips

@@ -271,10 +271,10 @@ window.FIXTURES = [
     // seams
     ctx.strokeStyle='rgba(60,62,72,0.9)';ctx.lineWidth=Math.max(2,r/40);
     cp.forEach(v=>{const a=Math.atan2(v[1]-cy,v[0]-cx);ctx.beginPath();ctx.moveTo(v[0],v[1]);ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));ctx.stroke();});
-    // outer pentagons
-    for(let i=0;i<5;i++){const a=-Math.PI/2+(i+0.5)*2*Math.PI/5;poly(ctx,pent(cx+r*0.72*Math.cos(a),cy+r*0.72*Math.sin(a),r*0.27,a-Math.PI/2),secondary,'rgba(30,30,38,0.85)',Math.max(1,r/70));}
-    // center
-    poly(ctx,cp,primary,'rgba(30,30,38,0.85)',Math.max(1,r/70));
+    // outer pentagons (dominant kit colour)
+    for(let i=0;i<5;i++){const a=-Math.PI/2+(i+0.5)*2*Math.PI/5;poly(ctx,pent(cx+r*0.72*Math.cos(a),cy+r*0.72*Math.sin(a),r*0.27,a-Math.PI/2),primary,'rgba(30,30,38,0.85)',Math.max(1,r/70));}
+    // center (accent)
+    poly(ctx,cp,secondary,'rgba(30,30,38,0.85)',Math.max(1,r/70));
     // rim (clip)
     ctx.beginPath();ctx.arc(cx,cy,r,0,7);ctx.strokeStyle='#f5c518';ctx.lineWidth=Math.max(3,r/22);ctx.stroke();
     ctx.restore();
@@ -455,7 +455,7 @@ window.FIXTURES = [
     <li><a href="groups.html">Groups</a></li>
     <li><a href="jersey.html">Kit</a></li>
     <li><a href="game.html">Play</a></li>
-    <li><a href="#fanzone">Fan Zone</a></li>
+    <li><a href="fanzone.html">Fan Zone</a></li>
     <li><a href="terms.html">Terms</a></li>
     </ul>
   <button class="mnav-btn" onclick="document.getElementById('mnav').classList.toggle('open')" aria-label="Menu">&#9776;</button>
@@ -467,7 +467,7 @@ window.FIXTURES = [
   <a href="groups.html">Groups</a>
   <a href="jersey.html">Kit</a>
   <a href="game.html">Play</a>
-  <a href="#fanzone">Fan Zone</a>
+  <a href="fanzone.html">Fan Zone</a>
   <a href="terms.html">Terms</a>
 </div>
 
