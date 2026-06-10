@@ -55,10 +55,25 @@
   .cardprev{display:block;max-width:420px;width:100%;margin:22px auto 0;border-radius:14px;border:1px solid var(--border)}
   .foot{text-align:center;color:var(--muted);font-size:.78rem;margin-top:34px;line-height:1.5}
   .foot a{color:var(--muted2)}
+  .topbar{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;max-width:940px;margin:0 auto;border-bottom:1px solid var(--border);flex-wrap:wrap}
+  .tb-logo{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.06em;color:var(--gold);text-decoration:none}
+  .tb-links{display:flex;gap:18px}
+  .tb-links a{color:var(--muted2);text-decoration:none;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:.82rem}
+  .tb-links a:hover,.tb-links a.active{color:var(--gold)}
+  @media(max-width:560px){.tb-links{gap:13px}.tb-links a{font-size:.74rem}}
 </style>
 </head>
 <body>
 <div class="radar"></div>
+<nav class="topbar">
+  <a href="index.html" class="tb-logo">⚽ THE WORLD CUP</a>
+  <div class="tb-links">
+    <a href="index.html">Home</a>
+    <a href="jersey.html">Kit</a>
+    <a href="game.html" class="active">Play</a>
+    <a href="index.html#fanzone">Fan Zone</a>
+  </div>
+</nav>
 <div class="wrap">
   <div class="eyebrow">The World Cup · on Solana</div>
   <h1>Road to Glory</h1>
