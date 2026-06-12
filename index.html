@@ -605,7 +605,20 @@ function fmtDay(s){const p=s.split('-');const dt=new Date(+p[0],+p[1]-1,+p[2]);r
 function fxAsEvents(){return (window.FIXTURES||[]).map(function(f){return {date:f.d,state:'pre',done:false,venue:f.v||'',g:f.g,
   home:{code:f.h,name:((window.NATION||{})[f.h]||{}).n,score:'',winner:false},
   away:{code:f.a,name:((window.NATION||{})[f.a]||{}).n,score:'',winner:false}};});}
-function groupOf(e){if(e.g)return e.g;const f=(window.FIXTURES||[]).find(x=>(x.h===e.home.code&&x.a===e.away.code)||(x.h===e.away.code&&x.a===e.home.code));return f?f.g:'';}
+function groupOf(e){
+  if(e.g)return e.g;
+  const f=(window.FIXTURES||[]).find(x=>(x.h===e.home.code&&x.a===e.away.code)||(x.h===e.away.code&&x.a===e.home.code));
+  if(f)return f.g;
+  // group-stage teams always share a group — derive it from the draw
+  const GRP={MEX:'A',RSA:'A',KOR:'A',CZE:'A',CAN:'B',BIH:'B',QAT:'B',SUI:'B',BRA:'C',MAR:'C',HAI:'C',SCO:'C',USA:'D',PAR:'D',AUS:'D',TUR:'D',GER:'E',CUW:'E',CIV:'E',ECU:'E',NED:'F',JPN:'F',SWE:'F',TUN:'F',BEL:'G',EGY:'G',IRN:'G',NZL:'G',ESP:'H',CPV:'H',KSA:'H',URU:'H',FRA:'I',SEN:'I',IRQ:'I',NOR:'I',ARG:'J',ALG:'J',AUT:'J',JOR:'J',POR:'K',COD:'K',UZB:'K',COL:'K',ENG:'L',CRO:'L',GHA:'L',PAN:'L'};
+  const g1=GRP[e.home.code],g2=GRP[e.away.code];
+  return (g1&&g1===g2)?g1:'';
+}
+function stageLabel(e){
+  const g=groupOf(e);
+  if(g)return 'Group '+g;
+  return (e.date&&e.date>='2026-06-28')?'Knockouts':'World Cup';
+}
 function ldate(e){if(e.iso){const d=new Date(e.iso);if(!isNaN(d))return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}return e.date;}
 function pickDay(evs){
   function dt(s){const p=s.split('-');return new Date(+p[0],+p[1]-1,+p[2]).getTime();}
@@ -648,7 +661,7 @@ function renderMatchday(prices){
     if(done){const w=e.home.winner?e.home:(e.away.winner?e.away:null);
       if(w&&w.code)win='<a class="md-win" href="#" onclick="FZGEN.download(\'poster\',\''+w.code+'\');return false;">🏆 '+(((window.NATION||{})[w.code]||{}).n||w.code)+' win — get the winner poster ↓</a>';
       else win='<div class="md-draw">Full time · draw</div>';}
-    c.innerHTML='<div class="md-grp"><span class="gp">Group '+(groupOf(e)||'—')+'</span><span>'+status+'</span></div>'+
+    c.innerHTML='<div class="md-grp"><span class="gp">'+stageLabel(e)+'</span><span>'+status+'</span></div>'+
       mdSide(e.home,prices)+'<div class="md-vs">v</div>'+mdSide(e.away,prices)+win;
     wrap.appendChild(c);
   });
