@@ -350,6 +350,11 @@ window.FIXTURES = [
   .hero p{color:var(--muted2);max-width:640px;margin:16px auto 0;font-size:1.05rem;line-height:1.5}
   .kick{margin-top:14px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted2);font-size:.82rem}
   .kick b{color:var(--gold)}
+  .cdwrap{display:flex;gap:10px;justify-content:center;margin-top:14px}
+  .cdbox{background:var(--card);border:1px solid rgba(245,197,24,0.3);border-radius:12px;padding:10px 0 8px;width:76px;text-align:center}
+  .cdbox b{display:block;font-family:'DM Mono',monospace;font-weight:500;font-size:1.55rem;color:var(--gold);line-height:1.1}
+  .cdbox span{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted2)}
+  @media(max-width:420px){.cdbox{width:64px}.cdbox b{font-size:1.3rem}}
   .cols{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:40px 0 10px}
   .col{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;display:flex;flex-direction:column}
   .col-h{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:4px}
@@ -483,7 +488,13 @@ window.FIXTURES = [
     <div class="eyebrow">The one-stop shop for World Cup crypto · Solana</div>
     <h1>EVERY WORLD CUP TOKEN.<br>ONE PLACE.</h1>
     <p>Live prices and one-tap buys for the entire World Cup token meta — themed tokens, country tokens and player tokens, all ranked by market cap and bought straight from your own wallet. Non-custodial.</p>
-    <div class="kick" id="kick">Kickoff <b>June 11</b></div>
+    <div class="kick" id="kick">First whistle · <b>Mexico v South Africa</b> · Mexico City</div>
+    <div class="cdwrap" id="cdwrap">
+      <div class="cdbox"><b id="cdd">--</b><span>Days</span></div>
+      <div class="cdbox"><b id="cdh">--</b><span>Hrs</span></div>
+      <div class="cdbox"><b id="cdm">--</b><span>Min</span></div>
+      <div class="cdbox"><b id="cdsec">--</b><span>Sec</span></div>
+    </div>
     <div class="ecostat" id="ecostat"></div>
   </header>
 
@@ -573,10 +584,29 @@ window.FIXTURES = [
 <script>
 const L=window.HUBLIB;
 let LIVE=null, LASTPRICES={};
-// kickoff countdown
-(function(){const k=new Date('2026-06-11T00:00:00');const d=Math.ceil((k-new Date())/864e5);
-  if(d>0)document.getElementById('kick').innerHTML='Kickoff <b>June 11</b> · '+d+' day'+(d>1?'s':'')+' to go';
-  else document.getElementById('kick').innerHTML='<b>The World Cup is live</b>';})();
+// live countdown to the first whistle — flips to LIVE at zero
+(function(){
+  // ⚠ CONFIRM this against the official kickoff time and adjust if needed.
+  // Mexico v South Africa, Estadio Banorte, Mexico City (UTC-6).
+  var KICKOFF=new Date('2026-06-11T20:00:00-06:00');
+  var kick=document.getElementById('kick'),wrap=document.getElementById('cdwrap');
+  function pad(n){return n<10?'0'+n:''+n;}
+  function tick(){
+    var ms=KICKOFF-new Date();
+    if(ms<=0){
+      if(wrap)wrap.style.display='none';
+      if(kick)kick.innerHTML='<b>THE WORLD CUP IS LIVE</b> · scores update below';
+      return;
+    }
+    var s=Math.floor(ms/1000);
+    document.getElementById('cdd').textContent=pad(Math.floor(s/86400));
+    document.getElementById('cdh').textContent=pad(Math.floor(s%86400/3600));
+    document.getElementById('cdm').textContent=pad(Math.floor(s%3600/60));
+    document.getElementById('cdsec').textContent=pad(s%60);
+    setTimeout(tick,1000);
+  }
+  tick();
+})();
 
 // country addresses = HUB.country + any nation codes in tokens.js (excluding TWC)
 function countryAddrs(){
